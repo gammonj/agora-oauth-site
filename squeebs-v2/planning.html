@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0b0d10">
+<title>Squeebs v2 — Planning / Cash Forecast prototype</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;
+  --text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;
+  --orange:#ff8a4c;--red:#ff5d62;--purple:#a878ff;--cyan:#51c8d9;--shadow:0 16px 44px rgba(0,0,0,.34)
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100dvh}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+.app{max-width:1180px;margin:0 auto;min-height:100dvh;padding:18px 16px calc(92px + env(safe-area-inset-bottom))}
+.header{display:flex;align-items:center;justify-content:space-between;margin:2px 0 14px}
+.header h1{font-size:30px;letter-spacing:-.6px;margin:0}
+.header-actions{display:flex;align-items:center;gap:10px}
+.iconbtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted)}
+.iconbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.status-dot{width:11px;height:11px;border-radius:50%;background:var(--green);border:0;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
+.modebar{display:flex;gap:8px;overflow:auto;scrollbar-width:none;margin-bottom:14px;padding-bottom:2px}
+.modebar::-webkit-scrollbar{display:none}
+.mode{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 12px;white-space:nowrap;color:var(--muted)}
+.mode.active{background:#17395a;border-color:#245f93;color:#a9d5ff}
+.mode.disabled{opacity:.45}
+.hero{background:linear-gradient(180deg,#192129,#14191f);border:1px solid #2b3946;border-radius:22px;padding:17px;margin-bottom:14px}
+.kicker{display:flex;align-items:center;gap:7px;font-size:12px;color:#8edcae;font-weight:700}
+.kicker i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.hero h2{font-size:25px;line-height:1.14;letter-spacing:-.6px;margin:9px 0 7px}
+.hero p{font-size:14px;line-height:1.45;color:#c5ccd4;margin:0}
+.hero-note{margin-top:12px;font-size:12px;color:var(--muted)}
+.horizon{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:15px 2px 9px}
+.horizon h2{font-size:17px;margin:0}
+.segment{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px}
+.segment button{border:0;background:transparent;color:var(--muted);padding:7px 10px;border-radius:9px;font-size:12px}
+.segment button.active{background:#224d75;color:#d7ecff}
+.account-strip{display:flex;gap:9px;overflow:auto;scrollbar-width:none;padding:0 0 10px}
+.account-strip::-webkit-scrollbar{display:none}
+.account-chip{min-width:150px;border:1px solid var(--line);background:var(--surface);border-radius:15px;padding:11px;text-align:left}
+.account-chip.active{border-color:#2f6fa6;background:#13263a}
+.account-chip .name{font-size:13px;font-weight:700}
+.account-chip .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.account-chip .state{margin-top:7px;font-size:11px;font-weight:700}
+.account-chip .state.good{color:var(--green)}
+.account-chip .state.action{color:#8cc6ff}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.account-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.account-head h3{font-size:18px;margin:0}
+.account-head .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.badge{font-size:11px;padding:5px 8px;border-radius:999px;white-space:nowrap}
+.badge.action{background:rgba(61,155,255,.12);color:#8cc6ff}
+.badge.good{background:rgba(66,210,122,.10);color:#7be5a4}
+.chart-wrap{margin-top:14px;background:var(--surface2);border-radius:15px;padding:10px 8px 7px}
+.chart-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);padding:0 4px 5px}
+.chart{width:100%;height:180px;display:block}
+.chart .grid{stroke:#2a323b;stroke-width:1}
+.chart .buffer{stroke:var(--orange);stroke-width:1.5;stroke-dasharray:5 5}
+.chart .path{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chart .transfer{stroke:var(--green);stroke-width:1.5;stroke-dasharray:3 4}
+.chart .dot{fill:var(--blue)}
+.chart .transfer-dot{fill:var(--green)}
+.chart text{font-size:10px;fill:#8f99a5}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin:8px 3px 0;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{display:inline-block;width:10px;height:3px;border-radius:3px;background:var(--blue)}
+.legend .buf i{background:var(--orange)}
+.legend .fund i{background:var(--green)}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.stat{background:var(--surface2);border-radius:13px;padding:11px}
+.stat .label{font-size:10px;color:var(--muted)}
+.stat .value{font-size:17px;font-weight:750;margin-top:3px}
+.stat .value.good{color:var(--green)}
+.stat .value.action{color:#8cc6ff}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 9px}
+.section-title h2{font-size:17px;margin:0}
+.section-title button{border:0;background:transparent;color:var(--blue);font-size:13px}
+.funding{position:relative;overflow:hidden}
+.funding:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+.funding .tag{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8cc6ff;font-weight:750}
+.funding h3{font-size:18px;line-height:1.25;margin:8px 0 4px}
+.funding p{font-size:13px;color:var(--muted);line-height:1.45;margin:0}
+.route{margin-top:12px;background:var(--surface2);border-radius:13px;padding:11px}
+.route-title{font-size:10px;color:var(--muted);margin-bottom:7px}
+.route-line{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:13px;font-weight:700}
+.arrow{color:var(--blue)}
+.route-note{font-size:11px;line-height:1.4;color:var(--muted);margin-top:7px}
+.timeline{padding:0}
+.event{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
+.event:last-child{border-bottom:0}
+.event .date{font-size:11px;color:var(--muted)}
+.event .title{font-size:13px;font-weight:680}
+.event .sub{font-size:11px;color:var(--muted);margin-top:3px}
+.event .amount{font-size:13px;font-weight:700;white-space:nowrap}
+.event .amount.in{color:var(--green)}
+.event.funding-event{background:rgba(61,155,255,.04)}
+.activity-note{font-size:11px;color:var(--muted);line-height:1.45;margin:9px 2px 0}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(15,18,22,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;justify-content:space-around}
+.navitem{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:4px;align-items:center;border:0;background:transparent}
+.navitem.active{color:var(--blue)}
+.navicon{font-size:20px}
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.56);z-index:50;display:none}
+.sheet-backdrop.show{display:block}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#12161b;border-radius:24px 24px 0 0;max-height:min(88dvh,760px);overflow:auto;border-top:1px solid var(--line);padding:10px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.45)}
+.grab{width:38px;height:5px;border-radius:9px;background:#3c454f;margin:0 auto 14px}
+.sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sheethead h2{font-size:21px;margin:0}
+.close{border:0;background:var(--surface2);width:34px;height:34px;border-radius:50%;font-size:19px}
+.fact{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.fact .k{font-size:13px;color:var(--muted)}
+.fact .v{font-size:13px;font-weight:650;text-align:right}
+.explain{font-size:13px;line-height:1.5;color:var(--muted)}
+.private .sensitive{filter:blur(8px);user-select:none}
+.private .privacy-label::after{content:"Hidden"}
+.privacy-label::after{content:"Shown"}
+.desktop-grid{display:block}
+@media(min-width:760px){
+  .app{padding:24px 28px 40px}
+  .header h1{font-size:36px}
+  .desktop-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);gap:18px}
+  .desktop-side{display:flex;flex-direction:column;gap:18px}
+  .chart{height:230px}
+  .bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}
+  .sheet{left:50%;right:auto;transform:translateX(-50%);width:min(540px,92vw)}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="header">
+    <h1>Planning</h1>
+    <div class="header-actions">
+      <button class="iconbtn" id="privacyBtn" aria-label="Toggle sensitive figures">
+        <svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>
+      </button>
+      <button class="status-dot" id="statusDot" aria-label="Data status"></button>
+    </div>
+  </div>
+
+  <div class="modebar">
+    <button class="mode active">Cash Forecast</button>
+    <button class="mode disabled">Runway</button>
+    <button class="mode disabled">Reserves</button>
+    <button class="mode disabled">Scenarios</button>
+  </div>
+
+  <section class="hero">
+    <div class="kicker"><i></i> Baseline · next 30 days</div>
+    <h2>All operational accounts are coverable.</h2>
+    <p>One funding movement is expected: Sabadell Joint will need about <span class="sensitive">€1,500</span> later this month. The source account remains above its own buffer afterwards.</p>
+    <div class="hero-note">No transfer needs to happen today.</div>
+  </section>
+
+  <div class="horizon">
+    <h2>Operational accounts</h2>
+    <div class="segment" id="horizonSegment"><button class="active" data-horizon="30">30d</button><button data-horizon="60">60d</button><button data-horizon="90">90d</button></div>
+  </div>
+
+  <div class="account-strip">
+    <button class="account-chip" data-account="personal">
+      <div class="name">Sabadell Personal</div>
+      <div class="sub">EUR · projected low <span class="sensitive">€2.05k</span></div>
+      <div class="state good">Covered</div>
+    </button>
+    <button class="account-chip active" data-account="joint">
+      <div class="name">Sabadell Joint</div>
+      <div class="sub">EUR · funding around 24 Oct</div>
+      <div class="state action">~<span class="sensitive">€1.5k</span> required</div>
+    </button>
+    <button class="account-chip" data-account="hsbc">
+      <div class="name">HSBC Joint</div>
+      <div class="sub">GBP · projected low <span class="sensitive">£1.42k</span></div>
+      <div class="state good">Covered</div>
+    </button>
+  </div>
+
+  <div class="desktop-grid">
+    <div>
+      <section class="card" id="forecastCard">
+        <div class="account-head">
+          <div><h3 id="accountName">Sabadell Joint · EUR</h3><div class="sub" id="accountSub">Operational household account</div></div>
+          <span class="badge action" id="accountBadge">Funding expected</span>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-labels"><span>Projected balance</span><span id="chartHorizon">30 days</span></div>
+          <svg class="chart" id="chart" viewBox="0 0 600 190" preserveAspectRatio="none" aria-label="Synthetic projected account balance chart">
+            <line class="grid" x1="32" y1="35" x2="580" y2="35"></line>
+            <line class="grid" x1="32" y1="90" x2="580" y2="90"></line>
+            <line class="grid" x1="32" y1="145" x2="580" y2="145"></line>
+            <line class="buffer" id="bufferLine" x1="32" y1="132" x2="580" y2="132"></line>
+            <line class="transfer" id="transferLine" x1="370" y1="20" x2="370" y2="165"></line>
+            <path class="path" id="balancePath" d="M32 55 L105 68 L170 77 L230 92 L305 108 L350 125 L370 70 L430 83 L500 98 L580 112"></path>
+            <circle class="dot" id="endDot" cx="580" cy="112" r="4"></circle>
+            <circle class="transfer-dot" id="transferDot" cx="370" cy="70" r="4"></circle>
+            <text id="bufferText" x="38" y="126">buffer €1,000</text>
+            <text id="transferText" x="378" y="32">+€1,500 funding</text>
+            <text x="32" y="182">Now</text><text x="540" y="182">+30d</text>
+          </svg>
+          <div class="legend"><span><i></i> projected balance</span><span class="buf"><i></i> operating buffer</span><span class="fund"><i></i> planned funding</span></div>
+        </div>
+
+        <div class="summary-grid">
+          <div class="stat"><div class="label">Current balance</div><div class="value sensitive" id="currentBalance">€3,260</div></div>
+          <div class="stat"><div class="label">Lowest before funding</div><div class="value action sensitive" id="projectedLow">€420</div></div>
+          <div class="stat"><div class="label">Operating buffer</div><div class="value sensitive" id="bufferValue">€1,000</div></div>
+          <div class="stat"><div class="label">After planned funding</div><div class="value good sensitive" id="afterFunding">€1,920 low</div></div>
+        </div>
+      </section>
+
+      <div class="section-title"><h2>Expected activity</h2><button id="explainActivity">How estimated?</button></div>
+      <section class="card timeline" id="timeline">
+        <div class="event"><div class="date">10 Oct</div><div><div class="title">Household payment</div><div class="sub">Known recurring amount</div></div><div class="amount sensitive">−€860</div></div>
+        <div class="event"><div class="date">17 Oct</div><div><div class="title">Utilities & subscriptions</div><div class="sub">Expected Activity · mixed known/estimated</div></div><div class="amount sensitive">−€620</div></div>
+        <div class="event"><div class="date">22 Oct</div><div><div class="title">Housing payment</div><div class="sub">Known commitment</div></div><div class="amount sensitive">−€1,450</div></div>
+        <div class="event funding-event"><div class="date">24 Oct</div><div><div class="title">Funding from Sabadell Personal</div><div class="sub">Derived funding requirement</div></div><div class="amount in sensitive">+€1,500</div></div>
+        <div class="event"><div class="date">28 Oct</div><div><div class="title">Ordinary spending</div><div class="sub">Stable-variable estimate</div></div><div class="amount sensitive">−€510</div></div>
+      </section>
+      <p class="activity-note">Farther periods can aggregate monthly. The chart should not invent exact dates for activity that is only known at monthly resolution.</p>
+    </div>
+
+    <div class="desktop-side">
+      <div>
+        <div class="section-title"><h2>Funding plan</h2></div>
+        <section class="card funding">
+          <div class="tag">Derived from account buffers</div>
+          <h3>Fund Sabadell Joint with about <span class="sensitive">€1,500</span> around 24 Oct.</h3>
+          <p>Sabadell Personal remains above its own operating buffer after the transfer, so no upstream movement is needed in this baseline.</p>
+          <div class="route">
+            <div class="route-title">Preferred route</div>
+            <div class="route-line"><span>Sabadell Personal</span><span class="arrow">→</span><span>Sabadell Joint</span></div>
+            <div class="route-note">If Personal could not safely cover it, extend the chain upstream to Trading 212 EUR Cash.</div>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <div class="section-title"><h2>Funding resources</h2><button id="resourcesBtn">View all</button></div>
+        <section class="card">
+          <div class="fact"><span class="k">Trading 212 EUR Cash</span><span class="v sensitive">€14.8k</span></div>
+          <div class="fact"><span class="k">Sabadell Savings</span><span class="v sensitive">€6.2k</span></div>
+          <div class="fact"><span class="k">Trade Republic cash</span><span class="v sensitive">€3.4k</span></div>
+          <div class="explain" style="margin-top:10px">Availability does not imply every source can fund every account directly. Route constraints remain part of the model.</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottomnav">
+  <button class="navitem"><div class="navicon">⌂</div>Home</button>
+  <button class="navitem"><div class="navicon">≡</div>Transactions</button>
+  <button class="navitem"><div class="navicon">▥</div>Insights</button>
+  <button class="navitem active"><div class="navicon">□</div>Planning</button>
+</nav>
+
+<div class="sheet-backdrop" id="statusSheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2>Data status</h2><button class="close">×</button></div><p class="explain">All connected source data used for this baseline is current in this synthetic prototype.</p><div class="fact"><span class="k">Last successful update</span><span class="v">Today · 18:42</span></div><div class="fact"><span class="k">Latest transaction</span><span class="v">Today</span></div></div></div>
+
+<div class="sheet-backdrop" id="activitySheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2>How this forecast is built</h2><button class="close">×</button></div><p class="explain">Expected Activity combines known commitments, explicit future changes and justified estimates. Known information outranks inference.</p><div class="fact"><span class="k">Known commitments</span><span class="v">Exact amount/timing</span></div><div class="fact"><span class="k">Recurring activity</span><span class="v">Cadence + history</span></div><div class="fact"><span class="k">Variable spending</span><span class="v">Robust recent baseline</span></div><div class="fact"><span class="k">Structural transitions</span><span class="v">Override slow history</span></div></div></div>
+
+<div class="sheet-backdrop" id="resourcesSheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2>Funding resources</h2><button class="close">×</button></div><p class="explain">These are cash/cash-equivalent resources in this synthetic example. Investments are not included as baseline funding.</p><div class="fact"><span class="k">Trading 212 EUR Cash</span><span class="v sensitive">€14.8k</span></div><div class="fact"><span class="k">Trading 212 GBP Cash</span><span class="v sensitive">£980</span></div><div class="fact"><span class="k">Trading 212 USD Cash</span><span class="v sensitive">$820</span></div><div class="fact"><span class="k">HSBC Personal GBP</span><span class="v sensitive">£470</span></div><div class="fact"><span class="k">Sabadell Savings</span><span class="v sensitive">€6.2k</span></div><div class="fact"><span class="k">Trade Republic cash</span><span class="v sensitive">€3.4k</span></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const app=$('#app');
+function openSheet(id){$(id).classList.add('show')}
+function closeSheets(){$$('.sheet-backdrop').forEach(x=>x.classList.remove('show'))}
+$$('.sheet-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b||e.target.classList.contains('close'))closeSheets()}));
+$('#statusDot').onclick=()=>openSheet('#statusSheet');
+$('#explainActivity').onclick=()=>openSheet('#activitySheet');
+$('#resourcesBtn').onclick=()=>openSheet('#resourcesSheet');
+$('#privacyBtn').onclick=()=>app.classList.toggle('private');
+
+const accounts={
+ joint:{
+  name:'Sabadell Joint · EUR',sub:'Operational household account',badge:'Funding expected',badgeClass:'action',
+  current:'€3,260',low:'€420',buffer:'€1,000',after:'€1,920 low',
+  path:'M32 55 L105 68 L170 77 L230 92 L305 108 L350 125 L370 70 L430 83 L500 98 L580 112',
+  bufferY:132,bufferText:'buffer €1,000',transferX:370,transferY:70,transferText:'+€1,500 funding',transfer:true,
+  events:[
+   ['10 Oct','Household payment','Known recurring amount','−€860',''],
+   ['17 Oct','Utilities & subscriptions','Expected Activity · mixed known/estimated','−€620',''],
+   ['22 Oct','Housing payment','Known commitment','−€1,450',''],
+   ['24 Oct','Funding from Sabadell Personal','Derived funding requirement','+€1,500','in funding-event'],
+   ['28 Oct','Ordinary spending','Stable-variable estimate','−€510','']
+  ],
+  planTitle:'Fund Sabadell Joint with about €1,500 around 24 Oct.',
+  planBody:'Sabadell Personal remains above its own operating buffer after the transfer, so no upstream movement is needed in this baseline.',
+  route:'<span>Sabadell Personal</span><span class="arrow">→</span><span>Sabadell Joint</span>',
+  routeNote:'If Personal could not safely cover it, extend the chain upstream to Trading 212 EUR Cash.'
+ },
+ personal:{
+  name:'Sabadell Personal · EUR',sub:'Operational personal account and EUR funding hub',badge:'Covered',badgeClass:'good',
+  current:'€8,900',low:'€2,050',buffer:'€1,500',after:'€2,050 low',
+  path:'M32 48 L105 60 L170 72 L230 85 L300 96 L370 112 L430 127 L500 134 L580 138',
+  bufferY:148,bufferText:'buffer €1,500',transferX:0,transferY:0,transferText:'',transfer:false,
+  events:[
+   ['09 Oct','Ordinary card spending','Stable-variable estimate','−€320',''],
+   ['14 Oct','Household income','Known inflow','+€1,100','in'],
+   ['24 Oct','Funding to Sabadell Joint','Derived funding requirement','−€1,500','funding-event'],
+   ['27 Oct','Recurring bills','Expected Activity','−€780',''],
+   ['30 Oct','Ordinary spending','Stable-variable estimate','−€410','']
+  ],
+  planTitle:'No upstream funding required in the current 30-day baseline.',
+  planBody:'Personal can fund the expected Joint top-up and remain above its €1,500 operating buffer.',
+  route:'<span>Trading 212 EUR Cash</span><span class="arrow">→</span><span>Sabadell Personal</span>',
+  routeNote:'This route stays dormant unless Personal itself would fall below its operating buffer.'
+ },
+ hsbc:{
+  name:'HSBC Joint · GBP',sub:'Operational London-property account',badge:'Covered',badgeClass:'good',
+  current:'£3,850',low:'£1,420',buffer:'£1,000',after:'£1,420 low',
+  path:'M32 42 L110 55 L175 65 L240 76 L310 91 L380 104 L450 115 L520 124 L580 130',
+  bufferY:145,bufferText:'buffer £1,000',transferX:0,transferY:0,transferText:'',transfer:false,
+  events:[
+   ['11 Oct','Property service','Known commitment','−£540',''],
+   ['18 Oct','Utilities','Expected Activity','−£290',''],
+   ['23 Oct','Property charge','Known commitment','−£820',''],
+   ['28 Oct','Ordinary property costs','Stable-variable estimate','−£310','']
+  ],
+  planTitle:'No GBP funding movement is required in the current 30-day baseline.',
+  planBody:'HSBC Joint remains above its £1,000 operating buffer through this horizon.',
+  route:'<span>HSBC Personal GBP</span><span>or</span><span>Trading 212 GBP Cash</span><span class="arrow">→</span><span>HSBC Joint</span>',
+  routeNote:'If existing GBP cash were insufficient for a large property bill, extend the route: Trading 212 EUR Cash → FX → Trading 212 GBP Cash → HSBC Joint.'
+ }
+};
+
+function renderAccount(key){
+ const a=accounts[key];
+ $$('.account-chip').forEach(x=>x.classList.toggle('active',x.dataset.account===key));
+ $('#accountName').textContent=a.name;$('#accountSub').textContent=a.sub;$('#accountBadge').textContent=a.badge;$('#accountBadge').className='badge '+a.badgeClass;
+ $('#currentBalance').textContent=a.current;$('#projectedLow').textContent=a.low;$('#bufferValue').textContent=a.buffer;$('#afterFunding').textContent=a.after;
+ $('#projectedLow').className='value '+(a.badgeClass==='action'?'action':'good')+' sensitive';
+ $('#balancePath').setAttribute('d',a.path);$('#bufferLine').setAttribute('y1',a.bufferY);$('#bufferLine').setAttribute('y2',a.bufferY);$('#bufferText').setAttribute('y',a.bufferY-6);$('#bufferText').textContent=a.bufferText;
+ $('#transferLine').style.display=a.transfer?'block':'none';$('#transferDot').style.display=a.transfer?'block':'none';$('#transferText').style.display=a.transfer?'block':'none';
+ if(a.transfer){$('#transferLine').setAttribute('x1',a.transferX);$('#transferLine').setAttribute('x2',a.transferX);$('#transferDot').setAttribute('cx',a.transferX);$('#transferDot').setAttribute('cy',a.transferY);$('#transferText').setAttribute('x',a.transferX+8);$('#transferText').textContent=a.transferText}
+ $('#endDot').setAttribute('cy',a.path.match(/L580 ([0-9]+)/)?.[1]||112);
+ $('#timeline').innerHTML=a.events.map(e=>'<div class="event '+e[4]+'"><div class="date">'+e[0]+'</div><div><div class="title">'+e[1]+'</div><div class="sub">'+e[2]+'</div></div><div class="amount '+(e[3].startsWith('+')?'in':'')+' sensitive">'+e[3]+'</div></div>').join('');
+ document.querySelector('.funding h3').innerHTML=a.planTitle.replace(/([€£]\d[\d,.]*k?|\d[\d,.]*\s?€)/g,'<span class="sensitive">$1</span>');
+ document.querySelector('.funding p').textContent=a.planBody;
+ document.querySelector('.route-line').innerHTML=a.route;document.querySelector('.route-note').textContent=a.routeNote;
+}
+$$('.account-chip').forEach(x=>x.onclick=()=>renderAccount(x.dataset.account));
+
+$$('[data-horizon]').forEach(b=>b.onclick=()=>{
+ $$('#horizonSegment button').forEach(x=>x.classList.toggle('active',x===b));
+ $('#chartHorizon').textContent=b.dataset.horizon+' days';
+});
+
+renderAccount('joint');
+</script>
+</body>
+</html>
