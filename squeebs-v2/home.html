@@ -7,198 +7,158 @@
 <meta name="theme-color" content="#0b0d10">
 <title>Squeebs v2 — Home prototype</title>
 <style>
-:root{
-  color-scheme:dark;
-  --bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;
-  --text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;
-  --orange:#ff8a4c;--red:#ff5d62;--purple:#a878ff;--shadow:0 16px 44px rgba(0,0,0,.32);
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body{min-height:100dvh}
-button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
-.app{max-width:1180px;margin:0 auto;padding:18px 16px calc(92px + env(safe-area-inset-bottom));min-height:100dvh}
-.header{display:flex;justify-content:space-between;align-items:center;margin:2px 0 16px}
-.header h1{font-size:30px;letter-spacing:-.6px;margin:0}
-.status-dot{width:11px;height:11px;border-radius:50%;background:var(--green);border:0;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
-.hero{background:linear-gradient(180deg,#192129,#14191f);border:1px solid #2b3946;border-radius:22px;padding:18px;margin-bottom:14px}
-.eyebrow{font-size:12px;color:#8edcae;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:7px}
-.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-.hero h2{font-size:27px;line-height:1.1;letter-spacing:-.6px;margin:10px 0 8px}
-.hero p{font-size:15px;line-height:1.45;color:#c5ccd4;margin:0}
-.hero-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;color:var(--muted);font-size:12px}
-.inline-link{margin-top:14px;border:0;background:transparent;color:#8cc6ff;padding:0;font-weight:650;font-size:14px}
-.section-title{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 9px}
-.section-title h2{font-size:17px;margin:0;letter-spacing:-.2px}
-.section-title button{border:0;background:transparent;color:var(--blue);font-size:13px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:15px}
-.metric-card .label{font-size:12px;color:var(--muted)}
-.metric-card .big{font-size:31px;font-weight:760;letter-spacing:-.7px;margin-top:2px}
-.metric-card .foot{font-size:12px;color:var(--muted);margin-top:4px}
-.breakdown{margin-top:12px;border-top:1px solid var(--line)}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-.row:last-child{border-bottom:0}
-.row .k{color:var(--muted);font-size:13px}
-.row .v{font-size:14px;font-weight:650;white-space:nowrap}
-.row .sub{font-size:11px;color:var(--muted2);margin-top:2px}
-.outlook-card{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:var(--surface2);border-radius:14px;padding:12px}
-.stat .label{font-size:11px;color:var(--muted)}
-.stat .value{font-size:20px;font-weight:720;margin-top:3px}
-.stat .value.good{color:var(--green)}
-.outlook-note{grid-column:1/-1;font-size:13px;line-height:1.4;color:#c2cad2;padding-top:2px}
-.activity{padding:0}
-.tx{display:grid;grid-template-columns:36px minmax(0,1fr) auto 15px;gap:10px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}
-.tx:last-child{border-bottom:0}
-.tx-icon{width:34px;height:34px;border-radius:10px;background:var(--surface2);display:grid;place-items:center;font-size:11px;font-weight:800;color:#d1d7de}
-.tx-title{font-size:14px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-sub{font-size:11px;color:var(--muted);margin-top:3px}
-.tx-amount{font-size:14px;font-weight:700;white-space:nowrap}
-.chev{color:var(--muted2);font-size:20px}
-.insight{position:relative;overflow:hidden}
-.insight:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--orange)}
-.insight .tag{font-size:12px;color:var(--orange);font-weight:700}
-.insight h3{font-size:18px;line-height:1.25;margin:8px 0 6px}
-.insight p{font-size:13px;color:var(--muted);line-height:1.45;margin:0}
-.insight-footer{display:flex;justify-content:space-between;align-items:center;margin-top:13px}
-.insight-footer button{border:0;background:transparent;color:var(--blue);padding:0;font-weight:650}
-.reassure{font-size:12px;color:var(--green)}
-.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(15,18,22,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;justify-content:space-around}
-.navitem{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:4px;align-items:center;border:0;background:transparent}
-.navitem.active{color:var(--blue)}
-.navicon{font-size:20px}
-.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:none}
-.sheet-backdrop.show{display:block}
-.sheet{position:absolute;left:0;right:0;bottom:0;background:#12161b;border-radius:24px 24px 0 0;max-height:min(84dvh,720px);overflow:auto;border-top:1px solid var(--line);padding:10px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.45)}
-.grab{width:38px;height:5px;border-radius:9px;background:#3c454f;margin:0 auto 14px}
-.sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.sheethead h2{font-size:21px;margin:0}
-.close{border:0;background:var(--surface2);width:34px;height:34px;border-radius:50%;font-size:19px}
-.status-row{padding:13px 0;border-bottom:1px solid var(--line)}
-.status-row:last-child{border-bottom:0}
-.status-row .title{font-weight:650}
-.status-row .detail{font-size:12px;color:var(--muted);margin-top:3px}
-.mini-screen{position:fixed;inset:0;background:var(--bg);z-index:45;display:none;padding:18px 16px 100px;overflow:auto}
-.mini-screen.show{display:block}
-.back{border:0;background:transparent;color:var(--blue);padding:6px 0;font-size:15px;margin-bottom:14px}
-.mini-screen h2{font-size:28px;margin:0 0 10px}
-.mini-screen p{color:var(--muted);line-height:1.5}
-.desktop-grid{display:block}
-@media(min-width:760px){
-  .app{padding:24px 28px 40px}
-  .header h1{font-size:36px}
-  .desktop-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:18px}
-  .desktop-side{display:flex;flex-direction:column;gap:18px}
-  .hero{padding:22px}
-  .bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}
-  .sheet{left:50%;right:auto;transform:translateX(-50%);width:min(520px,92vw)}
-}
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;--text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;--orange:#ff8a4c;--red:#ff5d62;--purple:#a878ff;--shadow:0 16px 44px rgba(0,0,0,.34)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100dvh}button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+.app{max-width:1180px;margin:0 auto;min-height:100dvh;padding:18px 16px calc(92px + env(safe-area-inset-bottom))}
+.header{display:flex;align-items:center;justify-content:space-between;margin:2px 0 16px}.header h1{font-size:30px;letter-spacing:-.6px;margin:0}.status-dot{width:11px;height:11px;border-radius:50%;background:var(--green);border:0;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
+.hero{background:linear-gradient(180deg,#182129,#14191f);border:1px solid #2b3946;border-radius:22px;padding:18px;margin-bottom:17px}
+.hero-kicker{display:flex;align-items:center;gap:7px;font-size:12px;color:#8edcae;font-weight:700}.hero-kicker i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.hero h2{font-size:27px;line-height:1.12;letter-spacing:-.7px;margin:10px 0 8px}.hero p{font-size:15px;line-height:1.45;color:#c5ccd4;margin:0}
+.next-action{margin-top:14px;background:rgba(61,155,255,.08);border:1px solid rgba(61,155,255,.2);border-radius:14px;padding:12px}
+.next-action .label{font-size:11px;color:#8cc6ff;text-transform:uppercase;letter-spacing:.07em;font-weight:750}.next-action strong{display:block;margin-top:4px;font-size:15px}.next-action span{display:block;margin-top:3px;font-size:12px;color:var(--muted)}
+.link{border:0;background:transparent;color:var(--blue);padding:0;font-weight:650}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:19px 2px 9px}.section-title h2{font-size:17px;margin:0}.section-title button{border:0;background:transparent;color:var(--blue);font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
+.position-grid{display:grid;gap:9px}.position-item{background:var(--surface2);border-radius:14px;padding:13px}.position-item .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.position-item .label{font-size:12px;color:var(--muted)}.position-item .amount{font-size:24px;font-weight:760;letter-spacing:-.4px;margin-top:3px}.position-item .desc{font-size:11px;line-height:1.35;color:var(--muted);margin-top:5px}.position-item.invest{border:1px solid rgba(168,120,255,.18)}.currency-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.currency-chip{font-size:10px;padding:4px 7px;border-radius:999px;background:var(--surface3);color:#cbd4dc}
+.op-list{padding:0}.op-row{display:grid;grid-template-columns:minmax(0,1fr) auto 15px;gap:10px;align-items:center;padding:14px;border-bottom:1px solid var(--line);cursor:pointer}.op-row:last-child{border-bottom:0}.op-name{font-size:14px;font-weight:680}.op-sub{font-size:11px;color:var(--muted);margin-top:3px}.op-right{text-align:right}.op-balance{font-size:14px;font-weight:700}.op-status{display:inline-block;margin-top:5px;font-size:11px;padding:4px 7px;border-radius:999px}.op-status.good{background:rgba(66,210,122,.10);color:#7be5a4}.op-status.soon{background:rgba(61,155,255,.12);color:#8cc6ff}.chev{color:var(--muted2);font-size:20px}
+.helper{font-size:12px;line-height:1.45;color:var(--muted);margin:9px 2px 0}
+.activity{padding:0}.tx{display:grid;grid-template-columns:36px minmax(0,1fr) auto 15px;gap:10px;align-items:center;padding:13px 14px;border-bottom:1px solid var(--line)}.tx:last-child{border-bottom:0}.tx-icon{width:34px;height:34px;border-radius:10px;background:var(--surface2);display:grid;place-items:center;font-size:10px;font-weight:800;color:#d1d7de}.tx-title{font-size:14px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx-sub{font-size:11px;color:var(--muted);margin-top:3px}.tx-amount{font-size:14px;font-weight:700;white-space:nowrap}.tx-amount.fx{color:#cbb7ff}
+.insight{position:relative;overflow:hidden}.insight:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}.insight .tag{font-size:12px;color:var(--orange);font-weight:700}.insight h3{font-size:18px;line-height:1.25;margin:8px 0 6px}.insight p{font-size:13px;color:var(--muted);line-height:1.45;margin:0}.insight-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:13px}.reassure{font-size:12px;color:var(--green)}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(15,18,22,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;justify-content:space-around}.navitem{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:4px;align-items:center;border:0;background:transparent}.navitem.active{color:var(--blue)}.navicon{font-size:20px}
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.56);z-index:50;display:none}.sheet-backdrop.show{display:block}.sheet{position:absolute;left:0;right:0;bottom:0;background:#12161b;border-radius:24px 24px 0 0;max-height:min(88dvh,760px);overflow:auto;border-top:1px solid var(--line);padding:10px 16px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.45)}.grab{width:38px;height:5px;border-radius:9px;background:#3c454f;margin:0 auto 14px}.sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sheethead h2{font-size:21px;margin:0}.close{border:0;background:var(--surface2);width:34px;height:34px;border-radius:50%;font-size:19px}
+.sheet-summary{font-size:13px;line-height:1.45;color:var(--muted);margin:0 0 10px}.fact{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}.fact .k{color:var(--muted);font-size:13px}.fact .v{text-align:right;font-size:13px;font-weight:650}.route{margin:13px 0;background:var(--surface2);border-radius:14px;padding:12px}.route-title{font-size:11px;color:var(--muted);margin-bottom:7px}.route-step{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:650;flex-wrap:wrap}.route-arrow{color:var(--blue)}.route-note{font-size:11px;color:var(--muted);line-height:1.4;margin-top:7px}.secondary-route{font-size:12px;color:var(--muted);margin-top:9px}
+.status-row{padding:12px 0;border-bottom:1px solid var(--line)}.status-row:last-child{border-bottom:0}.status-row b{font-size:14px}.status-row div{font-size:12px;color:var(--muted);margin-top:3px}
+.desktop-grid{display:block}.desktop-side{display:block}
+@media(min-width:760px){.app{padding:24px 28px 40px}.header h1{font-size:36px}.position-grid{grid-template-columns:repeat(3,1fr)}.desktop-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:18px}.desktop-side{display:flex;flex-direction:column;gap:18px}.bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(540px,92vw)}}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header"><h1>Home</h1><button class="status-dot" id="statusDot" aria-label="Data status"></button></div>
 
-  <section class="hero" id="heroCard">
-    <div class="eyebrow"><span class="eyebrow-dot"></span> No immediate action needed</div>
-    <h2>Your near-term cash position looks covered.</h2>
-    <p>Expected spending and preserved reserves remain covered through the end of the month.</p>
-    <div class="hero-meta"><span>Lowest projected personal cash €12.7k</span><span>28 Oct</span></div>
-    <button class="inline-link" data-screen="forecast">View cash forecast</button>
+  <section class="hero">
+    <div class="hero-kicker"><i></i> Covered on the baseline path</div>
+    <h2>You’re covered. One transfer is likely later this month.</h2>
+    <p>Sabadell Joint is projected to need funding, but Sabadell Personal can cover it and remain above its own operating buffer.</p>
+    <div class="next-action">
+      <div class="label">Expected next action</div>
+      <strong>Move about €1,500 → Sabadell Joint</strong>
+      <span>From Sabadell Personal · around 24 Oct · no need to move it yet</span>
+    </div>
+  </section>
+
+  <div class="section-title"><h2>Financial position</h2></div>
+  <section class="card position-grid">
+    <div class="position-item">
+      <div class="label">Personal cash & cash-equivalents</div>
+      <div class="amount">€29.6k</div>
+      <div class="desc">Funding/spending resources. Includes Trading 212 Cash; excludes investments.</div>
+      <div class="currency-chips"><span class="currency-chip">EUR €26.8k</span><span class="currency-chip">GBP £1.45k</span><span class="currency-chip">USD $820</span></div>
+    </div>
+    <div class="position-item">
+      <div class="label">Shared operational balances</div>
+      <div class="amount">€7.8k eq.</div>
+      <div class="desc">Joint accounts shown for position. They are not personal runway resources.</div>
+      <div class="currency-chips"><span class="currency-chip">Sabadell Joint €3.26k</span><span class="currency-chip">HSBC Joint £3.85k</span></div>
+    </div>
+    <div class="position-item invest">
+      <div class="label">Investments</div>
+      <div class="amount">€63.4k</div>
+      <div class="desc">FWRA only in this synthetic example. Excluded from normal baseline funding.</div>
+      <div class="currency-chips"><span class="currency-chip">Trading 212 Investments</span></div>
+    </div>
   </section>
 
   <div class="desktop-grid">
     <div>
-      <div class="section-title"><h2>Financial position</h2></div>
-      <section class="card metric-card">
-        <div class="label">Liquid position</div>
-        <div class="big">€87,620</div>
-        <div class="foot">Property excluded</div>
-        <div class="breakdown">
-          <div class="row"><div><div class="k">Personal cash</div><div class="sub">Includes €4.2k reserved</div></div><div class="v">€18,420</div></div>
-          <div class="row"><div><div class="k">Joint balances</div><div class="sub">Position only, not personal runway</div></div><div class="v">€5,800</div></div>
-          <div class="row"><div class="k">Investments</div><div class="v">€63,400</div></div>
+      <div class="section-title"><h2>Operational outlook</h2><button class="link" id="cashForecastBtn">Cash Forecast</button></div>
+      <section class="card op-list">
+        <div class="op-row" data-account="personal">
+          <div><div class="op-name">Sabadell Personal · EUR</div><div class="op-sub">Current €8,900 · projected low €2,050 after Joint funding</div></div>
+          <div class="op-right"><div class="op-balance">Buffer €1,500</div><span class="op-status good">Covered 30 days</span></div><div class="chev">›</div>
+        </div>
+        <div class="op-row" data-account="joint">
+          <div><div class="op-name">Sabadell Joint · EUR</div><div class="op-sub">Current €3,260 · projected low €420 before funding</div></div>
+          <div class="op-right"><div class="op-balance">Needs ~€1,500</div><span class="op-status soon">Around 24 Oct</span></div><div class="chev">›</div>
+        </div>
+        <div class="op-row" data-account="hsbc">
+          <div><div class="op-name">HSBC Joint · GBP</div><div class="op-sub">Current £3,850 · projected low £1,420</div></div>
+          <div class="op-right"><div class="op-balance">Buffer £1,000</div><span class="op-status good">Covered 30 days</span></div><div class="chev">›</div>
         </div>
       </section>
-
-      <div class="section-title"><h2>Next 30 days</h2><button data-screen="forecast">Planning</button></div>
-      <section class="card outlook-card">
-        <div class="stat"><div class="label">Expected in</div><div class="value">€6,200</div></div>
-        <div class="stat"><div class="label">Expected out</div><div class="value">€5,640</div></div>
-        <div class="stat"><div class="label">Projected change</div><div class="value good">+€560</div></div>
-        <div class="stat"><div class="label">Runway</div><div class="value">8.4 mo</div></div>
-        <div class="outlook-note">No funding gap is currently expected. Preserved reserves remain intact on the baseline path.</div>
-      </section>
+      <p class="helper">Funding sources only surface here when they explain coverage or a required action. Trading 212 Cash, HSBC Personal, Savings and Trade Republic remain available in the underlying funding model.</p>
     </div>
 
     <div class="desktop-side">
       <div>
-        <div class="section-title"><h2>Recent activity</h2><button data-screen="transactions">View all</button></div>
+        <div class="section-title"><h2>Recent activity</h2><button class="link">View all</button></div>
         <section class="card activity">
-          <div class="tx" data-screen="transactions"><div class="tx-icon">NE</div><div><div class="tx-title">Nova Energy</div><div class="tx-sub">Today · Joint</div></div><div class="tx-amount">−€82.14</div><div class="chev">›</div></div>
-          <div class="tx" data-screen="transactions"><div class="tx-icon">MC</div><div><div class="tx-title">Mercado Central</div><div class="tx-sub">Yesterday · Personal</div></div><div class="tx-amount">−€74.52</div><div class="chev">›</div></div>
-          <div class="tx" data-screen="transactions"><div class="tx-icon">BN</div><div><div class="tx-title">Bistro Nube</div><div class="tx-sub">4 Oct · Personal</div></div><div class="tx-amount">−€96.00</div><div class="chev">›</div></div>
+          <div class="tx"><div class="tx-icon">NE</div><div><div class="tx-title">Nova Energy</div><div class="tx-sub">Today · Sabadell Joint</div></div><div class="tx-amount">−€82.14</div><div class="chev">›</div></div>
+          <div class="tx"><div class="tx-icon">T2</div><div><div class="tx-title">Card purchase</div><div class="tx-sub">Yesterday · Trading 212 GBP cash</div></div><div class="tx-amount fx">−£28.60</div><div class="chev">›</div></div>
+          <div class="tx"><div class="tx-icon">MC</div><div><div class="tx-title">Mercado Central</div><div class="tx-sub">5 Oct · Sabadell Personal</div></div><div class="tx-amount">−€74.52</div><div class="chev">›</div></div>
         </section>
       </div>
 
       <div>
         <div class="section-title"><h2>Worth knowing</h2></div>
-        <section class="card insight" data-screen="insight">
+        <section class="card insight">
           <div class="tag">Restaurants</div>
           <h3>Spending is €86 above your typical month.</h3>
           <p>Most of the difference comes from two higher-value meals. Everything else is close to typical.</p>
-          <div class="insight-footer"><span class="reassure">Everything else · close to typical</span><button>View insight</button></div>
+          <div class="insight-footer"><span class="reassure">Everything else · close to typical</span><button class="link">View insight</button></div>
         </section>
       </div>
     </div>
   </div>
 </div>
 
-<nav class="bottomnav">
-  <button class="navitem active"><div class="navicon">⌂</div>Home</button>
-  <button class="navitem" data-screen="transactions"><div class="navicon">≡</div>Transactions</button>
-  <button class="navitem" data-screen="insight"><div class="navicon">▥</div>Insights</button>
-  <button class="navitem" data-screen="forecast"><div class="navicon">□</div>Planning</button>
-</nav>
+<nav class="bottomnav"><button class="navitem active"><div class="navicon">⌂</div>Home</button><button class="navitem"><div class="navicon">≡</div>Transactions</button><button class="navitem"><div class="navicon">▥</div>Insights</button><button class="navitem"><div class="navicon">□</div>Planning</button></nav>
 
-<div class="sheet-backdrop" id="statusSheet">
-  <div class="sheet">
-    <div class="grab"></div>
-    <div class="sheethead"><h2>Data status</h2><button class="close">×</button></div>
-    <div class="status-row"><div class="title">Up to date</div><div class="detail">Last successful update completed today at 18:42.</div></div>
-    <div class="status-row"><div class="title">Latest transaction</div><div class="detail">Today · Personal and Joint sources checked successfully.</div></div>
-    <div class="status-row"><div class="title">No action required</div><div class="detail">All baseline calculations shown on Home are using current source data.</div></div>
-  </div>
-</div>
+<div class="sheet-backdrop" id="statusSheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2>Data status</h2><button class="close">×</button></div><div class="status-row"><b>Up to date</b><div>Last successful source update completed today at 18:42.</div></div><div class="status-row"><b>Latest transaction</b><div>Today. A successful update with no new transactions would still count as current.</div></div><div class="status-row"><b>No action required</b><div>Baseline calculations on Home are using current source data.</div></div></div></div>
 
-<div class="mini-screen" id="forecastScreen">
-  <button class="back" data-close-screen>‹ Home</button>
-  <h2>Cash forecast</h2>
-  <p>This prototype only demonstrates the Home handoff. Planning will get its own interaction pass later.</p>
-  <section class="card"><div class="row"><span class="k">Lowest projected personal cash</span><span class="v">€12,700</span></div><div class="row"><span class="k">Preserved reserves</span><span class="v">€4,200</span></div><div class="row"><span class="k">Funding gaps</span><span class="v">None</span></div></section>
-</div>
+<div class="sheet-backdrop" id="accountSheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2 id="accountTitle">Account outlook</h2><button class="close">×</button></div><p class="sheet-summary" id="accountSummary"></p><div id="accountFacts"></div><div class="route"><div class="route-title">Funding route</div><div class="route-step" id="routePrimary"></div><div class="route-note" id="routeNote"></div><div class="secondary-route" id="routeSecondary"></div></div></div></div>
 
-<div class="mini-screen" id="insightScreen">
-  <button class="back" data-close-screen>‹ Home</button>
-  <h2>Restaurants</h2>
-  <p>Home preserves the question and hands off into the relevant Insights context rather than opening a generic landing page.</p>
-  <section class="card insight"><div class="tag">Above typical</div><h3>€86 above your typical month.</h3><p>Two higher-value meals explain most of the difference.</p></section>
-</div>
-
-<div class="mini-screen" id="transactionsScreen">
-  <button class="back" data-close-screen>‹ Home</button>
-  <h2>Transactions</h2>
-  <p>Home can hand off to the relevant recent or filtered transaction context without losing the originating question.</p>
-  <section class="card activity"><div class="tx"><div class="tx-icon">NE</div><div><div class="tx-title">Nova Energy</div><div class="tx-sub">Today · Joint</div></div><div class="tx-amount">−€82.14</div><div class="chev">›</div></div></section>
-</div>
+<div class="sheet-backdrop" id="forecastSheet"><div class="sheet"><div class="grab"></div><div class="sheethead"><h2>Cash Forecast</h2><button class="close">×</button></div><p class="sheet-summary">Home summarises the operational model. Planning owns the detailed account forecast, expected activity and funding path.</p><div class="fact"><span class="k">Next expected funding</span><span class="v">Sabadell Joint · ~€1,500</span></div><div class="fact"><span class="k">Source</span><span class="v">Sabadell Personal</span></div><div class="fact"><span class="k">Personal after funding</span><span class="v">Projected low €2,050</span></div><div class="fact"><span class="k">GBP operational risk</span><span class="v">None in next 30 days</span></div></div></div>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-$('#statusDot').onclick=()=>$('#statusSheet').classList.add('show');
-$('#statusSheet').addEventListener('click',e=>{if(e.target===$('#statusSheet')||e.target.classList.contains('close'))$('#statusSheet').classList.remove('show')});
-const screens={forecast:$('#forecastScreen'),insight:$('#insightScreen'),transactions:$('#transactionsScreen')};
-$$('[data-screen]').forEach(el=>el.addEventListener('click',()=>{const s=screens[el.dataset.screen];if(s)s.classList.add('show')}));
-$$('[data-close-screen]').forEach(el=>el.addEventListener('click',()=>el.closest('.mini-screen').classList.remove('show')));
+function openSheet(id){$(id).classList.add('show')}
+function closeSheets(){$$('.sheet-backdrop').forEach(x=>x.classList.remove('show'))}
+$$('.sheet-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b||e.target.classList.contains('close'))closeSheets()}));
+$('#statusDot').onclick=()=>openSheet('#statusSheet');$('#cashForecastBtn').onclick=()=>openSheet('#forecastSheet');
+
+const accountData={
+ personal:{
+  title:'Sabadell Personal · EUR',
+  summary:'Personal is an operational account as well as a funding source for Sabadell Joint. The forecast below already includes the planned Joint top-up.',
+  facts:[['Current balance','€8,900'],['Projected low','€2,050'],['Operating buffer','€1,500'],['30-day status','Covered']],
+  primary:['Trading 212 EUR cash','→','Sabadell Personal'],
+  note:'Use Trading 212 EUR cash if Personal itself would fall below its operating buffer.',
+  secondary:'Sabadell Savings can only move to/from Personal; it is not shown as the default route here.'
+ },
+ joint:{
+  title:'Sabadell Joint · EUR',
+  summary:'Joint is projected to fall below its desired operating buffer later this month unless it is topped up.',
+  facts:[['Current balance','€3,260'],['Projected low before funding','€420'],['Expected top-up','~€1,500'],['Expected timing','Around 24 Oct']],
+  primary:['Sabadell Personal','→','Sabadell Joint'],
+  note:'The forecast checks Personal after this transfer. In this example Personal still remains above its own buffer.',
+  secondary:'If Personal could not safely fund it, the chain would extend: Trading 212 EUR cash → Sabadell Personal → Sabadell Joint.'
+ },
+ hsbc:{
+  title:'HSBC Joint · GBP',
+  summary:'The property account remains above its GBP operating buffer over the current 30-day baseline.',
+  facts:[['Current balance','£3,850'],['Projected low','£1,420'],['Operating buffer','£1,000'],['30-day status','Covered']],
+  primary:['HSBC Personal GBP','or','Trading 212 GBP cash','→','HSBC Joint'],
+  note:'No transfer is currently required. Squeebs should surface the route only when a forecasted bill creates a funding need.',
+  secondary:'If GBP liquidity is insufficient for a large property bill: Trading 212 EUR cash → convert to GBP → Trading 212 GBP cash → HSBC Joint.'
+ }
+};
+$$('[data-account]').forEach(row=>row.onclick=()=>{
+ const d=accountData[row.dataset.account];$('#accountTitle').textContent=d.title;$('#accountSummary').textContent=d.summary;
+ $('#accountFacts').innerHTML=d.facts.map(([k,v])=>'<div class="fact"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>').join('');
+ $('#routePrimary').innerHTML=d.primary.map((x,i)=>'<span class="'+(x==='→'?'route-arrow':'')+'">'+x+'</span>').join('');
+ $('#routeNote').textContent=d.note;$('#routeSecondary').textContent=d.secondary;openSheet('#accountSheet')
+});
 </script>
 </body>
 </html>
