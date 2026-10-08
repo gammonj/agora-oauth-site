@@ -182,9 +182,10 @@ let nextId=100,scenarios=[
  {id:'s-uk',name:'London rental becomes vacant',description:'Stop the expected rental inflow and allow for additional property costs.',changes:[{id:'p6',type:'uk',from:4,currency:'GBP',lostIncome:1900,extra:390}]},
  {id:'s-combined',name:'New role + new rental',description:'Employment resumes alongside a move, with housing commitments unchanged.',changes:[{id:'p7',type:'job',from:2,income:7700},{id:'p8',type:'rental',from:3,currency:'EUR',rent:1650,electric:140,gas:45,water:35,internet:55,alarm:25,insurance:30,move:2500,extras:[]}]}
 ];
-let activeId=null,draft=null,editingId=null,builderOrigin='library',expanded=null,horizon=18,selectedMonth=5,proposal=null,proposalOps=null;
+let activeId=null,draft=null,editingId=null,builderOrigin='library',expanded=null,horizon=18,selectedMonth=5,proposal=null,proposalOps=null,previewingDraft=false;
 const screen=name=>{$$('.screen').forEach(n=>n.classList.toggle('show',n.id===name));window.scrollTo(0,0)};
 const getScenario=()=>scenarios.find(s=>s.id===activeId);
+const shownScenario=()=>previewingDraft&&draft?draft:getScenario();
 function monthName(i){return MONTHS[i%12]+' '+(2026+Math.floor((i+9)/12))}
 function longMonth(i){return new Date(2026,9+i,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}
 function tooltip(s){return esc(s)}
@@ -268,20 +269,23 @@ function libraryRender(){
  }).join('');
  $$('[data-open]').forEach(b=>b.onclick=()=>openScenario(b.dataset.open));
 }
-function openLibrary(){activeId=null;draft=null;proposal=null;libraryRender();screen('library')}
-function openScenario(id){activeId=id;draft=null;horizon=18;selectedMonth=5;renderView();screen('viewer')}
+function openLibrary(){activeId=null;draft=null;proposal=null;previewingDraft=false;libraryRender();screen('library')}
+function openScenario(id){activeId=id;draft=null;previewingDraft=false;horizon=18;selectedMonth=5;renderView();screen('viewer')}
 function renderView(){
- const s=getScenario();if(!s){openLibrary();return}
+ const s=shownScenario();if(!s){openLibrary();return}
  const fc=forecast(s,24),h=horizon,rows=fc.rows.slice(0,h),last=rows.at(-1);
- $('#viewBreadcrumb').textContent=s.name;$('#viewTitle').textContent=s.name;$('#viewDescription').textContent=s.description||'A saved hypothetical.';
- $('#viewTags').innerHTML='<span class="pill purple">Hypothetical</span><span class="pill">'+summarize(s)+'</span><span class="pill">Baseline inherited</span>';
+ $('#viewBack').textContent=previewingDraft?'‹ Back to builder':'‹ All scenarios';
+ $('#editScenario').textContent=previewingDraft?'Continue editing':'Edit assumptions';
+ $('#duplicateScenario').style.display=previewingDraft?'none':'';$('#deleteScenario').style.display=previewingDraft?'none':'';$('#reviewAdoption').style.display=previewingDraft?'none':'';
+ $('#viewBreadcrumb').textContent=s.name||'Unsaved draft';$('#viewTitle').textContent=s.name||'Unsaved draft';$('#viewDescription').textContent=s.description||'A saved hypothetical.';
+ $('#viewTags').innerHTML='<span class="pill purple">'+(previewingDraft?'Unsaved preview':'Hypothetical')+'</span><span class="pill">'+summarize(s)+'</span><span class="pill">Baseline inherited</span>';
  $('#baseOutcome').textContent=resultLabel(fc.baseAt,h);$('#baseQualifier').textContent=resultQual(fc.baseAt,h);
  $('#altOutcome').textContent=resultLabel(fc.altAt,h);$('#altQualifier').textContent=resultQual(fc.altAt,h);
  const impact=rows.reduce((sum,r)=>sum+r.delta,0);
- let first='Cash impact of these changed assumptions: '+signed(impact)+' over '+h+' months.';
- if(fc.altAt!==null&&fc.altAt<h)first+=' This scenario reaches the protected-reserve boundary; later spending requires a new funding assumption.';
+ let first='Cumulative net cashflow change from these assumptions: '+signed(impact)+' across '+h+' months. This is not the cash balance at horizon end.';
+ if(fc.altAt!==null&&fc.altAt<h)first+=' This scenario reaches the protected-reserve boundary; later changes are hypothetical, not fundable without new resources.';
  else if(fc.baseAt!==null&&fc.baseAt<h)first+=' Baseline depletes during this horizon while this scenario does not.';
- $('#summaryTitle').textContent=impact>0?'Scenario improves the cash trajectory':impact<0?'Scenario increases cash pressure':'Cash impact unchanged within this horizon';
+ $('#summaryTitle').textContent=impact>0?'Changed cashflows improve the outlook':impact<0?'Changed cashflows increase pressure':'No net cashflow change within this horizon';
  $('#summaryText').textContent=first;
  $$('#periodControls button').forEach(b=>b.classList.toggle('active',Number(b.dataset.horizon)===h));
  renderPlot(s,fc);
@@ -291,7 +295,7 @@ function renderView(){
  $('#structureSummary').innerHTML=phases.length?phases.map((p,i)=>'<div class="line baseline-list"><b>'+esc(longMonth(p.from))+' · '+esc(typeLabel(p.type))+'</b><div class="sensitive">'+phaseSummary(p)+'</div></div>').join(''):'<p class="baseline-list">No changed assumptions. This scenario currently matches the baseline.</p>';
  const warnings=needItems(s);
  $('#needsPreview').innerHTML='<b>'+warnings.length+' areas to check before relying on this result</b><p>'+esc(warnings[0]||'No unresolved assumptions identified in this simplified example.')+'</p><button class="quiet" id="viewWarnings" style="margin-top:10px">Review all in builder →</button>';
- $('#viewWarnings').onclick=()=>beginEdit('viewer',true);
+ $('#viewWarnings').onclick=()=>previewingDraft?screen('builder'):beginEdit('viewer',true);
  }
 function renderPlot(s,fc){
  const rows=fc.rows,h=horizon,max=Math.max(24000,START,...rows.slice(0,h).map(r=>Math.max(0,r.base,r.alt))),ceiling=Math.max(25000,Math.ceil(max/5000)*5000);
@@ -338,6 +342,7 @@ function renderDrivers(rows){
  $('#drivers').innerHTML=groups.length?groups.map(([name,d])=>'<div class="driver"><div class="driver-main"><b>'+esc(name)+'</b><strong class="sensitive">'+signed(d.value)+'</strong></div><p class="driver-detail">Cumulative change versus inherited baseline over '+horizon+' months</p><div class="subdrivers">'+Object.entries(d.children).map(([t,v])=>'<div>'+esc(t)+' · <span class="sensitive">'+signed(v)+'</span></div>').join('')+'</div></div>').join(''):'<p class="baseline-list">No changed assumptions in this scenario.</p>';
 }
 function beginEdit(origin,isExisting){
+ if(previewingDraft&&draft){screen('builder');return;}
  builderOrigin=origin||'library';editingId=isExisting?activeId:null;
  draft=isExisting?clone(getScenario()):{id:'s-'+(nextId++),name:'',description:'',changes:[]};
  proposal=null;proposalOps=null;expanded=null;renderBuilder();screen('builder');
@@ -386,9 +391,8 @@ function renderNeeds(){
  $('#builderNeeds').innerHTML='<b>'+items.length+' issues to check before adopting</b>'+(items.length?items.map(t=>'<p>'+esc(t)+'</p>').join(''):'<p>No domain-specific questions identified. Real forecast validation is still necessary before adoption.</p>');
 }
 function renderBuilderImpact(){
- const fc=forecast(draft,18);
- const difference=fc.rows.slice(0,18).reduce((t,r)=>t+r.delta,0);
- $('#builderImpact').innerHTML='<b>18-month difference from baseline</b><div class="sensitive" style="font-size:26px;font-weight:780;margin:7px 0">'+signed(difference)+'</div><div>Current comparison: '+(fc.altAt===null||fc.altAt>=18?'no depletion forecast within 18 months':'unallocated cash limit about '+monthName(fc.altAt))+'.</div><div style="margin-top:9px;color:var(--faint);font-size:11px">Illustrative aggregate only · operational funding not recalculated</div>';
+ const fc=forecast(draft,18),difference=fc.rows.slice(0,18).reduce((t,r)=>t+r.delta,0);
+ $('#builderImpact').innerHTML='<b>18-month net cashflow difference</b><div class="sensitive" style="font-size:26px;font-weight:780;margin:7px 0">'+signed(difference)+'</div><div>Scenario cash limit: '+(fc.altAt===null||fc.altAt>=18?'not projected within 18 months':'about '+monthName(fc.altAt))+'.</div><div style="margin-top:9px;color:var(--faint);font-size:11px">Cumulative effect of changed income and spending—not cash remaining after 18 months. Beyond a funding limit it is a hypothetical comparison, not fundable cash. Operational funding is not yet recalculated.</div>';
 }
 function saveDraft(){
  if(!draft)return;
@@ -396,7 +400,7 @@ function saveDraft(){
  draft.description=$('#scenarioDescription').value.trim()||'Custom hypothetical';
  if(editingId){const i=scenarios.findIndex(s=>s.id===editingId);if(i>=0)scenarios[i]=clone(draft);activeId=editingId}
  else{scenarios.unshift(clone(draft));activeId=draft.id}
- const name=draft.name;draft=null;proposal=null;renderView();screen('viewer');toast('Saved "'+name+'" in this page only. Baseline unchanged.');
+ const name=draft.name;draft=null;proposal=null;previewingDraft=false;renderView();screen('viewer');toast('Saved "'+name+'" in this page only. Baseline unchanged.');
 }
 function chooseType(){
  const html='<p>Choose a type of change. New items start with unset costs represented as zero in this demo, and missing information is flagged for review rather than filled from example amounts.</p><div class="addrow">'+Object.entries(TYPES).map(([type,t])=>'<button data-addtype="'+type+'">'+esc(t.name)+'</button>').join('')+'</div><p>No money moves and nothing is added to your real baseline.</p>';
@@ -535,7 +539,7 @@ function reviewAdopt(){
  $('#closeReview').onclick=closeSheet;
 }
 $('#newScenario').onclick=()=>beginEdit('library',false);
-$('#viewBack').onclick=openLibrary;
+$('#viewBack').onclick=()=>{if(previewingDraft){screen('builder');return}openLibrary()};
 $('#editScenario').onclick=()=>beginEdit('viewer',true);
 $('#openBuilder').onclick=()=>beginEdit('viewer',true);
 $('#editFromDrivers').onclick=()=>beginEdit('viewer',true);
@@ -556,7 +560,7 @@ $('#scenarioName').oninput=()=>{draft.name=$('#scenarioName').value;};
 $('#scenarioDescription').oninput=()=>{draft.description=$('#scenarioDescription').value;};
 
 $('#interpret').onclick=chatPropose;
-$('#builderPreview').onclick=()=>showSheet('Preview scope','<p>This modelled summary reflects your current unsaved draft.</p><p><b>18-month cash difference:</b> '+signed(forecast(draft,18).rows.reduce((n,r)=>n+r.delta,0))+'.</p><p>To see the full comparative chart, save the scenario first. The current baseline will remain untouched.</p><p>Real implementation must also evaluate account-specific funding and uncertainty before claiming a scenario is viable.</p>');
+$('#builderPreview').onclick=()=>{if(!draft)return;draft.name=$('#scenarioName').value.trim()||'Unsaved draft';draft.description=$('#scenarioDescription').value.trim();previewingDraft=true;horizon=18;selectedMonth=5;renderView();screen('viewer')};
 $('#periodControls').onclick=e=>{const b=e.target.closest('[data-horizon]');if(!b)return;horizon=Number(b.dataset.horizon);selectedMonth=Math.min(selectedMonth,horizon-1);renderView()};
 $('#monthSelect').onchange=()=>{selectedMonth=Number($('#monthSelect').value);renderView()};
 $('#monthBack').onclick=()=>{selectedMonth=Math.max(0,selectedMonth-1);renderView()};
