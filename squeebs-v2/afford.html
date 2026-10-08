@@ -129,7 +129,7 @@ function accountsFor(currency){
  if(valid.some(([key])=>key===existing))el.value=existing;
 }
 function setPattern(value){
- mode=value;$$('[data-pattern]').forEach(b=>b.classList.toggle('active',b.dataset.pattern===value));
+ mode=value;$$$('[data-pattern]').forEach(b=>b.classList.toggle('active',b.dataset.pattern===value));
  const planned=$('#treatment');
  if(value==='monthly'&&planned.value==='planned')planned.value='new';
  planned.querySelector('option[value="planned"]').disabled=value==='monthly';
