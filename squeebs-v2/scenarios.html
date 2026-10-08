@@ -48,7 +48,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
 .timeline{display:grid;gap:9px}
 .phase{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}.phase-head{padding:12px;border:0;background:none;color:inherit;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left}.phase-head .phase-num{font-size:11px;border-radius:8px;background:#293a4c;color:#c3e1fb;padding:6px 8px}.phase-head .phase-info{flex:1;min-width:0}.phase-head b{font-size:13px;display:block}.phase-head p{font-size:11px;color:var(--muted);margin:4px 0 0;line-height:1.4}.phase-head .chevron{color:var(--faint);font-size:18px}
 .phase-body{padding:0 12px 12px;border-top:1px solid #29333c}.phase-body .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.phase-body .formgrid .span{grid-column:1/-1}
-.phase-foot{display:flex;justify-content:flex-end;margin-top:12px}.phase-foot button{border:1px solid #62353c;color:#ffb2ba;background:#2e1f23;font-size:12px;border-radius:10px;padding:8px 11px}
+.extra-line{display:grid;grid-template-columns:minmax(0,1fr) 80px 30px;gap:6px;margin:6px 0}.extra-line input{min-width:0;padding:8px}.extra-line button{border:1px solid var(--line);background:var(--surface3);border-radius:8px}.phase-foot{display:flex;justify-content:flex-end;margin-top:12px}.phase-foot button{border:1px solid #62353c;color:#ffb2ba;background:#2e1f23;font-size:12px;border-radius:10px;padding:8px 11px}
 .addrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.addrow button{padding:12px 9px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;text-align:left;color:#cbd8e4;font-size:12px}
 .empty{border:1px dashed #46515d;background:var(--surface);border-radius:17px;padding:20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
 .chat{border:1px solid #354a60;border-radius:17px;background:var(--surface);overflow:hidden}
@@ -216,7 +216,7 @@ function needItems(s){
  const rental=s.changes.find(p=>p.type==='rental'), job=s.changes.find(p=>p.type==='job'),home=s.changes.filter(p=>p.type==='home'),uk=s.changes.find(p=>p.type==='uk');
  if(rental){
    items.push('Lease start, upfront deposit versus actual expense, and payment account need confirmation.');
-   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check zero or missing rental assumptions, including rent, utilities, moving costs and optional gas, alarm or insurance. Zero is not automatically confirmed.');
+   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check missing or zero rental assumptions (rent, utilities, move-in costs). Other costs such as gas, alarm or insurance should also be confirmed, including if genuinely zero.');
    if(!home.length)items.push('Existing-home cost responsibility is inherited unchanged; confirm whether or when that split changes.');
  }
  if(job){if(!job.income)items.push('Net income amount is not set. Forecast results are provisional.');items.push('Employment offer, first partial payroll, tax/net-pay basis and receiving account are not confirmed.');}
@@ -350,8 +350,8 @@ function renderBuilder(){
  renderTimeline();renderNeeds();renderBuilderImpact();renderExamples();
 }
 function inputField(p,key,label){
- const isPercent=key.endsWith('Pct');
- return '<div class="field"><label class="formlabel" for="field-'+esc(p.id)+'-'+key+'">'+esc(label)+'</label><input id="field-'+esc(p.id)+'-'+key+'" type="number" inputmode="numeric" min="0" max="'+(isPercent?'100':'500000')+'" step="'+(isPercent?'5':'10')+'" data-phase="'+esc(p.id)+'" data-key="'+key+'" class="sensitive" value="'+Number(p[key]||0)+'"></div>';
+ const isPercent=key.endsWith('Pct'),unit=isPercent?'':' ('+symbol(currencyOf(p))+')';
+ return '<div class="field"><label class="formlabel" for="field-'+esc(p.id)+'-'+key+'">'+esc(label+unit)+'</label><input id="field-'+esc(p.id)+'-'+key+'" type="number" inputmode="decimal" min="0" max="'+(isPercent?'100':'500000')+'" step="'+(isPercent?'5':'10')+'" data-phase="'+esc(p.id)+'" data-key="'+key+'" class="sensitive" value="'+Number(p[key]||0)+'"></div>';
 }
 function renderTimeline(){
  const sortedChanges=sorted(draft);
@@ -359,7 +359,9 @@ function renderTimeline(){
  const t=TYPES[p.type],open=expanded===p.id;
  const items=t.fields.map(([key,label])=>inputField(p,key,label)).join('');
  const dates=Array.from({length:24},(_,x)=>'<option value="'+x+'"'+(x===p.from?' selected':'')+'>'+longMonth(x)+'</option>').join('');
- return '<div class="phase"><button class="phase-head" data-expand="'+p.id+'"><span class="phase-num">'+(i+1)+'</span><span class="phase-info"><b>'+esc(t.name)+' · '+esc(longMonth(p.from))+'</b><p class="sensitive">'+phaseSummary(p)+'</p></span><span class="chevron">'+(open?'⌃':'⌄')+'</span></button>'+(!open?'':'<div class="phase-body"><p style="font-size:11px;color:var(--muted);line-height:1.45;margin:10px 0 0">'+esc(t.help)+'</p><div class="formgrid"><div class="field span"><label class="formlabel">Effective month</label><select data-phase="'+p.id+'" data-key="from">'+dates+'</select></div>'+(t.label?'<div class="field span"><label class="formlabel">Description</label><input class="sensitive" data-phase="'+p.id+'" data-key="label" value="'+esc(p.label||'')+'"></div>':'')+items+'</div><div class="phase-foot"><button data-remove="'+p.id+'">Remove this change</button></div></div>')+'</div>';
+ const currency=p.type==='home'?'':'<div class="field span"><label class="formlabel">Currency</label><select data-phase="'+p.id+'" data-key="currency"><option value="EUR"'+(currencyOf(p)==='EUR'?' selected':'')+'>EUR · Euro (€)</option><option value="GBP"'+(currencyOf(p)==='GBP'?' selected':'')+'>GBP · Pound (£)</option></select></div>';
+ const extras=p.type==='rental'?'<div class="field span"><label class="formlabel">Other rental costs · monthly</label>'+((p.extras||[]).map((extra,j)=>'<div class="extra-line"><input data-extra-index="'+j+'" data-extra-phase="'+p.id+'" data-extra-key="label" class="sensitive" aria-label="Cost description" placeholder="e.g. Building fees" value="'+esc(extra.label||'')+'"><input data-extra-index="'+j+'" data-extra-phase="'+p.id+'" data-extra-key="amount" class="sensitive" aria-label="Monthly amount" type="number" min="0" value="'+Number(extra.amount||0)+'"><button data-extra-remove="'+j+'" data-extra-owner="'+p.id+'" aria-label="Remove cost">×</button></div>').join(''))+'<button class="quiet" data-extra-add="'+p.id+'">+ Add other monthly cost</button></div>':'';
+ return '<div class="phase"><button class="phase-head" data-expand="'+p.id+'"><span class="phase-num">'+(i+1)+'</span><span class="phase-info"><b>'+esc(t.name)+' · '+esc(longMonth(p.from))+'</b><p class="sensitive">'+phaseSummary(p)+'</p></span><span class="chevron">'+(open?'⌃':'⌄')+'</span></button>'+(!open?'':'<div class="phase-body"><p style="font-size:11px;color:var(--muted);line-height:1.45;margin:10px 0 0">'+esc(t.help)+'</p><div class="formgrid"><div class="field span"><label class="formlabel">Effective month</label><select data-phase="'+p.id+'" data-key="from">'+dates+'</select></div>'+currency+(t.label?'<div class="field span"><label class="formlabel">Description</label><input class="sensitive" data-phase="'+p.id+'" data-key="label" value="'+esc(p.label||'')+'"></div>':'')+items+extras+'</div><div class="phase-foot"><button data-remove="'+p.id+'">Remove this change</button></div></div>')+'</div>';
  }).join(''):'<div class="empty">No changes yet. Add a dated assumption below or describe your scenario to the assistant.</div>';
  $('#timeline').innerHTML+='<div class="addrow"><button id="addStageShortcut">+ Add structured change</button><button id="focusChat" class="mobile-chat-jump">Go to scenario assistant ↓</button></div>';
  $$('[data-expand]').forEach(b=>b.onclick=()=>{expanded=expanded===b.dataset.expand?null:b.dataset.expand;renderTimeline()});
@@ -367,11 +369,15 @@ function renderTimeline(){
   const p=draft.changes.find(x=>x.id===el.dataset.phase),key=el.dataset.key;
   if(!p)return;
   if(key==='label')p[key]=String(el.value).trim().slice(0,70);
+  else if(key==='currency')p.currency=el.value==='GBP'?'GBP':'EUR';
   else if(key==='from')p.from=Math.max(0,Math.min(23,Number(el.value)||0));
   else p[key]=Math.max(0,Math.min(key.endsWith('Pct')?100:500000,Number(el.value)||0));
   renderBuilder();expanded=p.id;renderTimeline();
  });
- $$('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
+ $('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
+ $('[data-extra-add]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraAdd);if(!p)return;p.extras ||= [];p.extras.push({label:'Other cost',amount:0});expanded=p.id;renderBuilder()});
+ $('[data-extra-remove]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraOwner);if(!p)return;p.extras.splice(Number(b.dataset.extraRemove),1);expanded=p.id;renderBuilder()});
+ $('[data-extra-index]').forEach(el=>el.onchange=()=>{const p=draft.changes.find(x=>x.id===el.dataset.extraPhase),e=p?.extras?.[Number(el.dataset.extraIndex)];if(!e)return;if(el.dataset.extraKey==='label')e.label=String(el.value).trim().slice(0,60);else e.amount=Math.max(0,Math.min(500000,Number(el.value)||0));expanded=p.id;renderBuilder()});
  $('#addStageShortcut').onclick=chooseType;
  $('#focusChat').onclick=()=>{const target=$('.chat');target.classList.add('attention');target.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{target.classList.remove('attention');$('#composer').focus({preventScroll:true})},600)};
 }
