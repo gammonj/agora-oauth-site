@@ -77,8 +77,8 @@
   <section class="hero">
     <div class="eyebrow"><i class="dot"></i> Baseline · preserving reserves</div>
     <div class="metric sensitive">About 4 months</div>
-    <h2>Cash runway ends around February 2027.</h2>
-    <p>Your unallocated personal cash is projected to be exhausted around February, while <span class="sensitive">€12.1k</span> in protected reserves stays untouched.</p>
+    <h2 class="sensitive">Cash runway ends around February 2027.</h2>
+    <p>Your unallocated personal cash is projected to be exhausted <span class="sensitive">around February</span>, while <span class="sensitive">€12.1k</span> in protected reserves stays untouched.</p>
     <div class="hero-bottom"><span>Monthly projection · not an exact cutoff date</span><button id="explainRunway">How is this calculated? →</button></div>
   </section>
   <div class="pretend">ILLUSTRATIVE FINANCIAL DATA · NOT CONNECTED TO YOUR ACCOUNTS</div>
@@ -130,7 +130,7 @@
     </div>
   </div>
 </div>
-<nav class="bottomnav"><a class="navitem" href="home.html"><span class="navicon">⌂</span>Home</a><a class="navitem" href="transactions.html"><span class="navicon">≡</span>Transactions</a><a class="navitem" href="insights.html"><span class="navicon">▥</span>Insights</a><a class="navitem active" href="runway.html"><span class="navicon">□</span>Planning</a></nav>
+<nav class="bottomnav"><a class="navitem" href="home.html"><span class="navicon">⌂</span>Home</a><a class="navitem" href="transactions.html"><span class="navicon">≡</span>Transactions</a><button class="navitem" id="insightsNav"><span class="navicon">▥</span>Insights</button><a class="navitem active" href="runway.html"><span class="navicon">□</span>Planning</a></nav>
 <div id="sheet" class="sheetbg"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grabber"></div><div class="sheethead"><h2 id="sheetTitle">Explanation</h2><button class="close" id="close" aria-label="Close">×</button></div><div id="sheetBody"></div></section></div>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -151,7 +151,7 @@ function renderMonth(i){
  $('#selectedDot').innerHTML='<circle cx="'+m.point[0]+'" cy="'+m.point[1]+'" r="6" class="month-dot chosen"/>';
 }
 $$('#monthButtons button').forEach(b=>b.onclick=()=>renderMonth(Number(b.dataset.m)));
-function show(title,body){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=body;$('#sheet').classList.add('open')}
+function show(title,body){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=document.body.classList.contains('private')?'<p>Sensitive financial detail is hidden. Use the eye icon to reveal figures before inspecting this breakdown.</p>':body;$('#sheet').classList.add('open')}
 function dismiss(){$('#sheet').classList.remove('open')}
 $('#close').onclick=dismiss;
 $('#sheet').onclick=e=>{if(e.target===$('#sheet'))dismiss()};
@@ -160,7 +160,8 @@ $('#explainRunway').onclick=()=>show('How runway is calculated', '<p>Runway uses
 $('#assumptions').onclick=()=>show('Baseline assumptions','<p>This is an illustrative, not live, baseline. The assumptions are the structured inputs behind the answer, not a second editable forecast.</p><div class="baseline-row"><span class="key">Eligible cash</span><b>€35,700</b></div><div class="baseline-row"><span class="key">Protected reserves</span><b>€12,100</b></div><div class="baseline-row"><span class="key">Income</span><b>€3,000 / typical full month</b></div><div class="baseline-row"><span class="key">Ordinary spending</span><b>Monthly / seasonal estimate</b></div><div class="baseline-row"><span class="key">Known commitments</span><b>Current expected activity</b></div><div class="baseline-row"><span class="key">Shared funding</span><b>Personal contribution only</b></div><div class="baseline-row"><span class="key">Alternative investment sale</span><b>Not assumed</b></div><p>In the real product, changing assumptions happens in Planning, with evidence, effective dates and a recalculated Cash Forecast—not by secretly editing the Runway answer.</p>');
 $('#sources').onclick=()=>show('Eligible resources & exclusions','<p>The initial eligible cash total is a converted reporting-currency value. Original balances and funding constraints remain attached to each source.</p><h3>Included</h3><ul class="sheetlist"><li>Sabadell Personal EUR and Sabadell Savings EUR (Savings can move only via Personal).</li><li>Trading 212 Cash EUR, GBP and USD (including card activity).</li><li>Trade Republic parked cash and HSBC Personal GBP.</li></ul><h3>Excluded from ordinary runway</h3><ul class="sheetlist"><li>Sabadell Joint and HSBC Joint balances: shared, not personal runway resources.</li><li>Trading 212 FWRA holdings, other investments and pensions.</li><li>Property values and hypothetical property-sale proceeds not yet part of the baseline.</li></ul><p>Expected personal contributions to shared bills are still debited through projected future cashflows.</p>');
 $('#movement').onclick=()=>show('Why runway moved','<p>The comparison is against where the previous forecast expected you to be today, not a simple subtraction of calendar time from last month’s runway headline.</p><ul class="sheetlist"><li>Lower-than-forecast ordinary spending: positive contribution.</li><li>Expected income and shared funding unchanged in this synthetic example.</li><li>No change to protected reserve allocations.</li></ul><p>Once connected to actual history, this view should quantify the contributors and allow a drill-down to transactions or Expected Activity as relevant.</p>');
+$('#insightsNav').onclick=()=>show('Insights','<p>The Insights interactive prototype is a separate discovery surface for now. This prototype focuses only on the Runway model.</p>');
 $('#status').onclick=()=>show('Data status','<p>Prototype data is entirely synthetic. A real freshness state must distinguish the last successful update/import from the most recent transaction date.</p>');
-$('#privacy').onclick=()=>{const on=$('#app').classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures');$('#privacy').title=on?'Reveal sensitive figures':'Hide sensitive figures'};
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures');$('#privacy').title=on?'Reveal sensitive figures':'Hide sensitive figures'};
 renderMonth(0);
 </script></body></html>
