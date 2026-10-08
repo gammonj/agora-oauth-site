@@ -35,7 +35,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="header"><h1>Home</h1><button class="status-dot" id="statusDot" aria-label="Data status"></button></div>
+  <div class="header"><h1>Squeebs</h1><button class="status-dot" id="statusDot" aria-label="Data status"></button></div>
 
   <section class="hero">
     <div class="hero-kicker"><i></i> Covered on the baseline path</div>
@@ -126,7 +126,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function openSheet(id){$(id).classList.add('show')}
 function closeSheets(){$$('.sheet-backdrop').forEach(x=>x.classList.remove('show'))}
 $$('.sheet-backdrop').forEach(b=>b.addEventListener('click',e=>{if(e.target===b||e.target.classList.contains('close'))closeSheets()}));
-$('#statusDot').onclick=()=>openSheet('#statusSheet');$('#cashForecastBtn').onclick=()=>openSheet('#forecastSheet');
+$('#statusDot').onclick=()=>openSheet('#statusSheet');$('#cashForecastBtn').onclick=()=>{window.location.href='planning.html'};
 
 const accountData={
  personal:{
