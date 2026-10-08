@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10"><meta name="color-scheme" content="dark">
+<title>Squeebs v2 · Scenario Library</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#15191e;--surface2:#1c232b;--surface3:#242d36;--line:#303943;--text:#f5f7fa;--muted:#a3acb8;--faint:#76828e;--blue:#55a8fa;--purple:#ae91fa;--green:#48d991;--orange:#ffad77;--red:#f47a84}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);min-height:100%}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default;opacity:.4}a{color:inherit;text-decoration:none}
+.app{max-width:1160px;margin:auto;padding:17px 15px calc(98px + env(safe-area-inset-bottom));min-height:100dvh}
+.head{display:flex;justify-content:space-between;align-items:center;margin:3px 2px 15px}.head h1{font-size:30px;margin:0;letter-spacing:-.6px}.actions{display:flex;gap:12px;align-items:center}.iconbtn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted)}.iconbtn svg{height:19px;width:19px;fill:none;stroke:currentColor;stroke-width:2}.dot{width:11px;height:11px;border:0;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(72,217,145,.08)}
+.modes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px}.modes::-webkit-scrollbar{display:none}.mode{border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:14px;border-radius:99px;padding:9px 12px;white-space:nowrap}.mode.active{color:#b5dcff;border-color:#286498;background:#193955}
+.topline{display:flex;align-items:center;gap:9px;margin:5px 0 13px;font-size:13px;color:var(--muted)}.topline button{border:0;background:none;color:var(--blue);padding:0;font-size:13px}.topline .chev{color:var(--faint)}.topline .tail{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.page-title{font-size:25px;letter-spacing:-.45px;margin:0}.lede{color:var(--muted);font-size:13px;line-height:1.5;margin:6px 0 17px}
+.fake{font-size:10px;color:var(--faint);letter-spacing:.045em;margin:12px 2px}
+.primary{background:#7dbefd;color:#0d2336;border:0;border-radius:13px;font-weight:760;padding:12px 14px;font-size:14px}.primary.full{width:100%}.secondary{background:var(--surface2);border:1px solid var(--line);border-radius:12px;font-weight:620;font-size:13px;padding:11px 13px}.quiet{border:0;background:none;color:var(--blue);font-size:13px;padding:4px 0}
+.actionrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:13px 0}.sectiontitle{font-size:17px;letter-spacing:-.2px;margin:0}.meta{font-size:11px;color:var(--faint)}.pill{font-size:10px;color:#c6d2dc;border:1px solid #3c4955;background:#202731;border-radius:99px;padding:5px 8px;display:inline-flex;align-items:center;gap:4px}.pill.purple{color:#d4c6ff;border-color:#51436d;background:#272237}.pill.amber{color:#ffcbab;border-color:#694d39;background:#35271f}.pill.green{color:#b0edd0;border-color:#2e574c;background:#20382f}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:15px}.card+.card{margin-top:10px}
+.scenario-list{display:grid;gap:9px}
+.scenario-item{border:1px solid var(--line);background:var(--surface);border-radius:18px;display:block;text-align:left;width:100%;padding:15px;cursor:pointer}
+.scenario-item:active{border-color:#426c94}.itemtop{display:flex;align-items:start;gap:11px}.square{width:37px;height:37px;display:grid;place-items:center;flex:none;border-radius:12px;background:#2a3149;color:#c9c2ff;font-size:14px;font-weight:750}.square.house{background:#1c3747;color:#aee3ff}.square.work{background:#2c3446;color:#b7cffe}.square.property{background:#382c34;color:#f7c1cc}
+.itemtext{flex:1;min-width:0}.itemtitle{font-size:15px;font-weight:760;line-height:1.3}.itemdesc{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}.arrow{font-size:23px;color:var(--faint);margin-left:6px}.itembottom{border-top:1px solid #29323b;margin-top:13px;padding-top:11px;display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap}.itembottom span{font-size:11px;color:var(--muted)}.itembottom .hint{color:#b8d8fa}
+.library-note{margin-top:15px;background:rgba(85,168,250,.06);border:1px solid rgba(85,168,250,.17);border-radius:15px;color:#b9c8d6;padding:12px 13px;font-size:12px;line-height:1.55}
+.screen{display:none}.screen.show{display:block}.librarytop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.grid{display:block}.sidebar{display:block}
+.eyebrow{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:730;color:#b6c3d0}.eyebrow .spot{width:8px;height:8px;border-radius:50%;background:var(--purple)}
+.hero{border:1px solid #354153;background:linear-gradient(180deg,#1a2430,#151a20);border-radius:21px;padding:17px}
+.hero h2{font-size:22px;letter-spacing:-.3px;margin:9px 0 6px}.hero p{font-size:13px;color:#c0cbd5;line-height:1.5;margin:0}.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 0}.toolbar button{padding:9px 11px}
+.headingrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:19px 2px 9px}.headingrow h3{font-size:17px;margin:0}.headingrow button{border:0;background:none;color:var(--blue);font-size:13px;padding:0}
+.comparecols{display:grid;grid-template-columns:1fr 1fr;gap:9px}.result{border-radius:14px;background:var(--surface2);padding:12px;min-width:0}.result.changed{background:#242136;border:1px solid #504270}.result small{color:var(--muted);font-size:11px}.result b{display:block;font-size:22px;line-height:1.1;letter-spacing:-.2px;margin:8px 0 5px}.result .qual{font-size:11px;color:var(--muted);line-height:1.4}
+.takeaway{border-radius:13px;background:var(--surface2);padding:11px 12px;margin-top:12px}.takeaway b{font-size:13px}.takeaway p{font-size:12px;color:var(--muted);line-height:1.5;margin:5px 0 0}
+.periods{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--line);padding:3px;border-radius:11px}.periods button{border:0;background:none;color:var(--muted);padding:6px 8px;border-radius:8px;font-size:11px}.periods button.active{background:#2c4660;color:#d0e9ff}
+.plot{background:var(--surface2);border-radius:13px;padding:9px 6px 5px;position:relative}.plot svg{width:100%;height:210px;display:block}.plot svg text{fill:#a1abb5;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.plot .guide{stroke:#37434f;stroke-width:.7}.plot .zero{stroke:#778799;stroke-width:1;stroke-dasharray:4 4}.plot .basepath{fill:none;stroke:#9ba8b5;stroke-width:2;stroke-dasharray:5 5}.plot .altpath{fill:none;stroke:var(--purple);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.plot .marker{fill:var(--purple);stroke:var(--surface2);stroke-width:2}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin:9px 2px 0}.legend span:before{content:"";display:inline-block;height:3px;width:13px;border-radius:3px;background:var(--purple);vertical-align:middle;margin-right:6px}.legend .base:before{background:#9ba8b5}
+.month-nav{display:grid;grid-template-columns:35px minmax(0,1fr) 35px;gap:8px;margin-top:12px}.month-nav select,.month-nav button{border:1px solid var(--line);border-radius:10px;background:var(--surface2);height:36px}.month-nav select{padding:0 10px;width:100%;font-size:12px}.month-nav button{font-size:20px}
+.month-detail{border:1px solid var(--line);background:var(--surface2);border-radius:13px;padding:12px;margin-top:9px}.month-detail .first{display:flex;align-items:start;justify-content:space-between;gap:12px}.month-detail b{font-size:13px}.month-detail .small{font-size:11px;color:var(--muted);line-height:1.5;margin-top:7px}.cashpairs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.cashpairs>div{border-top:1px solid var(--line);padding-top:8px}.cashpairs small{font-size:10px;color:var(--muted)}.cashpairs b{font-size:15px;display:block;margin-top:3px}
+.driver{border-top:1px solid var(--line);padding:12px 0}.driver:first-child{border-top:0;padding-top:0}.driver-main{display:flex;justify-content:space-between;align-items:start;gap:10px}.driver-main b{font-size:13px}.driver-main strong{font-size:13px;white-space:nowrap}.driver-detail{font-size:11px;color:var(--muted);line-height:1.45;margin:5px 0 0}.subdrivers{margin:9px 0 0 8px;padding-left:10px;border-left:1px solid #405061}.subdrivers>div{font-size:11px;line-height:1.45;color:#bac4d0;margin:7px 0}
+.notice{border:1px solid rgba(255,173,119,.24);background:rgba(255,173,119,.06);border-radius:14px;padding:12px;color:#d9bba8}.notice b{font-size:13px}.notice p{font-size:12px;line-height:1.5;margin:6px 0 0;color:#c8b6ab}
+.baseline-list{font-size:12px;color:var(--muted);line-height:1.5}.baseline-list b{color:var(--text);font-size:13px}
+.line{border-bottom:1px solid var(--line);padding:10px 0}.line:last-child{border-bottom:0}
+.editor-header{border:1px solid var(--line);background:var(--surface);border-radius:17px;padding:14px}.editor-header .micro{color:var(--muted);font-size:11px;margin-bottom:8px}
+.formlabel{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.field{min-width:0}.field input,.field select,.field textarea,.edit-title{background:var(--surface2);border:1px solid #3b4a59;outline:none;width:100%;padding:10px 11px;border-radius:11px;font-size:14px}.field input:focus,.field select:focus,.field textarea:focus,.edit-title:focus{border-color:var(--blue)}.edit-title{font-size:19px;font-weight:720}
+.field small{font-size:10px;color:var(--muted);line-height:1.45;display:block;margin-top:5px}
+.subheading{font-size:13px;font-weight:770;margin:0}
+.timeline{display:grid;gap:9px}
+.phase{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}.phase-head{padding:12px;border:0;background:none;color:inherit;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left}.phase-head .phase-num{font-size:11px;border-radius:8px;background:#293a4c;color:#c3e1fb;padding:6px 8px}.phase-head .phase-info{flex:1;min-width:0}.phase-head b{font-size:13px;display:block}.phase-head p{font-size:11px;color:var(--muted);margin:4px 0 0;line-height:1.4}.phase-head .chevron{color:var(--faint);font-size:18px}
+.phase-body{padding:0 12px 12px;border-top:1px solid #29333c}.phase-body .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.phase-body .formgrid .span{grid-column:1/-1}
+.extra-line{display:grid;grid-template-columns:minmax(0,1fr) 80px 30px;gap:6px;margin:6px 0}.extra-line input{min-width:0;padding:8px}.extra-line button{border:1px solid var(--line);background:var(--surface3);border-radius:8px}.phase-foot{display:flex;justify-content:flex-end;margin-top:12px}.phase-foot button{border:1px solid #62353c;color:#ffb2ba;background:#2e1f23;font-size:12px;border-radius:10px;padding:8px 11px}
+.addrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.addrow button{padding:12px 9px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;text-align:left;color:#cbd8e4;font-size:12px}
+.empty{border:1px dashed #46515d;background:var(--surface);border-radius:17px;padding:20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5}
+.chat{border:1px solid #354a60;border-radius:17px;background:var(--surface);overflow:hidden}
+.chat-header{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1c2836;padding:12px 14px}.chat-header b{font-size:14px}.chat-header span{font-size:10px;color:#afc4da}
+.chat-body{padding:12px}.chat-body .intro{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 11px}
+.examples{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}.examples button{font-size:11px;line-height:1.4;border:1px solid #3b4e61;background:#1e2b38;padding:7px 9px;border-radius:12px;text-align:left;color:#c0dafa}
+.chat textarea{width:100%;min-height:66px;resize:vertical;border:1px solid #445365;background:#202b36;border-radius:11px;padding:10px;color:var(--text);font-size:13px;line-height:1.4}
+.chat-go{margin-top:9px;display:flex;justify-content:space-between;align-items:center;gap:11px}.chat-go span{font-size:11px;color:var(--muted);line-height:1.4}.chat-go button{border:0;border-radius:10px;background:#3d81bc;color:white;padding:10px 11px;font-size:12px;font-weight:740}
+.proposal{background:#202c3a;border:1px solid #426686;border-radius:13px;padding:12px;margin-top:11px}.proposal h4{font-size:13px;margin:0 0 8px}.proposal ul{padding-left:18px;margin:0}.proposal li{font-size:12px;line-height:1.45;color:#c3d4e2;margin:7px 0}.proposal p{font-size:12px;line-height:1.4;color:#c3d4e2}
+.proposal-actions{display:flex;gap:8px;margin-top:12px}.proposal-actions button{padding:9px 11px;border-radius:10px;border:1px solid #466481;background:#2b4f72;color:white;font-size:12px}.proposal-actions .reject{background:#283340;border-color:#44515e}
+.checkpanel{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:13px}.checkpanel summary{cursor:pointer;font-size:13px;font-weight:750}.checkpanel p{font-size:12px;color:var(--muted);line-height:1.5}
+.savebar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.savebar button{padding:13px 9px}
+.adopt-btn{width:100%;padding:12px;margin-top:11px;border:1px solid #385575;background:#1b334b;border-radius:12px;color:#bfddfb;font-weight:720;font-size:13px}
+.private .sensitive{filter:blur(8px);user-select:none}.private .plot:after{content:"Forecast hidden";position:absolute;inset:6px;border-radius:12px;background:rgba(28,35,43,.97);display:grid;place-items:center;font-size:12px;color:var(--muted)}.private #builder .field input,.private #builder .field textarea,.private .edit-title,.private #composer{filter:blur(7px);pointer-events:none}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.65);display:none}.modal.open{display:block}.sheet{position:absolute;bottom:0;left:0;right:0;background:#131920;border-top:1px solid var(--line);border-radius:23px 23px 0 0;padding:10px 16px calc(25px + env(safe-area-inset-bottom));max-height:88dvh;overflow:auto}.grab{height:5px;width:38px;border-radius:8px;background:#414c58;margin:0 auto 14px}.sheet-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.sheet-head h3{font-size:20px;margin:0}.sheet-close{border:0;background:var(--surface2);border-radius:50%;width:34px;height:34px;font-size:18px}.sheet-body p,.sheet-body li{color:var(--muted);font-size:13px;line-height:1.55}.sheet-body ul{padding-left:20px}.sheet-body li{margin-bottom:7px}
+.toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:70;background:#1c3650;border:1px solid #436887;border-radius:12px;padding:11px 14px;font-size:12px;color:#d6eaff;display:none;max-width:calc(100% - 32px);text-align:center}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(15,18,22,.96);border-top:1px solid var(--line);backdrop-filter:blur(20px);display:flex;justify-content:space-around;padding:8px 13px calc(9px + env(safe-area-inset-bottom))}.navitem{border:0;background:none;display:flex;align-items:center;flex-direction:column;gap:4px;font-size:11px;color:var(--muted)}.navitem.active{color:var(--blue)}.navitem span{font-size:20px}
+.chat.attention{outline:2px solid var(--blue);outline-offset:3px;transition:outline-color .4s}.assistant-reply{font-size:12px;line-height:1.5;background:#203244;border-left:3px solid var(--blue);color:#d1e5f5;border-radius:9px;padding:10px;margin-top:10px}.chat-unclear{font-size:12px;line-height:1.5;color:#ffd5b5;margin:7px 0}
+@media(min-width:790px){.mobile-chat-jump{display:none}.app{padding:24px 28px 45px}.head h1{font-size:36px}.library-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,.7fr);gap:20px}.scenario-list{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-item{height:100%;display:flex;flex-direction:column}.itembottom{margin-top:auto}.grid{display:grid;grid-template-columns:minmax(0,1.19fr) minmax(340px,.81fr);align-items:start;gap:20px}.sidebar{position:sticky;top:18px}.plot svg{height:245px}.nav{max-width:650px;margin:30px auto 0;position:sticky;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(550px,92vw)}.hero h2{font-size:26px}}
+@media(max-width:365px){.result b{font-size:18px}.phase-body .formgrid{grid-template-columns:1fr}}
+</style>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app" id="app">
+ <header class="head"><h1>Planning</h1><div class="actions">
+  <button class="iconbtn" id="privacy" aria-label="Hide sensitive amounts" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+  <button class="dot" id="dataStatus" aria-label="Data status"></button>
+ </div></header>
+ <nav class="modes" aria-label="Planning"><a class="mode" href="planning.html">Cash Forecast</a><a class="mode" href="runway.html">Runway</a><a class="mode" href="reserves.html">Reserves</a><a class="mode active" href="scenarios.html" aria-current="page">Scenarios</a><a class="mode" href="afford.html">Can I afford this?</a></nav>
+ <section class="screen show" id="library">
+  <div class="librarytop"><div><h2 class="page-title">Scenarios</h2><p class="lede" style="margin-bottom:4px">Explore possible futures without changing your current plan.</p></div><button class="primary" id="newScenario">+ New</button></div>
+  <div class="fake">SYNTHETIC LIBRARY · BROWSER-SESSION DEMO · NO REAL FINANCIAL DATA</div>
+  <div class="library-layout"><div><div class="actionrow"><h3 class="sectiontitle">Your scenarios</h3><span class="meta" id="libraryCount"></span></div><div class="scenario-list" id="scenarioList"></div></div>
+  <aside><div class="actionrow"><h3 class="sectiontitle">How it works</h3></div><div class="card baseline-list">
+   <div class="line"><b>Start from the current baseline</b><div>All unchanged income, accounts, expected activity and protected reserves stay inherited.</div></div>
+   <div class="line"><b>Describe or structure a change</b><div>Add stages for new housing, employment, existing-home costs, a tenancy change or one-off expenses.</div></div>
+   <div class="line"><b>Save independently</b><div>Reopen, edit, duplicate or delete a hypothetical. Saving never adopts it into the real forecast.</div></div>
+   <div class="line"><b>Review before adopting</b><div>If a future becomes likely, inspect starts, stops, unresolved items and account-funding implications before scheduling anything.</div></div>
+  </div><div class="library-note">The sample library uses made-up values. Your changes remain only in this open page; reloading resets the examples. The chat below is a limited, local demonstration of structured proposals, not a connected AI.</div></aside></div>
+ </section>
+ <section class="screen" id="viewer">
+  <div class="topline"><button id="viewBack">‹ All scenarios</button><span class="chev">/</span><span class="tail" id="viewBreadcrumb">Scenario</span></div>
+  <div class="hero">
+    <div class="eyebrow"><i class="spot"></i> Saved hypothetical · baseline unchanged</div>
+    <h2 id="viewTitle">Scenario</h2><p id="viewDescription"></p>
+    <div class="hero-tags" id="viewTags"></div>
+    <div class="toolbar"><button class="secondary" id="editScenario">Edit assumptions</button><button class="secondary" id="duplicateScenario">Duplicate</button><button class="secondary" id="deleteScenario">Delete</button></div>
+  </div>
+  <div class="fake">SYNTHETIC FINANCIAL COMPARISON · NOT CONNECTED TO SQUEEBS</div>
+  <div class="grid"><main>
+   <div class="headingrow"><h3>Runway comparison</h3><button id="whatIsRunway">How calculated?</button></div>
+   <div class="card">
+    <div class="comparecols"><div class="result"><small>Current baseline</small><b class="sensitive" id="baseOutcome">~4 months</b><div class="qual" id="baseQualifier">Protected reserves preserved</div></div><div class="result changed"><small>With this scenario</small><b class="sensitive" id="altOutcome">—</b><div class="qual" id="altQualifier">During selected horizon</div></div></div>
+    <div class="takeaway"><b id="summaryTitle">Comparison</b><p class="sensitive" id="summaryText"></p></div>
+   </div>
+   <div class="headingrow"><h3>Unallocated cash trajectory</h3><div class="periods" id="periodControls"><button data-horizon="12">12m</button><button data-horizon="18" class="active">18m</button><button data-horizon="24">24m</button></div></div>
+   <div class="card">
+    <div class="plot"><svg id="chart" viewBox="0 0 600 225" role="img" aria-label="Synthetic baseline compared with saved scenario"><g id="chartLayers"></g></svg></div>
+    <div class="legend"><span>Scenario</span><span class="base">Baseline</span></div><div class="meta" style="margin:9px 2px 0">Reporting in EUR · GBP examples converted at an illustrative £1 = €1.16</div>
+    <div class="month-nav"><button id="monthBack" aria-label="Previous month">‹</button><select id="monthSelect" aria-label="Forecast month"></select><button id="monthForward" aria-label="Next month">›</button></div>
+    <div class="month-detail"><div class="first"><b id="monthHeading"></b><b class="sensitive" id="monthDifference"></b></div><div class="cashpairs"><div><small>Baseline month end</small><b class="sensitive" id="monthBaseline"></b></div><div><small>Scenario month end</small><b class="sensitive" id="monthAlternative"></b></div></div><div class="small sensitive" id="monthExplanation"></div></div>
+    <div class="library-note" style="margin-bottom:0">The forecast stops at the protected-reserve boundary if cash is exhausted. Future account-level transfers and FX constraints must be checked separately.</div>
+   </div>
+   <div class="headingrow"><h3>Where the difference comes from</h3><button id="editFromDrivers">Edit changes</button></div>
+   <div class="card" id="drivers"></div>
+  </main><aside class="sidebar">
+    <div class="headingrow"><h3>Scenario structure</h3><button id="openBuilder">View assumptions</button></div>
+    <div class="card" id="structureSummary"></div>
+    <div class="headingrow"><h3>Needs attention</h3></div>
+    <div class="notice" id="needsPreview"></div>
+    <button class="adopt-btn" id="reviewAdoption">Review for current plan →</button>
+    <div class="library-note">The graph is a modelled aggregate comparison. Operational account consequences are shown only where the prototype can identify a meaningful changed requirement, not as static reassurance cards.</div>
+  </aside></div>
+ </section>
+ <section class="screen" id="builder">
+   <div class="topline"><button id="builderBack">‹ Back</button><span class="chev">/</span><span class="tail">Scenario builder</span></div>
+   <h2 class="page-title" id="builderHeading">Edit scenario</h2><p class="lede">A hypothetical is a sequence of dated changes layered on the current forecast. Chat can propose structural edits; you confirm before they affect this draft.</p>
+   <div class="grid"><main>
+    <section class="editor-header"><div class="micro">Scenario name</div><input class="edit-title sensitive" id="scenarioName" maxlength="80" placeholder="e.g. Move into a rental"><div class="field" style="margin-top:11px"><label class="formlabel" for="scenarioDescription">What are you exploring?</label><textarea id="scenarioDescription" class="sensitive" rows="2" placeholder="Short description"></textarea></div><div class="hero-tags" id="builderTags"></div></section>
+    <div class="headingrow"><h3>Changed assumptions · timeline</h3></div>
+    <div class="timeline" id="timeline"></div>
+    <div class="headingrow"><h3>Inherited from baseline</h3></div>
+    <details class="checkpanel"><summary>See what stays unchanged</summary><p>Eligible personal cash €35,700, with €12,100 protected for reserves. Existing Expected Activity (income, ordinary/seasonal spending, household contributions and GBP commitments), bank sources and transfer constraints carry forward unless a dated change explicitly overrides them.</p><p>In this synthetic model, current home contributions include €1,350/month mortgage and €370/month running costs. Any changed percentage applies to those baseline contributions and replaces previous scenario percentages from its effective month.</p></details>
+    <div class="headingrow"><h3>Needs attention</h3></div><section class="notice" id="builderNeeds"></section>
+    <div class="savebar"><button id="discardDraft" class="secondary">Discard edits</button><button id="saveDraft" class="primary">Save scenario</button></div>
+    <div class="library-note">Any GBP assumptions are converted for the EUR runway example at a fixed illustrative £1 = €1.16, not a live exchange rate. Saving keeps the hypothetical only in this open prototype page. The current plan is never changed, and this mock does not persist anything to a server.</div>
+   </main>
+   <aside class="sidebar">
+     <div class="headingrow"><h3>Describe a change</h3><span class="meta">Interactive demo</span></div>
+     <div class="chat">
+       <div class="chat-header"><b>Scenario assistant</b><span>Propose → review → accept</span></div>
+       <div class="chat-body"><p class="intro">Tell me what to add, remove or change. I'll translate supported example requests into a visible structured proposal before changing your draft.</p>
+         <div class="examples" id="chatExamples"></div>
+         <label class="formlabel" for="composer">Your instruction</label><textarea class="sensitive" id="composer" rows="3" placeholder="e.g. Add rental in January: rent 1700, electricity 140, water 35, internet 55, moving costs 2400"></textarea>
+         <div class="chat-go"><span>Local rule-based demo · no AI service connected</span><button id="interpret">Review suggestion →</button></div>
+         <div id="chatProposal"></div><div id="chatReply" aria-live="polite"></div>
+       </div>
+     </div>
+     <div class="headingrow"><h3>Runway impact preview</h3></div><div class="card"><div id="builderImpact" class="baseline-list"></div><button class="secondary" style="width:100%;margin-top:11px" id="builderPreview">Preview Runway comparison →</button></div>
+   </aside></div>
+ </section>
+</div>
+<nav class="nav"><a class="navitem" href="home.html"><span>⌂</span>Home</a><a class="navitem" href="transactions.html"><span>≡</span>Transactions</a><button class="navitem" id="insights"><span>▥</span>Insights</button><button class="navitem active" id="planningNav"><span>□</span>Planning</button></nav>
+<div class="modal" id="modal"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="grab"></div><div class="sheet-head"><h3 id="modalTitle"></h3><button class="sheet-close" id="closeSheet" aria-label="Close">×</button></div><div class="sheet-body" id="modalBody"></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const clone=a=>JSON.parse(JSON.stringify(a));
+const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+const fmt=n=>(n<0?'−':'')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const signed=n=>(n>=0?'+':'−')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const START=23600,TOTAL=35700,RESERVES=12100,TEMP=1500,MORTGAGE=1350,RUNNING=370,EXAMPLE_GBP_EUR=1.16;
+const symbol=c=>c==='GBP'?'£':'€';
+const moneyIn=(n,c='EUR')=>(n<0?'−':'')+symbol(c)+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const inEur=(n,c='EUR')=>Number(n||0)*(c==='GBP'?EXAMPLE_GBP_EUR:1);
+const currencyOf=p=>p.currency|| (p.type==='uk'?'GBP':'EUR');
+const MONTHS=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+const TYPES={
+ rental:{name:'New rental',area:'Housing',icon:'R',help:'Rent, utilities, insurance and move-in costs. Add other named expenses if needed. UK vacancies default to GBP, with EUR/GBP selectors on monetary changes.',fields:[['rent','Rent per month'],['electric','Electricity per month'],['gas','Gas per month'],['water','Water per month'],['internet','Internet per month'],['alarm','Alarm per month'],['insurance','Home insurance per month'],['move','Move-in cost, one-off']]},
+ job:{name:'New employment',area:'Income',icon:'J',help:'Net income replaces existing temporary income, not adds to it.',fields:[['income','Net monthly income']]},
+ home:{name:'Existing home cost share',area:'Housing',icon:'H',help:'Changes personal share of existing contributions from this month; most recent rule wins.',fields:[['mortgagePct','Mortgage share (%)',50],['runningPct','Running costs share (%)',0]]},
+ uk:{name:'UK rental becomes vacant',area:'Property',icon:'U',help:'GBP by default. Conversion into EUR reporting equivalents is illustrative.',fields:[['lostIncome','Monthly rent no longer received'],['extra','Extra property costs per month']]},
+ recurring:{name:'New recurring cost',area:'Other',icon:'C',help:'Additional regular expense from a dated month.',fields:[['amount','Additional monthly cost']],label:true},
+ once:{name:'One-off expense',area:'One-offs',icon:'1',help:'Single additional payment in its effective month.',fields:[['amount','One-time expense']],label:true},
+ onceIncome:{name:'One-off income',area:'Income',icon:'+',help:'A one-time eligible personal cash inflow.',fields:[['amount','One-time income']],label:true}
+};
+let nextId=100,scenarios=[
+ {id:'s-rental',name:'Move into a rental',description:'Additional housing costs, without assuming a new job or removing existing commitments.',changes:[{id:'p1',type:'rental',from:3,currency:'EUR',rent:1700,electric:140,gas:65,water:35,internet:55,alarm:35,insurance:30,move:2400,extras:[]}]},
+ {id:'s-job',name:'Start a new job',description:'Replace temporary income with employment, leaving housing arrangements unchanged.',changes:[{id:'p2',type:'job',from:2,income:7400}]},
+ {id:'s-staged',name:'Move out, then change shared costs',description:'New rental plus two dated stages for existing-home obligations.',changes:[{id:'p3',type:'rental',from:3,currency:'EUR',rent:1650,electric:130,gas:45,water:40,internet:55,alarm:25,insurance:30,move:2100,extras:[]},{id:'p4',type:'home',from:3,mortgagePct:50,runningPct:0},{id:'p5',type:'home',from:5,mortgagePct:50,runningPct:50}]},
+ {id:'s-uk',name:'London rental becomes vacant',description:'Stop the expected rental inflow and allow for additional property costs.',changes:[{id:'p6',type:'uk',from:4,currency:'GBP',lostIncome:1900,extra:390}]},
+ {id:'s-combined',name:'New role + new rental',description:'Employment resumes alongside a move, with housing commitments unchanged.',changes:[{id:'p7',type:'job',from:2,income:7700},{id:'p8',type:'rental',from:3,currency:'EUR',rent:1650,electric:140,gas:45,water:35,internet:55,alarm:25,insurance:30,move:2500,extras:[]}]}
+];
+let activeId=null,draft=null,editingId=null,builderOrigin='library',expanded=null,horizon=18,selectedMonth=5,proposal=null,proposalOps=null,previewingDraft=false;
+const screen=name=>{$$('.screen').forEach(n=>n.classList.toggle('show',n.id===name));window.scrollTo(0,0)};
+const getScenario=()=>scenarios.find(s=>s.id===activeId);
+const shownScenario=()=>previewingDraft&&draft?draft:getScenario();
+function monthName(i){return MONTHS[i%12]+' '+(2026+Math.floor((i+9)/12))}
+function longMonth(i){return new Date(2026,9+i,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}
+function tooltip(s){return esc(s)}
+function newChange(type,from=3){
+ const t=TYPES[type],item={id:'p'+(nextId++),type,from,currency:type==='uk'?'GBP':'EUR'};
+ t.fields.forEach(([k,label,v])=>item[k]=type==='home'?100:0);
+ if(type==='rental')item.extras=[];
+ if(t.label)item.label=type='once'?'One-time purchase':type==='onceIncome'?'One-time inflow':'Additional monthly cost';
+ return item;
+}
+function typeLabel(t){return TYPES[t]?.name||t}
+function rentalMonthly(p){return ['electric','gas','water','internet','alarm','insurance'].reduce((n,k)=>n+Number(p[k]||0),0)+(p.extras||[]).reduce((n,e)=>n+Number(e.amount||0),0)}
+function phaseSummary(p){
+ const c=currencyOf(p),native=n=>moneyIn(n,c);
+ switch(p.type){
+  case 'rental':return native(p.rent)+'/mo rent · '+native(rentalMonthly(p))+'/mo other costs · '+native(p.move)+' once';
+  case 'job':return native(p.income)+'/mo net (replaces '+fmt(TEMP)+'/mo baseline)';
+  case 'home':return p.mortgagePct+'% mortgage · '+p.runningPct+'% running costs';
+  case 'uk':return '−'+native(p.lostIncome)+'/mo income · '+native(p.extra)+'/mo costs';
+  case 'recurring':return esc(p.label||'Additional cost')+' · '+native(p.amount)+'/mo';
+  case 'once':return esc(p.label||'One-off')+' · '+native(p.amount)+' once';
+  case 'onceIncome':return esc(p.label||'One-off')+' · +'+native(p.amount)+' once';
+ }
+ return '';
+}
+function sorted(s){return [...s.changes].sort((a,b)=>a.from-b.from||String(a.id).localeCompare(String(b.id)))}
+function needItems(s){
+ const items=[];
+ const rental=s.changes.find(p=>p.type==='rental'), job=s.changes.find(p=>p.type==='job'),home=s.changes.filter(p=>p.type==='home'),uk=s.changes.find(p=>p.type==='uk');
+ if(rental){
+   items.push('Lease start, upfront deposit versus actual expense, and payment account need confirmation.');
+   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check missing or zero rental assumptions (rent, utilities, move-in costs). Other costs such as gas, alarm or insurance should also be confirmed, including if genuinely zero.');
+   if(!home.length)items.push('Existing-home cost responsibility is inherited unchanged; confirm whether or when that split changes.');
+ }
+ if(job){if(!job.income)items.push('Net income amount is not set. Forecast results are provisional.');items.push('Employment offer, first partial payroll, tax/net-pay basis and receiving account are not confirmed.');}
+ if(home.length)items.push('Stage dates and agreed shares of existing-home costs require confirmation.');
+ if(uk){if(!uk.lostIncome||!uk.extra)items.push('Check the lost rental income and vacant-property cost assumptions; zero entries may be incomplete.');items.push('Tenant departure, vacant-property bills, currency conversion and the GBP funding route need confirmation.');}
+ if(s.changes.some(p=>['rental','uk','home','recurring','once','onceIncome','job'].includes(p.type)))items.push('Account-specific buffers, transfer timing and funding paths need a full Cash Forecast calculation.');
+ return items;
+}
+function summarize(s){return sorted(s).length+' dated change'+(s.changes.length===1?'':'s')}
+function baselineNet(i){return [-3050,-5400,-6300,-5200,-5000][i]??-5200}
+function contribution(s,i){
+ const active=sorted(s).filter(p=>p.from<=i),detail=[];
+ let amount=0;
+ const latest=type=>active.filter(p=>p.type===type).at(-1);
+ const job=latest('job');if(job){const n=inEur(job.income,currencyOf(job))-TEMP;amount+=n;detail.push({area:'Income',label:'New income replacing temporary income',value:n,stage:job})}
+ const rental=latest('rental');if(rental){
+  const monthly=-inEur(Number(rental.rent||0)+rentalMonthly(rental),currencyOf(rental));
+  amount+=monthly;detail.push({area:'Housing',label:'New rental and associated costs',value:monthly,stage:rental});
+  if(i===rental.from){const move=-inEur(rental.move,currencyOf(rental));amount+=move;detail.push({area:'One-offs',label:'Move-in costs',value:move,stage:rental})}
+ }
+ const home=latest('home');if(home){const n=MORTGAGE*(1-home.mortgagePct/100)+RUNNING*(1-home.runningPct/100);amount+=n;detail.push({area:'Housing',label:'Change to existing-home contributions',value:n,stage:home})}
+ const uk=latest('uk');if(uk){const n=-inEur(Number(uk.lostIncome||0)+Number(uk.extra||0),currencyOf(uk));amount+=n;detail.push({area:'Property',label:'UK tenancy change',value:n,stage:uk})}
+ active.filter(p=>p.type==='recurring').forEach(p=>{const n=-inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'Other',label:p.label,value:n,stage:p})});
+ active.filter(p=>p.from===i&&p.type==='once').forEach(p=>{const n=-inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'One-offs',label:p.label,value:n,stage:p})});
+ active.filter(p=>p.from===i&&p.type==='onceIncome').forEach(p=>{const n=inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'Income',label:p.label,value:n,stage:p})});
+ return {amount,detail};
+}
+function forecast(s,num=24){
+ let baseline=START,alt=START,baseEnded=false,altEnded=false,baseAt=null,altAt=null;
+ const rows=[];
+ for(let i=0;i<num;i++){
+  const b=baselineNet(i),change=contribution(s,i);
+  if(!baseEnded){baseline+=b;if(baseline<=0){baseEnded=true;baseAt=i}}
+  if(!altEnded){alt+=b+change.amount;if(alt<=0){altEnded=true;altAt=i}}
+  rows.push({i,baseNet:b,delta:change.amount,detail:change.detail,base:baseline,alt,baseUnfunded:baseEnded,altUnfunded:altEnded});
+ }
+ return {rows,baseAt,altAt};
+}
+function resultLabel(index,h){return index===null||index>=h?'No depletion':'~'+(index+0.5).toFixed(1)+' months'}
+function resultQual(index,h){return index===null||index>=h?'projected within '+h+' months':'Estimated limit around '+monthName(index)}
+function libraryRender(){
+ $('#libraryCount').textContent=scenarios.length+' saved in this session';
+ if(!scenarios.length){$('#scenarioList').innerHTML='<div class="empty">Nothing saved yet. Create your first hypothetical scenario.</div>';return}
+ $('#scenarioList').innerHTML=scenarios.map(s=>{
+  const ch=s.changes,types=new Set(ch.map(p=>p.type)),icon=types.has('rental')?'house':types.has('job')?'work':'property';
+  const initial=types.has('rental')?'H':types.has('job')?'J':'P';
+  const needs=needItems(s).length;
+  return '<button class="scenario-item" data-open="'+esc(s.id)+'"><div class="itemtop"><div class="square '+icon+'">'+initial+'</div><div class="itemtext"><div class="itemtitle">'+esc(s.name)+'</div><div class="itemdesc">'+esc(s.description||'Saved hypothetical plan')+'</div></div><span class="arrow">›</span></div><div class="itembottom"><span>'+summarize(s)+' · '+(types.size)+' affected area'+(types.size===1?'':'s')+'</span><span class="hint">'+needs+' questions to review</span></div></button>';
+ }).join('');
+ $$('[data-open]').forEach(b=>b.onclick=()=>openScenario(b.dataset.open));
+}
+function openLibrary(){activeId=null;draft=null;proposal=null;previewingDraft=false;libraryRender();screen('library')}
+function openScenario(id){activeId=id;draft=null;previewingDraft=false;horizon=18;selectedMonth=5;renderView();screen('viewer')}
+function renderView(){
+ const s=shownScenario();if(!s){openLibrary();return}
+ const fc=forecast(s,24),h=horizon,rows=fc.rows.slice(0,h),last=rows.at(-1);
+ $('#viewBack').textContent=previewingDraft?'‹ Back to builder':'‹ All scenarios';
+ $('#editScenario').textContent=previewingDraft?'Continue editing':'Edit assumptions';
+ $('#duplicateScenario').style.display=previewingDraft?'none':'';$('#deleteScenario').style.display=previewingDraft?'none':'';$('#reviewAdoption').style.display=previewingDraft?'none':'';
+ $('#viewBreadcrumb').textContent=s.name||'Unsaved draft';$('#viewTitle').textContent=s.name||'Unsaved draft';$('#viewDescription').textContent=s.description||'A saved hypothetical.';
+ $('#viewTags').innerHTML='<span class="pill purple">'+(previewingDraft?'Unsaved preview':'Hypothetical')+'</span><span class="pill">'+summarize(s)+'</span><span class="pill">Baseline inherited</span>';
+ $('#baseOutcome').textContent=resultLabel(fc.baseAt,h);$('#baseQualifier').textContent=resultQual(fc.baseAt,h);
+ $('#altOutcome').textContent=resultLabel(fc.altAt,h);$('#altQualifier').textContent=resultQual(fc.altAt,h);
+ const impact=rows.reduce((sum,r)=>sum+r.delta,0);
+ let first='Cumulative net cashflow change from these assumptions: '+signed(impact)+' across '+h+' months. This is not the cash balance at horizon end.';
+ if(fc.altAt!==null&&fc.altAt<h)first+=' This scenario reaches the protected-reserve boundary; later changes are hypothetical, not fundable without new resources.';
+ else if(fc.baseAt!==null&&fc.baseAt<h)first+=' Baseline depletes during this horizon while this scenario does not.';
+ $('#summaryTitle').textContent=impact>0?'Changed cashflows improve the outlook':impact<0?'Changed cashflows increase pressure':'No net cashflow change within this horizon';
+ $('#summaryText').textContent=first;
+ $$('#periodControls button').forEach(b=>b.classList.toggle('active',Number(b.dataset.horizon)===h));
+ renderPlot(s,fc);
+ renderMonthPicker(fc);
+ renderDrivers(rows);
+ const phases=sorted(s);
+ $('#structureSummary').innerHTML=phases.length?phases.map((p,i)=>'<div class="line baseline-list"><b>'+esc(longMonth(p.from))+' · '+esc(typeLabel(p.type))+'</b><div class="sensitive">'+phaseSummary(p)+'</div></div>').join(''):'<p class="baseline-list">No changed assumptions. This scenario currently matches the baseline.</p>';
+ const warnings=needItems(s);
+ $('#needsPreview').innerHTML='<b>'+warnings.length+' areas to check before relying on this result</b><p>'+esc(warnings[0]||'No unresolved assumptions identified in this simplified example.')+'</p><button class="quiet" id="viewWarnings" style="margin-top:10px">Review all in builder →</button>';
+ $('#viewWarnings').onclick=()=>previewingDraft?screen('builder'):beginEdit('viewer',true);
+ }
+function renderPlot(s,fc){
+ const rows=fc.rows,h=horizon,max=Math.max(24000,START,...rows.slice(0,h).map(r=>Math.max(0,r.base,r.alt))),ceiling=Math.max(25000,Math.ceil(max/5000)*5000);
+ const x=i=>56+(i+1)*524/h,y=v=>182-149*Math.min(1,Math.max(0,v)/ceiling);
+ function path(key,at){
+  let d='M56 '+y(START).toFixed(1),stopped=false,previous=START;
+  for(let i=0;i<h;i++){
+   if(stopped)break;
+   const current=rows[i][key],end=x(i),start=i===0?56:x(i-1);
+   if(current>0)d+=' L'+end.toFixed(2)+' '+y(current).toFixed(2);
+   else{const f=previous>0?Math.min(1,Math.max(0,previous/(previous-current))):0;d+=' L'+(start+(end-start)*f).toFixed(2)+' 182';stopped=true}
+   previous=current;
+  }
+  return d;
+ }
+ let svg='<line x1="56" y1="33" x2="580" y2="33" class="guide"/><line x1="56" y1="84" x2="580" y2="84" class="guide"/><line x1="56" y1="133" x2="580" y2="133" class="guide"/><line x1="56" y1="182" x2="580" y2="182" class="zero"/>';
+ svg+='<text x="4" y="19">'+fmt(ceiling)+'</text><text x="19" y="186">€0</text>';
+ svg+='<path class="basepath" d="'+path('base',fc.baseAt)+'"/><path class="altpath" d="'+path('alt',fc.altAt)+'"/>';
+ const step=h<=12?2:h<=18?3:4;
+ for(let i=0;i<h;i++){if(i%step===0||i===h-1)svg+='<text x="'+x(i).toFixed(1)+'" y="214" text-anchor="middle">'+MONTHS[i%12]+'</text>'}
+ if(selectedMonth<h&&rows[selectedMonth].alt>0&&!rows[selectedMonth].altUnfunded)svg+='<circle class="marker" cx="'+x(selectedMonth).toFixed(1)+'" cy="'+y(rows[selectedMonth].alt).toFixed(1)+'" r="5.5"/>';
+ for(let i=0;i<h;i++)svg+='<rect data-at="'+i+'" x="'+(56+i*524/h).toFixed(2)+'" y="22" width="'+(524/h).toFixed(2)+'" height="166" fill="transparent"/>';
+ $('#chartLayers').innerHTML=svg;$$('[data-at]').forEach(n=>n.onclick=()=>{selectedMonth=Number(n.dataset.at);renderView()});
+}
+function renderMonthPicker(fc){
+ selectedMonth=Math.max(0,Math.min(horizon-1,selectedMonth));
+ $('#monthSelect').innerHTML=Array.from({length:horizon},(_,i)=>'<option value="'+i+'">'+longMonth(i)+'</option>').join('');
+ $('#monthSelect').value=String(selectedMonth);
+ const r=fc.rows[selectedMonth],m=selectedMonth;
+ $('#monthHeading').textContent=longMonth(m);$('#monthDifference').textContent=signed(r.delta)+' this month';
+ $('#monthBaseline').textContent=r.baseUnfunded?'Unfunded':fmt(r.base);
+ $('#monthAlternative').textContent=r.altUnfunded?'Unfunded':fmt(r.alt);
+ const descriptions=r.detail.map(p=>p.label+': '+signed(p.value));
+ $('#monthExplanation').textContent=(descriptions.length?descriptions.join(' · '):'No scenario overrides active; inherits the baseline.')+(r.altUnfunded?' The scenario has reached its funding limit; later months cannot be assumed to recover without a viable funding path.':'');
+ $('#monthBack').disabled=m===0;$('#monthForward').disabled=m===horizon-1;
+}
+function renderDrivers(rows){
+ const totals={};rows.forEach(r=>r.detail.forEach(d=>{
+  if(!totals[d.area])totals[d.area]={value:0,children:{}};
+  totals[d.area].value+=d.value;
+  totals[d.area].children[d.label]=(totals[d.area].children[d.label]||0)+d.value;
+ }));
+ const groups=Object.entries(totals).sort((a,b)=>Math.abs(b[1].value)-Math.abs(a[1].value));
+ $('#drivers').innerHTML=groups.length?groups.map(([name,d])=>'<div class="driver"><div class="driver-main"><b>'+esc(name)+'</b><strong class="sensitive">'+signed(d.value)+'</strong></div><p class="driver-detail">Cumulative change versus inherited baseline over '+horizon+' months</p><div class="subdrivers">'+Object.entries(d.children).map(([t,v])=>'<div>'+esc(t)+' · <span class="sensitive">'+signed(v)+'</span></div>').join('')+'</div></div>').join(''):'<p class="baseline-list">No changed assumptions in this scenario.</p>';
+}
+function beginEdit(origin,isExisting){
+ if(previewingDraft&&draft){screen('builder');return;}
+ builderOrigin=origin||'library';editingId=isExisting?activeId:null;
+ draft=isExisting?clone(getScenario()):{id:'s-'+(nextId++),name:'',description:'',changes:[]};
+ proposal=null;proposalOps=null;expanded=null;renderBuilder();screen('builder');
+}
+function renderBuilder(){
+ if(!draft)return;
+ $('#builderHeading').textContent=editingId?'Edit scenario':'Create scenario';
+ $('#scenarioName').value=draft.name;$('#scenarioDescription').value=draft.description;
+ $('#builderTags').innerHTML='<span class="pill purple">Hypothetical</span><span class="pill">'+summarize(draft)+'</span><span class="pill">Baseline inherited</span>';
+ renderTimeline();renderNeeds();renderBuilderImpact();renderExamples();
+}
+function inputField(p,key,label){
+ const isPercent=key.endsWith('Pct'),unit=isPercent?'':' ('+symbol(currencyOf(p))+')';
+ return '<div class="field"><label class="formlabel" for="field-'+esc(p.id)+'-'+key+'">'+esc(label+unit)+'</label><input id="field-'+esc(p.id)+'-'+key+'" type="number" inputmode="decimal" min="0" max="'+(isPercent?'100':'500000')+'" step="'+(isPercent?'5':'10')+'" data-phase="'+esc(p.id)+'" data-key="'+key+'" class="sensitive" value="'+Number(p[key]||0)+'"></div>';
+}
+function renderTimeline(){
+ const sortedChanges=sorted(draft);
+ $('#timeline').innerHTML=sortedChanges.length?sortedChanges.map((p,i)=>{
+ const t=TYPES[p.type],open=expanded===p.id;
+ const items=t.fields.map(([key,label])=>inputField(p,key,label)).join('');
+ const dates=Array.from({length:24},(_,x)=>'<option value="'+x+'"'+(x===p.from?' selected':'')+'>'+longMonth(x)+'</option>').join('');
+ const currency=p.type==='home'?'':'<div class="field span"><label class="formlabel">Currency</label><select data-phase="'+p.id+'" data-key="currency"><option value="EUR"'+(currencyOf(p)==='EUR'?' selected':'')+'>EUR · Euro (€)</option><option value="GBP"'+(currencyOf(p)==='GBP'?' selected':'')+'>GBP · Pound (£)</option></select></div>';
+ const extras=p.type==='rental'?'<div class="field span"><label class="formlabel">Other rental costs · monthly</label>'+((p.extras||[]).map((extra,j)=>'<div class="extra-line"><input data-extra-index="'+j+'" data-extra-phase="'+p.id+'" data-extra-key="label" class="sensitive" aria-label="Cost description" placeholder="e.g. Building fees" value="'+esc(extra.label||'')+'"><input data-extra-index="'+j+'" data-extra-phase="'+p.id+'" data-extra-key="amount" class="sensitive" aria-label="Monthly amount" type="number" min="0" value="'+Number(extra.amount||0)+'"><button data-extra-remove="'+j+'" data-extra-owner="'+p.id+'" aria-label="Remove cost">×</button></div>').join(''))+'<button class="quiet" data-extra-add="'+p.id+'">+ Add other monthly cost</button></div>':'';
+ return '<div class="phase"><button class="phase-head" data-expand="'+p.id+'"><span class="phase-num">'+(i+1)+'</span><span class="phase-info"><b>'+esc(t.name)+' · '+esc(longMonth(p.from))+'</b><p class="sensitive">'+phaseSummary(p)+'</p></span><span class="chevron">'+(open?'⌃':'⌄')+'</span></button>'+(!open?'':'<div class="phase-body"><p style="font-size:11px;color:var(--muted);line-height:1.45;margin:10px 0 0">'+esc(t.help)+'</p><div class="formgrid"><div class="field span"><label class="formlabel">Effective month</label><select data-phase="'+p.id+'" data-key="from">'+dates+'</select></div>'+currency+(t.label?'<div class="field span"><label class="formlabel">Description</label><input class="sensitive" data-phase="'+p.id+'" data-key="label" value="'+esc(p.label||'')+'"></div>':'')+items+extras+'</div><div class="phase-foot"><button data-remove="'+p.id+'">Remove this change</button></div></div>')+'</div>';
+ }).join(''):'<div class="empty">No changes yet. Add a dated assumption below or describe your scenario to the assistant.</div>';
+ $('#timeline').innerHTML+='<div class="addrow"><button id="addStageShortcut">+ Add structured change</button><button id="focusChat" class="mobile-chat-jump">Go to scenario assistant ↓</button></div>';
+ $$('[data-expand]').forEach(b=>b.onclick=()=>{expanded=expanded===b.dataset.expand?null:b.dataset.expand;renderTimeline()});
+ $$('[data-phase]').forEach(el=>el.onchange=()=>{
+  const p=draft.changes.find(x=>x.id===el.dataset.phase),key=el.dataset.key;
+  if(!p)return;
+  if(key==='label')p[key]=String(el.value).trim().slice(0,70);
+  else if(key==='currency')p.currency=el.value==='GBP'?'GBP':'EUR';
+  else if(key==='from')p.from=Math.max(0,Math.min(23,Number(el.value)||0));
+  else p[key]=Math.max(0,Math.min(key.endsWith('Pct')?100:500000,Number(el.value)||0));
+  renderBuilder();expanded=p.id;renderTimeline();
+ });
+ $$('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
+ $$('[data-extra-add]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraAdd);if(!p)return;p.extras ||= [];p.extras.push({label:'Other cost',amount:0});expanded=p.id;renderBuilder()});
+ $$('[data-extra-remove]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraOwner);if(!p)return;p.extras.splice(Number(b.dataset.extraRemove),1);expanded=p.id;renderBuilder()});
+ $$('[data-extra-index]').forEach(el=>el.onchange=()=>{const p=draft.changes.find(x=>x.id===el.dataset.extraPhase),e=p?.extras?.[Number(el.dataset.extraIndex)];if(!e)return;if(el.dataset.extraKey==='label')e.label=String(el.value).trim().slice(0,60);else e.amount=Math.max(0,Math.min(500000,Number(el.value)||0));expanded=p.id;renderBuilder()});
+ $('#addStageShortcut').onclick=chooseType;
+ $('#focusChat').onclick=()=>{const target=$('.chat');target.classList.add('attention');target.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{target.classList.remove('attention');$('#composer').focus({preventScroll:true})},600)};
+}
+function renderNeeds(){
+ const items=needItems(draft);
+ $('#builderNeeds').innerHTML='<b>'+items.length+' issues to check before adopting</b>'+(items.length?items.map(t=>'<p>'+esc(t)+'</p>').join(''):'<p>No domain-specific questions identified. Real forecast validation is still necessary before adoption.</p>');
+}
+function renderBuilderImpact(){
+ const fc=forecast(draft,18),difference=fc.rows.slice(0,18).reduce((t,r)=>t+r.delta,0);
+ $('#builderImpact').innerHTML='<b>18-month net cashflow difference</b><div class="sensitive" style="font-size:26px;font-weight:780;margin:7px 0">'+signed(difference)+'</div><div>Scenario cash limit: '+(fc.altAt===null||fc.altAt>=18?'not projected within 18 months':'about '+monthName(fc.altAt))+'.</div><div style="margin-top:9px;color:var(--faint);font-size:11px">Cumulative effect of changed income and spending—not cash remaining after 18 months. Beyond a funding limit it is a hypothetical comparison, not fundable cash. Operational funding is not yet recalculated.</div>';
+}
+function saveDraft(){
+ if(!draft)return;
+ draft.name=$('#scenarioName').value.trim()||'Untitled scenario';
+ draft.description=$('#scenarioDescription').value.trim()||'Custom hypothetical';
+ if(editingId){const i=scenarios.findIndex(s=>s.id===editingId);if(i>=0)scenarios[i]=clone(draft);activeId=editingId}
+ else{scenarios.unshift(clone(draft));activeId=draft.id}
+ const name=draft.name;draft=null;proposal=null;previewingDraft=false;renderView();screen('viewer');toast('Saved "'+name+'" in this page only. Baseline unchanged.');
+}
+function chooseType(){
+ const html='<p>Choose a type of change. New items start with unset costs represented as zero in this demo, and missing information is flagged for review rather than filled from example amounts.</p><div class="addrow">'+Object.entries(TYPES).map(([type,t])=>'<button data-addtype="'+type+'">'+esc(t.name)+'</button>').join('')+'</div><p>No money moves and nothing is added to your real baseline.</p>';
+ showSheet('Add a dated change',html);
+ $$('[data-addtype]').forEach(b=>b.onclick=()=>{
+  const type=b.dataset.addtype;
+  const exclusive=['rental','job','uk'];
+  if(exclusive.includes(type)&&draft.changes.some(p=>p.type===type)){
+    const existing=draft.changes.find(p=>p.type===type);closeSheet();expanded=existing.id;renderBuilder();toast('This type already exists. Edit its current stage instead.');return;
+  }
+  const p=newChange(type);draft.changes.push(p);expanded=p.id;proposal=null;closeSheet();renderBuilder();setTimeout(()=>{const node=$('[data-expand="'+p.id+'"]');node?.scrollIntoView({behavior:'smooth',block:'center'})},0);
+ });
+}
+const examples=[
+ {name:'Add a complete rental',text:'Add rental in January: rent €1700, electricity €140, gas €60, water €35, internet €55, alarm €30, home insurance €25, moving costs €2400'},
+ {name:'Change existing-home split',text:'From March change Calle Plana mortgage to 50% and running costs to 50%'},
+ {name:'Start a job',text:'Start a job in December with net income €7400'},
+ {name:'Add a one-off',text:'Add one-off repair €600 in February'},
+ {name:'Remove employment',text:'Remove the new job'}
+];
+function renderExamples(){
+ $('#chatExamples').innerHTML=examples.map((x,i)=>'<button data-example="'+i+'">'+esc(x.name)+'</button>').join('');
+ $$('[data-example]').forEach(b=>b.onclick=()=>{$('#composer').value=examples[Number(b.dataset.example)].text;$('#composer').focus()});
+}
+function amountAfter(raw,patterns){
+ for(const token of patterns){
+  const pos=raw.toLowerCase().indexOf(token);
+  if(pos<0)continue;
+  const tail=raw.slice(pos+token.length, pos+token.length+34);
+  const found=tail.match(/(?:€\s*)?(\d{1,6}(?:[,.]\d{3})?|[\d]+)(?:\s*€)?/);
+  if(found){const num=found[1].replace(/[,.](?=\d{3}(?:\D|$))/g,'').replace(',','.');const value=Number(num);if(Number.isFinite(value))return value}
+ }
+ return null;
+}
+function detectMonth(raw){
+ const s=raw.toLowerCase();
+ const words=['october','november','december','january','february','march','april','may','june','july','august','september'];
+ for(let i=0;i<words.length;i++)if(new RegExp('\\b'+words[i]+'\\b').test(s))return i;
+ return null;
+}
+function parseChat(raw){
+ const s=raw.toLowerCase(),ops=[],notes=[],from=detectMonth(raw);
+ const hasGBP=/(£|\bgbp\b|pounds?)/i.test(raw),hasEUR=/(€|\beur\b|euros?)/i.test(raw);
+ if(hasGBP&&hasEUR)return {ops:[],notes:['You mentioned both EUR and GBP. Please specify one currency for each change, or add the changes separately.']};
+ const requestedCurrency=hasGBP?'GBP':hasEUR?'EUR':null;
+ const monthsPresent=['october','november','december','january','february','march','april','may','june','july','august','september'].filter(m=>new RegExp('\\b'+m+'\\b').test(s));
+ if(monthsPresent.length>1)return {ops:[],notes:['This demo found more than one month. Describe one dated stage per message so it cannot attach a change to the wrong month. The intended full AI builder will support multi-stage instructions.']};
+ const remove=/\b(remove|delete|drop)\b/.test(s);
+ if(remove){
+  const type=/\b(job|employment|salary)\b/.test(s)?'job':/\b(rental|rent|apartment)\b/.test(s)?'rental':/\b(london|tenant|vacancy)\b/.test(s)?'uk':/\b(home|carrer|calle plana|mortgage)\b/.test(s)?'home':null;
+  if(type){const targets=draft.changes.filter(p=>p.type===type);if(targets.length)targets.forEach(p=>ops.push({action:'remove',id:p.id,text:'Remove '+typeLabel(type)+' starting '+longMonth(p.from)}));else notes.push('There is no '+typeLabel(type)+' change to remove.')}
+ }
+ if(!remove){
+  const mentionsJob=/\b(job|employment|salary)\b/.test(s);
+  const mentionsRent=/\b(rental|rent|apartment)\b/.test(s);
+  const home=/\b(calle plana|existing.home|mortgage share|running costs|mortgage to)\b/.test(s);
+  const jobAmt=amountAfter(raw,['net income','net salary','salary','income']);
+  if(mentionsJob&&(jobAmt!==null||from!==null)){
+    const current=draft.changes.find(p=>p.type==='job');
+    if(!current&&jobAmt===null)notes.push('What net monthly income should I use?');
+    else if(!current&&from===null)notes.push('Which month should the job begin?');
+    else{
+      const p=current?clone(current):newChange('job',from??2);
+      if(jobAmt!==null)p.income=jobAmt;if(from!==null)p.from=from;if(requestedCurrency)p.currency=requestedCurrency;
+      ops.push({action:current?'update':'add',id:current?.id,item:p,text:(current?'Update':'Add')+' employment: '+fmt(p.income)+'/month from '+longMonth(p.from)+' (replaces baseline temporary income)'});
+    }
+  }
+  const rentAmt=amountAfter(raw,['rent ','rental amount','monthly rent']);
+  const electric=amountAfter(raw,['electricity','electric']);
+  const water=amountAfter(raw,['water']);
+  const internet=amountAfter(raw,['internet']);
+  const move=amountAfter(raw,['moving costs','move-in costs','moving cost','move-in']);
+  const gas=amountAfter(raw,['gas']),alarm=amountAfter(raw,['alarm']),insurance=amountAfter(raw,['home insurance','insurance']);
+  const rentalCurrent=draft.changes.find(p=>p.type==='rental');
+  if((mentionsRent||electric!==null||water!==null||internet!==null||gas!==null||alarm!==null||insurance!==null||move!==null)&&(rentAmt!==null||electric!==null||water!==null||internet!==null||gas!==null||alarm!==null||insurance!==null||move!==null||from!==null)){
+    if(!rentalCurrent&&rentAmt===null)notes.push('What is the monthly rent for the new rental?');
+    else if(!rentalCurrent&&from===null)notes.push('Which month should the rental start?');
+    else{
+      const p=rentalCurrent?clone(rentalCurrent):newChange('rental',from??3);
+      if(from!==null&&!home)p.from=from;
+      if(rentAmt!==null)p.rent=rentAmt;
+      if(electric!==null)p.electric=electric;
+      if(water!==null)p.water=water;
+      if(internet!==null)p.internet=internet;
+      if(gas!==null)p.gas=gas;if(alarm!==null)p.alarm=alarm;if(insurance!==null)p.insurance=insurance;
+      if(move!==null)p.move=move;if(requestedCurrency)p.currency=requestedCurrency;
+      ops.push({action:rentalCurrent?'update':'add',id:rentalCurrent?.id,item:p,text:(rentalCurrent?'Update':'Add')+' rental: '+phaseSummary(p)+' from '+longMonth(p.from)});
+    }
+  }
+  if(home){
+    const mort=amountAfter(raw,['mortgage to','mortgage share','mortgage']);
+    const running=amountAfter(raw,['running costs to','running costs','utilities share']);
+    if(from===null||mort===null||running===null)notes.push('For a staged existing-home contribution, provide a month, mortgage percentage and running-cost percentage.');
+    else{
+      const p=newChange('home',from);p.mortgagePct=Math.max(0,Math.min(100,mort));p.runningPct=Math.max(0,Math.min(100,running));
+      ops.push({action:'add',item:p,text:'Add a new home-cost stage from '+longMonth(p.from)+': '+phaseSummary(p)+'. This replaces earlier shares from that month.'});
+    }
+  }
+  if(/\b(london|vacancy|tenants leave)\b/.test(s)){
+    const old=draft.changes.find(p=>p.type==='uk'),p=old?clone(old):newChange('uk',from??4);
+    const lost=amountAfter(raw,['lost rent','lost income']),extra=amountAfter(raw,['extra costs','extra bills']);
+    if(from!==null)p.from=from;if(lost!==null)p.lostIncome=lost;if(extra!==null)p.extra=extra;if(requestedCurrency)p.currency=requestedCurrency;
+    ops.push({action:old?'update':'add',item:p,id:old?.id,text:(old?'Update':'Add')+' UK vacancy from '+longMonth(p.from)+': lost '+fmt(p.lostIncome)+' monthly income plus '+fmt(p.extra)+' costs'});
+  }
+  if(/\b(one.off|one time|one-time|repair)\b/.test(s)&&!mentionsRent&&!home){
+    const v=amountAfter(raw,['repair','purchase','one-off','one time','one-time']);
+    if(v===null)notes.push('Include an amount for the one-off cost.');
+    else if(from===null)notes.push('Which month should the one-off cost be paid?');
+    else{const p=newChange('once',from);p.amount=v;p.label=/repair/.test(s)?'Repair':'One-off expense';if(requestedCurrency)p.currency=requestedCurrency;ops.push({action:'add',item:p,text:'Add '+p.label+' '+fmt(v)+' in '+longMonth(p.from)})}
+  }
+ }
+ const seen=new Set(),dedup=ops.filter(op=>{const key=op.action+'|'+(op.id||op.item.id);if(seen.has(key))return false;seen.add(key);return true});
+ return {ops:dedup,notes};
+}
+function chatPropose(){
+ $('#chatReply').innerHTML='';
+ if(document.body.classList.contains('private')){toast('Reveal amounts first to edit scenario assumptions.');return}
+ const raw=$('#composer').value.trim();if(!raw){toast('Enter a change or use one of the examples.');return}
+ const parsed=parseChat(raw);
+ if(parsed.notes.length&&parsed.ops.length){parsed.ops=[];parsed.notes.unshift('Please clarify before I apply anything. Give one complete, dated change at a time.');}
+ proposalOps=parsed.ops;
+ const lines=parsed.ops.map(x=>'<li>'+esc(x.text)+'</li>').join('');
+ const notes=parsed.notes.map(x=>'<p>'+esc(x)+'</p>').join('');
+ $('#chatReply').innerHTML=parsed.ops.length?'<div class="assistant-reply">I found '+parsed.ops.length+' possible change'+(parsed.ops.length===1?'':'s')+'. Check the proposal below before I update your draft.</div>':('<div class="assistant-reply">'+esc(parsed.notes[0]||'I cannot interpret that reliably yet. Try a preset or add a structured change.')+'</div>');
+ $('#chatProposal').innerHTML='<div class="proposal"><h4>'+parsed.ops.length+' proposed structured change'+(parsed.ops.length===1?'':'s')+'</h4>'+(lines?'<ul>'+lines+'</ul>':'<p>I need a little more information before suggesting a safe change.</p>')+notes+(parsed.ops.length?'<div class="proposal-actions"><button id="acceptProposal">Accept into draft</button><button id="rejectProposal" class="reject">Dismiss</button></div>':'<p>Try an example above, or use “Add structured change” for anything the demo parser cannot interpret.</p>')+'</div>';
+ if(parsed.ops.length){
+   $('#acceptProposal').onclick=()=>{
+     for(const op of proposalOps){
+       if(op.action==='remove')draft.changes=draft.changes.filter(p=>p.id!==op.id);
+       else if(op.action==='update'){const idx=draft.changes.findIndex(p=>p.id===op.id);if(idx>=0)draft.changes[idx]=clone(op.item);}
+       else draft.changes.push(clone(op.item));
+     }
+     proposalOps=null;$('#chatProposal').innerHTML='';$('#composer').value='';
+     renderBuilder();$('#chatReply').innerHTML='<div class="assistant-reply">Updated your draft. You can inspect the change above, then save when ready.</div>';toast('Proposal accepted into draft — save separately to keep it.');
+   };
+   $('#rejectProposal').onclick=()=>{proposalOps=null;$('#chatProposal').innerHTML='';$('#chatReply').innerHTML='<div class="assistant-reply">Dismissed. Nothing changed in your draft.</div>';toast('Proposal dismissed. Draft unchanged.')};
+ }
+}
+function showSheet(title,html){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;$('#modal').classList.add('open')}
+function closeSheet(){$('#modal').classList.remove('open')}
+function toast(message){const b=$('#toast');b.textContent=message;b.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>b.style.display='none',3300)}
+function reviewAdopt(){
+ if(document.body.classList.contains('private')){showSheet('Protected', '<p>Reveal sensitive figures to review scenario changes.</p>');return}
+ const s=getScenario(),items=sorted(s).map(p=>'<li><b>'+esc(longMonth(p.from))+'</b> — '+esc(typeLabel(p.type))+': '+phaseSummary(p)+'</li>').join('');
+ const needs=needItems(s);
+ showSheet('Review for current forecast','<p>The following changes would need to be mapped into actual Expected Activity and scheduled transitions. This is a review step—not an Apply button.</p><h4>Starts / stops / changes</h4><ul>'+items+'</ul><h4>Unresolved before adoption</h4><ul>'+needs.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><div class="notice"><b>No baseline changes made</b><p>A real implementation must re-check dates, sources, assumptions, funding constraints and audit evidence server-side. This prototype cannot promote a scenario into a live plan.</p></div><button id="closeReview" class="primary full" style="margin-top:13px">Keep as a saved hypothetical</button>');
+ $('#closeReview').onclick=closeSheet;
+}
+$('#newScenario').onclick=()=>beginEdit('library',false);
+$('#viewBack').onclick=()=>{if(previewingDraft){screen('builder');return}openLibrary()};
+$('#editScenario').onclick=()=>beginEdit('viewer',true);
+$('#openBuilder').onclick=()=>beginEdit('viewer',true);
+$('#editFromDrivers').onclick=()=>beginEdit('viewer',true);
+$('#duplicateScenario').onclick=()=>{
+ const from=getScenario(),copy=clone(from);copy.id='s-'+(nextId++);copy.name=from.name+' (copy)';
+ copy.changes.forEach(p=>p.id='p'+(nextId++));scenarios.unshift(copy);activeId=copy.id;renderView();toast('Duplicated as an independent scenario in this page.')
+};
+$('#deleteScenario').onclick=()=>{
+ showSheet('Delete scenario?','<p>Delete this saved hypothetical from the current prototype session? Your baseline and all other scenarios stay unchanged.</p><button id="confirmDelete" class="primary full">Delete this scenario</button><button id="cancelDelete" class="secondary" style="width:100%;margin-top:9px">Cancel</button>');
+ $('#confirmDelete').onclick=()=>{scenarios=scenarios.filter(s=>s.id!==activeId);closeSheet();openLibrary();toast('Scenario deleted from this page only.')};
+ $('#cancelDelete').onclick=closeSheet;
+};
+$('#reviewAdoption').onclick=reviewAdopt;
+$('#builderBack').onclick=()=>{proposalOps=null;draft=null;if(builderOrigin==='viewer')openScenario(activeId);else openLibrary()};
+$('#discardDraft').onclick=()=>{proposalOps=null;draft=null;if(builderOrigin==='viewer')openScenario(activeId);else openLibrary();toast('Unsaved draft changes discarded.')};
+$('#saveDraft').onclick=saveDraft;
+$('#scenarioName').oninput=()=>{draft.name=$('#scenarioName').value;};
+$('#scenarioDescription').oninput=()=>{draft.description=$('#scenarioDescription').value;};
+
+$('#interpret').onclick=chatPropose;
+$('#builderPreview').onclick=()=>{if(!draft)return;draft.name=$('#scenarioName').value.trim()||'Unsaved draft';draft.description=$('#scenarioDescription').value.trim();previewingDraft=true;horizon=18;selectedMonth=5;renderView();screen('viewer')};
+$('#periodControls').onclick=e=>{const b=e.target.closest('[data-horizon]');if(!b)return;horizon=Number(b.dataset.horizon);selectedMonth=Math.min(selectedMonth,horizon-1);renderView()};
+$('#monthSelect').onchange=()=>{selectedMonth=Number($('#monthSelect').value);renderView()};
+$('#monthBack').onclick=()=>{selectedMonth=Math.max(0,selectedMonth-1);renderView()};
+$('#monthForward').onclick=()=>{selectedMonth=Math.min(horizon-1,selectedMonth+1);renderView()};
+$('#whatIsRunway').onclick=()=>showSheet('Runway comparison','<p>Both trajectories begin at the same synthetic €23,600 unallocated personal cash after protected reserves, with the same existing expected activity. The scenario adds only its dated changed assumptions.</p><p>Projections stop at depletion. This comparison uses synthetic aggregate monthly cashflows and does not yet validate operational account buffers, payment accounts, FX transfers or lending.</p>');
+$('#planningNav').onclick=openLibrary;
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive amounts':'Hide sensitive amounts')};
+$('#dataStatus').onclick=()=>showSheet('Data status','<p>Synthetic example data only. This prototype makes no requests to Squeebs, has no connected AI and does not transmit scenario information.</p><p>Changes are held in memory for this open page. Refreshing restores the example library.</p>');
+$('#insights').onclick=()=>showSheet('Insights','<p>The Insights experience is a separate v2 prototype. This page is focused on scenario creation, editing, saved alternatives and comparison.</p>');
+$('#closeSheet').onclick=closeSheet;
+$('#modal').onclick=e=>{if(e.target===$('#modal'))closeSheet()};
+window.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+libraryRender();
+</script><script src="shared.js" defer></script>
+</body></html>
