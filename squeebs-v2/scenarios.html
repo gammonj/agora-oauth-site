@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0d10">
+<title>Squeebs v2 — Planning / Scenarios prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;--text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;--orange:#ff9b62;--red:#ff727a;--purple:#ac92ff;--lightblue:#a9d5ff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{min-height:100dvh}button,input,select{font:inherit;color:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}a{text-decoration:none;color:inherit}
+.app{max-width:1180px;min-height:100dvh;margin:0 auto;padding:18px 16px calc(98px + env(safe-area-inset-bottom))}
+.header{display:flex;justify-content:space-between;align-items:center;margin:2px 0 14px}.header h1{font-size:30px;letter-spacing:-.6px;margin:0}.header-actions{display:flex;align-items:center;gap:12px}
+.iconbtn{width:35px;height:35px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted)}.iconbtn svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none}.status-dot{width:11px;height:11px;border-radius:50%;background:var(--green);border:0;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
+.modes{display:flex;gap:8px;overflow:auto;scrollbar-width:none;margin:0 0 15px}.modes::-webkit-scrollbar{display:none}.mode{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 13px;color:var(--muted);font-size:14px}.mode.active{background:#17395a;border-color:#245f93;color:var(--lightblue)}
+.kicker{font-size:12px;font-weight:750;color:#b7c9d6;display:flex;align-items:center;gap:7px}.kicker i{display:block;height:8px;width:8px;background:var(--purple);border-radius:50%}
+.hero{border:1px solid #334251;background:linear-gradient(180deg,#1a222e,#151a20);padding:17px;border-radius:22px}.hero .name{font-size:27px;font-weight:770;letter-spacing:-.55px;margin:8px 0 6px}.hero .desc{color:#becbd6;font-size:13px;line-height:1.5;margin:0}.hero-badges{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 0}.chip{font-size:11px;color:#c1ceda;border:1px solid #344455;border-radius:999px;padding:5px 9px}.chip.hypo{color:#dacfff;background:rgba(172,146,255,.09);border-color:rgba(172,146,255,.25)}.hero button{background:none;border:0;color:var(--lightblue);font-size:13px;margin-top:13px;padding:0;font-weight:700}
+.synthetic{font-size:10px;color:var(--muted2);letter-spacing:.045em;margin:10px 2px 0}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 2px 9px}.sectionhead h2{font-size:17px;letter-spacing:-.2px;margin:0}.sectionhead button{border:0;background:none;padding:0;color:var(--blue);font-size:13px}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px}
+.comparegrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.comparecard{background:var(--surface2);border-radius:14px;padding:13px}.comparecard.scenario{border:1px solid rgba(172,146,255,.32);background:#211e30}.comparecard .label{font-size:11px;color:var(--muted);margin-bottom:9px}.comparecard .figure{font-size:20px;font-weight:770;letter-spacing:-.2px;line-height:1.13}.comparecard .figure.positive{color:#b4e8c5}.comparecard .small{font-size:11px;line-height:1.45;color:var(--muted);margin-top:6px}
+.impact{margin-top:12px;padding:12px;border-radius:14px;background:var(--surface2)}.impact .headline{font-size:13px;font-weight:700}.impact p{font-size:12px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+.charthead{display:flex;align-items:center;justify-content:space-between;gap:8px}.charthead b{font-size:14px}.periods{display:flex;background:var(--surface2);padding:3px;border-radius:11px;border:1px solid var(--line)}.periods button{background:transparent;border:0;padding:6px 8px;border-radius:9px;font-size:11px;color:var(--muted)}.periods button.active{background:#2b435e;color:#d6ebff}
+.graph{margin-top:11px;border-radius:13px;background:var(--surface2);padding:11px 7px 7px;position:relative}
+.graph svg{display:block;width:100%;height:206px}.graph svg text{fill:#9aa5b0;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.graph .grid{stroke:#35404b;stroke-width:.8}.graph .axis{stroke:#88919c;stroke-dasharray:4 4;stroke-width:1}.graph .line-base{fill:none;stroke:#8997a5;stroke-width:2;stroke-dasharray:5 5;stroke-linecap:round}.graph .line-alt{fill:none;stroke:var(--purple);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.graph .selected{stroke:var(--text);stroke-width:1;stroke-dasharray:2 5;opacity:.7}.graph .point{fill:var(--purple);stroke:var(--surface2);stroke-width:2}.graph .limit{fill:var(--orange)}.graph .target{fill:none;stroke:var(--green);stroke-width:1.4;stroke-dasharray:4 4}
+.chartlegend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 1px 0;font-size:11px;color:var(--muted)}.legend{display:flex;align-items:center;gap:6px}.legend i{display:block;width:12px;height:3px;border-radius:4px;background:var(--purple)}.legend.base i{background:#8997a5}.legend.buffer i{background:var(--green)}
+.maskchart{display:none;position:absolute;inset:7px;background:rgba(20,25,31,.96);border-radius:12px;place-items:center;color:var(--muted);font-size:12px}
+.monthnav{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;gap:8px;align-items:center;margin-top:12px}
+.monthnav select{width:100%;border:1px solid var(--line);border-radius:11px;background:var(--surface2);font-size:12px;padding:9px 8px}
+.monthnav button{width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--surface2);font-size:18px}
+.monthdetails{border-radius:12px;background:var(--surface2);margin-top:9px;padding:12px}
+.monthdetailhead{display:flex;gap:12px;justify-content:space-between;align-items:start}.monthdetailhead b{font-size:13px}.monthdetailhead .value{font-size:14px;font-weight:760;text-align:right}
+.monthdetails .note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.45}
+.microcompare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.microcompare>div{padding-top:9px;border-top:1px solid var(--line)}.microcompare span{font-size:10px;color:var(--muted)}.microcompare b{display:block;font-size:15px;margin-top:4px}
+.fields{display:grid;gap:13px}.field label{display:block;color:#c5cfd8;font-size:13px;font-weight:680;margin-bottom:6px}
+.field input,.field select{border:1px solid #354351;background:var(--surface2);border-radius:12px;padding:11px 12px;width:100%;font-size:15px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue)}
+.field small{display:block;margin-top:5px;font-size:11px;line-height:1.4;color:var(--muted)}
+.twofields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.fieldgroup{padding:13px;border-radius:14px;background:var(--surface2);border:1px solid #283340}.fieldgroup h3{display:flex;align-items:center;gap:7px;font-size:14px;margin:0 0 12px}.fieldgroup h3 span{font-size:10px;color:var(--purple);border-radius:999px;padding:4px 7px;border:1px solid rgba(172,146,255,.3)}
+.fields .fieldgroup input,.fields .fieldgroup select{background:#171c25}
+.note-box{font-size:12px;line-height:1.55;color:#c0ceda;background:rgba(61,155,255,.07);border:1px solid rgba(61,155,255,.17);border-radius:13px;padding:11px;margin-top:11px}
+.impact-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}.impact-row:last-child{border-bottom:0}.impact-row b{font-size:13px}.impact-row p{font-size:11px;line-height:1.45;color:var(--muted);margin:4px 0 0}.impact-row strong{font-size:13px;text-align:right}
+.categories{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:13px}.category{font-size:12px;border-radius:999px;padding:7px 10px;border:1px solid var(--line);background:var(--surface2);color:var(--muted)}.category.active{color:var(--lightblue);background:#17395a;border-color:#245f93}
+.assumption{padding:10px 0;border-bottom:1px solid var(--line)}.assumption:last-child{border-bottom:0}.assumption b{font-size:13px;display:block}.assumption p{font-size:11px;color:var(--muted);line-height:1.45;margin:4px 0 0}.badge{display:inline-block;border-radius:999px;font-size:10px;padding:4px 7px;background:#252e3a;color:#bdcad7;margin-top:8px}.badge.warn{background:rgba(255,155,98,.1);color:#ffbb90}
+.btn-primary{display:block;border:none;border-radius:13px;background:#78bfff;color:#0c1b2c;font-weight:770;padding:13px 15px;width:100%;font-size:14px;margin-top:13px}.btn-secondary{width:100%;margin-top:8px;padding:12px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;font-size:13px}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(15,18,22,.97);border-top:1px solid var(--line);backdrop-filter:blur(20px);display:flex;justify-content:space-around;padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.navitem{border:none;background:none;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px}.navitem.active{color:var(--blue)}.navicon{font-size:20px}
+.sheetbg{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.64);display:none}.sheetbg.show{display:block}.sheet{position:absolute;bottom:0;left:0;right:0;max-height:min(90dvh,790px);overflow:auto;background:#12161b;border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom))}
+.grab{width:38px;height:5px;border-radius:7px;background:#3c454f;margin:0 auto 14px}.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.sheethead h2{font-size:20px;margin:0}.close{background:var(--surface2);border:none;border-radius:50%;width:34px;height:34px;font-size:19px}
+.sheet p,.sheet li{font-size:13px;color:var(--muted);line-height:1.55}.sheet ul{padding-left:20px}.sheet li{margin:5px 0}
+.private .sensitive{filter:blur(8px);user-select:none}.private .maskchart{display:grid}.private .microcompare{filter:blur(8px);user-select:none}
+.desktopgrid{display:block}.rightcol{display:block}
+@media(min-width:800px){.app{padding:24px 28px 42px}.header h1{font-size:36px}.desktopgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(335px,.8fr);align-items:start;gap:20px}.rightcol{display:block}.graph svg{height:250px}.hero .name{font-size:31px}.bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(540px,92vw)}}
+@media(max-width:360px){.comparecard .figure{font-size:17px}.hero .name{font-size:24px}}
+</style>
+</head><body>
+<div class="app" id="app">
+  <div class="header"><h1>Planning</h1><div class="header-actions">
+    <button class="iconbtn" id="privacy" aria-label="Hide sensitive figures" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+    <button class="status-dot" id="status" aria-label="Data status"></button>
+  </div></div>
+  <nav class="modes" aria-label="Planning views">
+    <a class="mode" href="planning.html">Cash Forecast</a><a class="mode" href="runway.html">Runway</a><a class="mode" href="reserves.html">Reserves</a><a class="mode active" href="scenarios.html" aria-current="page">Scenarios</a>
+  </nav>
+  <section class="hero">
+    <div class="kicker"><i></i> Hypothetical · not part of your current forecast</div>
+    <div class="name">New role + new rental</div>
+    <p class="desc">What if employment resumes and a separate apartment starts adding rent and move-in costs? Compare against the current baseline without changing it.</p>
+    <div class="hero-badges"><span class="chip hypo">Scenario draft</span><span class="chip">Baseline unchanged</span><span class="chip" id="changesCount">5 changes</span></div>
+    <button id="about" type="button">What’s a scenario? →</button>
+  </section>
+  <div class="synthetic">SYNTHETIC EXAMPLE · NOT LINKED TO ACTUAL ACCOUNTS OR FINANCIAL PLANS</div>
+  <div class="desktopgrid">
+    <main>
+      <div class="sectionhead"><h2>Compared with baseline</h2><button id="comparisonInfo">How compared?</button></div>
+      <section class="card">
+        <div class="comparegrid">
+          <div class="comparecard"><div class="label">Current baseline</div><div class="figure sensitive">~4.2 months</div><div class="small">Cash runway, estimated limit around February</div></div>
+          <div class="comparecard scenario"><div class="label">With this scenario</div><div class="figure sensitive" id="scenarioHeadline">No depletion</div><div class="small" id="scenarioSub">Within next 18 months</div></div>
+        </div>
+        <div class="impact"><div class="headline" id="impactHeadline">The income change improves your outlook.</div><p id="impactText">The new rent and move-in cost partially offset the extra income. Protected reserves remain intact in this projection.</p></div>
+      </section>
+      <div class="sectionhead"><h2>Cash impact over time</h2></div>
+      <section class="card">
+        <div class="charthead"><b>Unallocated personal cash</b><div class="periods" id="horizons"><button data-h="12">12m</button><button data-h="18" class="active">18m</button><button data-h="24">24m</button></div></div>
+        <div class="graph">
+          <svg id="forecastChart" viewBox="0 0 600 222" role="img" aria-label="Comparison of monthly unallocated cash under baseline and hypothetical scenario">
+            <g id="chartContent"></g>
+          </svg>
+          <div class="maskchart">Sensitive forecast graph hidden</div>
+        </div>
+        <div class="chartlegend"><span class="legend"><i></i>Scenario</span><span class="legend base"><i></i>Baseline</span><span class="legend buffer"><i></i>Protected reserves remain excluded</span></div>
+        <div class="monthnav"><button id="prevMonth" aria-label="Previous month">‹</button><select id="monthPicker" aria-label="Inspect projected month"></select><button id="nextMonth" aria-label="Next month">›</button></div>
+        <div class="monthdetails">
+          <div class="monthdetailhead"><b id="monthTitle">December</b><span class="value sensitive" id="monthDelta">+€6,200 vs baseline</span></div>
+          <div class="microcompare">
+            <div><span>Baseline month end</span><b class="sensitive" id="baselineCash">€0</b></div>
+            <div><span>Scenario month end</span><b class="sensitive" id="scenarioCash">€0</b></div>
+          </div>
+          <div class="note" id="monthNote">Scenario applies changed assumptions only after their effective months.</div>
+        </div>
+        <div class="note-box">The gray baseline line stops at its forecast limit. The scenario line stops too if eligible unallocated cash would be exhausted—never extend a negative balance as though the plan remains sustainable.</div>
+      </section>
+      <div class="sectionhead"><h2>Where the difference comes from</h2></div>
+      <section class="card" id="differenceList"></section>
+    </main>
+    <aside class="rightcol">
+      <div class="sectionhead"><h2>Changed in this scenario</h2><button id="resetBtn">Reset</button></div>
+      <section class="card fields">
+        <div class="fieldgroup">
+          <h3>New employment <span>Changed</span></h3>
+          <div class="field"><label for="income">New net monthly income · €</label><input id="income" type="number" min="0" max="16000" step="100" value="7700"><small>Replaces a synthetic €1,500/month temporary-income stream already in baseline, rather than adding to it twice.</small></div>
+          <div class="field" style="margin-top:11px"><label for="incomeStart">First full month</label><select id="incomeStart"></select></div>
+        </div>
+        <div class="fieldgroup">
+          <h3>New rental <span>Changed</span></h3>
+          <div class="field"><label for="rent">Additional monthly rent · €</label><input id="rent" type="number" min="0" max="6000" step="50" value="1650"><small>Additional housing cost. Existing baseline housing commitments are not silently removed.</small></div>
+          <div class="twofields" style="margin-top:11px">
+            <div class="field"><label for="rentStart">Start month</label><select id="rentStart"></select></div>
+            <div class="field"><label for="oneOff">Move-in cost · €</label><input id="oneOff" type="number" min="0" max="20000" step="100" value="2500"></div>
+          </div>
+          <small style="display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:9px">Move-in cost is modelled once, in the rent start month.</small>
+        </div>
+        <div class="note-box">Changes update this hypothetical illustration only. They are not bank transactions, actual Expected Activity edits, or amendments to your saved baseline.</div>
+      </section>
+      <div class="sectionhead"><h2>Inherited from baseline</h2></div>
+      <section class="card" id="inheritedList">
+        <div class="assumption"><b>Current account balances and source eligibility</b><p>Starting unallocated personal cash €23,600, with original currency/funding constraints retained.</p></div>
+        <div class="assumption"><b>Protected reserves</b><p>Emergency and Future Home allocations total €12,100, unchanged in this scenario.</p></div>
+        <div class="assumption"><b>Existing spending, income and shared obligations</b><p>Current recurring activity, seasonality and contributions to Joint/GBP accounts continue unless overridden.</p></div>
+      </section>
+      <div class="sectionhead"><h2>Needs attention</h2></div>
+      <section class="card">
+        <div class="assumption"><b>Employment certainty and first payment</b><p>A start month isn't a confirmed offer or payroll date. Actual first-month income may be partial.</p><span class="badge warn">Unconfirmed</span></div>
+        <div class="assumption"><b>Lease and overlap</b><p>The rent is additive; existing home costs are still inherited. A new agreement would need explicit effective dates and any changes to overlapping obligations.</p><span class="badge warn">Unconfirmed</span></div>
+        <div class="assumption"><b>Account-specific funding</b><p>Aggregate runway doesn't prove every operational bank account can settle its bills. A real scenario must recalculate Cash Forecast funding routes and buffers.</p><span class="badge warn">Requires Cash Forecast check</span></div>
+      </section>
+      <button class="btn-primary" id="promote">Review use in current forecast</button>
+      <div style="height:11px"></div>
+    </aside>
+  </div>
+</div>
+<nav class="bottomnav"><a class="navitem" href="home.html"><span class="navicon">⌂</span>Home</a><a class="navitem" href="transactions.html"><span class="navicon">≡</span>Transactions</a><button class="navitem" id="insightsNav"><span class="navicon">▥</span>Insights</button><a class="navitem active" href="scenarios.html"><span class="navicon">□</span>Planning</a></nav>
+<div class="sheetbg" id="sheetbg"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div><div class="sheethead"><h2 id="sheetTitle">Details</h2><button class="close" id="close" aria-label="Close">×</button></div><div id="sheetBody"></div></section></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const START=23600,RESERVED=12100,TEMP=1500;
+const defaults={income:7700,incomeStart:2,rent:1650,rentStart:3,oneOff:2500,horizon:18};
+let state={...defaults},month=5,scenario=[],baseline=[],endScenario=null,endBaseline=null;
+const names=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+function label(i){return names[i%12]+' '+(2026+Math.floor((i+9)/12))}
+function money(n){return (n<0?'−':'')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB')}
+function signed(n){return (n>=0?'+':'−')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB')}
+function incomeAt(i){return i>=state.incomeStart?state.income-TEMP:0}
+function rentAt(i){return i>=state.rentStart?state.rent:0}
+function oneOffAt(i){return i===state.rentStart?state.oneOff:0}
+function baseMonthly(i){return [-3050,-5400,-6300,-5200,-5000][i]??-5200}
+function compute(){
+ let b=START,s=START;
+ baseline=[];scenario=[];endScenario=null;endBaseline=null;
+ for(let i=0;i<Math.max(state.horizon,24);i++){
+   const base=baseMonthly(i),alt=base+incomeAt(i)-rentAt(i)-oneOffAt(i);
+   const prevB=b,prevS=s;b+=base;s+=alt;
+   if(endBaseline===null&&b<=0)endBaseline=i;
+   if(endScenario===null&&s<=0)endScenario=i;
+   baseline.push({i,previous:prevB,net:base,cash:b});
+   scenario.push({i,previous:prevS,net:alt,cash:s});
+ }
+}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+function yPos(n,max){return 185-150*clamp(n/max,0,1)}
+function renderChart(){
+ const h=state.horizon,steps=h,pointX=i=>53+(i+1)*(527/h);
+ const max=Math.max(24000,...scenario.slice(0,h).map(a=>a.cash),...baseline.slice(0,h).map(a=>a.cash));
+ const maxScale=Math.ceil(max/5000)*5000,yv=val=>yPos(val,maxScale);
+ function series(data,limit){
+   let d='M53 '+yv(START);
+   let terminated=false;
+   for(let i=0;i<h;i++){
+     const row=data[i];const x=pointX(i);
+     if(terminated)break;
+     if(row.cash>0){d+=' L'+x.toFixed(1)+' '+yv(row.cash).toFixed(1)}
+     else {
+       const fraction=row.previous>0?(row.previous/(row.previous-row.cash)):0;
+       const x0=i===0?53:pointX(i-1);
+       const at=x0+(x-x0)*clamp(fraction,0,1);
+       d+=' L'+at.toFixed(1)+' 185';terminated=true;
+     }
+   }
+   return d;
+ }
+ let str='';
+ for(let k=0;k<4;k++){const yy=35+k*50;const val=(maxScale-(k+0.2)*(maxScale/3.3));str+='<line class="grid" x1="53" y1="'+yy+'" x2="580" y2="'+yy+'"/>'; }
+ str+='<line class="axis" x1="53" y1="185" x2="580" y2="185"/>';
+ str+='<text x="7" y="19">'+money(maxScale)+'</text><text x="23" y="188">€0</text>';
+ str+='<path class="line-base" d="'+series(baseline,endBaseline)+'"/>';
+ str+='<path class="line-alt" d="'+series(scenario,endScenario)+'"/>';
+ for(let i=0;i<h;i++){
+  if((i+1)%3===0||i===0||i===h-1){
+   str+='<text x="'+pointX(i)+'" y="213" text-anchor="middle">'+names[i%12]+'</text>';
+  }
+ }
+ if(endBaseline!==null&&endBaseline<h){const b=baseline[endBaseline],x0=endBaseline?pointX(endBaseline-1):53,x1=pointX(endBaseline),fraction=clamp(b.previous/(b.previous-b.cash),0,1),cross=x0+(x1-x0)*fraction;str+='<circle cx="'+cross.toFixed(1)+'" cy="185" r="4.3" fill="#8d99a5"/>'}
+ if(endScenario!==null&&endScenario<h){const b=scenario[endScenario],x0=endScenario?pointX(endScenario-1):53,x1=pointX(endScenario),fraction=clamp(b.previous/(b.previous-b.cash),0,1),cross=x0+(x1-x0)*fraction;str+='<circle class="limit" cx="'+cross.toFixed(1)+'" cy="185" r="5"/>'}
+ if(month<h){
+  const row=scenario[month];
+  if(row.cash>0){const x=pointX(month),y=yv(row.cash);str+='<line class="selected" x1="'+x+'" y1="23" x2="'+x+'" y2="185"/><circle class="point" cx="'+x+'" cy="'+y.toFixed(1)+'" r="5.5"/>'}
+ }
+ // Large, invisible month interaction regions; preserve keyboard access through month picker.
+ for(let i=0;i<h;i++)str+='<rect data-chart-month="'+i+'" x="'+(53+i*527/h)+'" y="24" width="'+(527/h)+'" height="170" fill="transparent"/>';
+ $('#chartContent').innerHTML=str;
+ $$('[data-chart-month]').forEach(el=>el.addEventListener('click',()=>{month=Number(el.dataset.chartMonth);renderChart();renderMonth()}));
+}
+function renderMonthOptions(){
+ $('#monthPicker').innerHTML=Array.from({length:state.horizon},(_,i)=>'<option value="'+i+'">'+label(i)+'</option>').join('');
+ month=clamp(month,0,state.horizon-1);
+}
+function renderMonth(){
+ const row=scenario[month],base=baseline[month],delta=row.net-base.net;
+ $('#monthPicker').value=String(month);
+ $('#monthTitle').textContent=label(month);
+ $('#monthDelta').textContent=signed(delta)+' vs baseline this month';
+ $('#baselineCash').textContent=base.cash<=0?'Depleted':money(base.cash);
+ $('#scenarioCash').textContent=row.cash<=0?'Depleted':money(row.cash);
+ const info=[];
+ if(incomeAt(month))info.push(signed(incomeAt(month))+' net employment replacement');
+ if(rentAt(month))info.push('−'+money(rentAt(month))+' additional rent');
+ if(oneOffAt(month))info.push('−'+money(oneOffAt(month))+' move-in cost');
+ if(!info.length)info.push('No overrides active yet; this month inherits the baseline.');
+ $('#monthNote').textContent=info.join(' · ')+'. The month’s baseline cashflow is '+signed(base.net)+'.';
+ $('#prevMonth').disabled=month<=0;$('#nextMonth').disabled=month>=state.horizon-1;
+}
+function renderImpact(){
+ const sEnd=scenario.slice(0,state.horizon),bEnd=baseline.slice(0,state.horizon);
+ const end=sEnd[sEnd.length-1];
+ const scenarioDepIndex=sEnd.findIndex(r=>r.cash<=0);
+ const baseDepIndex=bEnd.findIndex(r=>r.cash<=0);
+ const scenarioH=$('#scenarioHeadline'),scenarioS=$('#scenarioSub');
+ if(scenarioDepIndex<0){
+   const start= Math.max(0,scenario[0].cash);
+   const last5=sEnd.slice(-Math.min(6,state.horizon));
+   const netAverage=last5.reduce((n,r)=>n+r.net,0)/last5.length;
+   scenarioH.textContent='No depletion';
+   scenarioH.className='figure positive sensitive';
+   scenarioS.textContent='Projected over '+state.horizon+' months · '+(netAverage>50?'growing':netAverage< -50?'gradually declining':'approximately stable')+' near horizon end';
+ } else {
+   scenarioH.textContent='~'+(scenarioDepIndex+0.5).toFixed(1)+' months';
+   scenarioH.className='figure sensitive';
+   scenarioS.textContent='Estimated unallocated-cash limit around '+label(scenarioDepIndex);
+ }
+ const totalIncome=scenario.slice(0,state.horizon).reduce((sum,r)=>sum+incomeAt(r.i),0);
+ const totalRent=scenario.slice(0,state.horizon).reduce((sum,r)=>sum+rentAt(r.i),0);
+ const totalOnce=state.rentStart<state.horizon?state.oneOff:0;
+ const diff=totalIncome-totalRent-totalOnce;
+ $('#impactHeadline').textContent=diff>0?'Net effect improves the cash outlook.':diff<0?'Net effect increases pressure on cash.':'No net change over this horizon.';
+ $('#impactText').textContent='Relative to baseline over '+state.horizon+' months: '+signed(totalIncome)+' from replacing temporary income, '+signed(-totalRent)+' additional rent and '+signed(-totalOnce)+' one-off move-in costs. Protected reserves stay at €12,100.';
+ $('#differenceList').innerHTML=[
+  ['Income replacement',signed(totalIncome),'New salary replaces the €1,500/month temporary stream from '+label(state.incomeStart)+'.'],
+  ['Additional rent',signed(-totalRent),'Existing housing commitments remain in the inherited baseline; new rent starts '+label(state.rentStart)+'.'],
+  ['Move-in cost',signed(-totalOnce),'One-time payment in '+label(state.rentStart)+'.'],
+  ['Total net difference',signed(diff),'Net change in projected personal cashflows, not a new cash account balance.']
+ ].map(([n,v,d])=>'<div class="impact-row"><div><b>'+n+'</b><p>'+d+'</p></div><strong class="sensitive">'+v+'</strong></div>').join('');
+}
+function recalc(){
+ compute();renderMonthOptions();renderChart();renderMonth();renderImpact();
+ $('#changesCount').textContent='5 changed assumptions';
+}
+function buildSelect(el){
+ let s='';for(let i=1;i<12;i++)s+='<option value="'+i+'">'+label(i)+'</option>';
+ $(el).innerHTML=s;
+}
+buildSelect('#incomeStart');buildSelect('#rentStart');
+for(const [key,el] of [['income','income'],['incomeStart','incomeStart'],['rent','rent'],['rentStart','rentStart'],['oneOff','oneOff']]){
+ const field=$('#'+el);field.value=state[key];field.addEventListener('change',()=>{
+  const n=Number(field.value),min=(key.endsWith('Start')?1:0),max=(key==='income'?16000:key==='rent'?6000:key==='oneOff'?20000:11);
+  state[key]=clamp(Number.isFinite(n)?n:defaults[key],min,max);
+  field.value=state[key];recalc();
+ });
+}
+$$('#horizons button').forEach(b=>b.onclick=()=>{
+ state.horizon=Number(b.dataset.h);$$('#horizons button').forEach(x=>x.classList.toggle('active',x===b));recalc();
+});
+$('#monthPicker').onchange=()=>{month=Number($('#monthPicker').value);renderChart();renderMonth()};
+$('#prevMonth').onclick=()=>{month--;renderChart();renderMonth()};
+$('#nextMonth').onclick=()=>{month++;renderChart();renderMonth()};
+$('#resetBtn').onclick=()=>{state={...defaults};for(const k of ['income','incomeStart','rent','rentStart','oneOff'])$('#'+k).value=state[k];$$('#horizons button').forEach(x=>x.classList.toggle('active',Number(x.dataset.h)===state.horizon));month=5;recalc()};
+function show(title,html){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=document.body.classList.contains('private')?'<p>Sensitive scenario details are hidden. Reveal figures with the eye icon to inspect this breakdown.</p>':html;$('#sheetbg').classList.add('show')}
+function dismiss(){$('#sheetbg').classList.remove('show')}
+$('#close').onclick=dismiss;$('#sheetbg').onclick=e=>{if(e.target===$('#sheetbg'))dismiss()};window.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss()});
+$('#about').onclick=()=>show('Hypothetical versus scheduled','<p>A <b>scenario</b> stores only what differs from the live baseline. It inherits everything else, including later baseline updates.</p><p>A <b>scheduled transition</b> is a future change that you now expect to happen. Moving a scenario to the baseline requires a separate explicit review of what starts, stops and changes.</p><p>Neither a draft scenario nor this prototype can edit bank transactions or silently change your current forecast.</p>');
+$('#comparisonInfo').onclick=()=>show('How the comparison works','<p>Both lines start from the same synthetic eligible personal cash, excluding the same protected reserves. The gray line uses current expected activity and the purple line applies the scenario’s dated changes on top.</p><p>The example assumes new employment income <b>replaces</b> an existing temporary-income stream. Rent and move-in costs are added, while existing household costs remain until explicitly changed.</p><p>The line stops at zero because continuing into negative unallocated cash would imply that protected reserves could be breached. Account-by-account funding must still be checked separately in Cash Forecast.</p>');
+$('#promote').onclick=()=>{
+ const summary=[
+ '<p>This step would convert a hypothetical into proposed <b>scheduled changes to the baseline</b>. In a real product, each starts/stops/changes item would require review, with a before/after forecast, evidence and audit record.</p>',
+ '<h3 style="margin:18px 0 8px;font-size:14px">Proposed changes</h3>',
+ '<ul>',
+ '<li>End the synthetic €1,500/month temporary-income stream from '+label(state.incomeStart)+'.</li>',
+ '<li>Start net employment income '+money(state.income)+'/month from '+label(state.incomeStart)+'.</li>',
+ '<li>Start additional rent '+money(state.rent)+'/month from '+label(state.rentStart)+'.</li>',
+ '<li>Schedule a one-time move-in cost '+money(state.oneOff)+' in '+label(state.rentStart)+'.</li>',
+ '</ul><h3 style="margin:18px 0 8px;font-size:14px">Still unresolved</h3>',
+ '<ul><li>Job offer, net pay, first payment and income termination.</li><li>Lease start, deposit versus expense treatment, and existing-home cost overlap.</li><li>Which accounts receive/pay each stream, and whether operational buffers and transfer routes hold.</li></ul>',
+ '<div style="padding:12px;background:#202731;border-radius:12px;margin-top:13px"><p><b>No changes will be applied.</b> This is a read-only prototype of the review stage. A real confirmation should remain unavailable until material uncertainties are resolved and Cash Forecast is recalculated.</p></div>',
+ '<button class="btn-secondary" id="keepScenario">Keep exploring scenario</button>'
+ ].join('');
+ show('Review for current forecast',summary);
+ if(!document.body.classList.contains('private'))$('#keepScenario').onclick=dismiss;
+};
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures')};
+$('#status').onclick=()=>show('Data status','<p>This prototype uses synthetic data and is not connected to live Squeebs. No account updates, saved scenarios or scheduled changes occur here.</p>');
+$('#insightsNav').onclick=()=>show('Insights','<p>The Insights discovery prototype remains a separate surface. This screen concentrates on the scenario comparison and promotion semantics.</p>');
+recalc();
+</script></body></html>
