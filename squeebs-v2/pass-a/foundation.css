@@ -284,3 +284,15 @@ body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] #sheet .sheet h3{co
  body.v2-pass-a[data-v2-page="runway"] .chart text[text-anchor="end"]{font-size:17px!important}
  body.v2-pass-a[data-v2-page="runway"] .chart .path{stroke-width:5.0!important}
 }
+
+/* Avoid iOS input-focus auto zoom and accidental double-tap zoom while retaining
+   user pinch zoom for accessibility. */
+body.v2-pass-a button,body.v2-pass-a a,
+body.v2-pass-a input,body.v2-pass-a select,body.v2-pass-a textarea{
+ touch-action:manipulation;
+}
+@media(max-width:1023px){
+ body.v2-pass-a input,body.v2-pass-a select,body.v2-pass-a textarea{
+  font-size:16px!important;
+ }
+}
