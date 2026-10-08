@@ -45,6 +45,9 @@
 (function(){
  const name=location.pathname.split("/").pop();
  const kind={ "home.html":"home","transactions.html":"transactions","runway.html":"runway" }[name];
+ // Input zoom guard is safe across all copied pages; visual header work is only
+ // active on the three representative pages in this pass.
+ document.body.classList.add("v2-zoomguard");
  if(!kind)return;
  const railFoot=document.querySelector("#squeebs-v2-rail .v2-foot");
  if(railFoot){
