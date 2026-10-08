@@ -160,23 +160,27 @@ const clone=a=>JSON.parse(JSON.stringify(a));
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const fmt=n=>(n<0?'−':'')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
 const signed=n=>(n>=0?'+':'−')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
-const START=23600,TOTAL=35700,RESERVES=12100,TEMP=1500,MORTGAGE=1350,RUNNING=370;
+const START=23600,TOTAL=35700,RESERVES=12100,TEMP=1500,MORTGAGE=1350,RUNNING=370,EXAMPLE_GBP_EUR=1.16;
+const symbol=c=>c==='GBP'?'£':'€';
+const moneyIn=(n,c='EUR')=>(n<0?'−':'')+symbol(c)+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const inEur=(n,c='EUR')=>Number(n||0)*(c==='GBP'?EXAMPLE_GBP_EUR:1);
+const currencyOf=p=>p.currency|| (p.type==='uk'?'GBP':'EUR');
 const MONTHS=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
 const TYPES={
- rental:{name:'New rental',area:'Housing',icon:'R',help:'Rent, utilities, internet and one-off moving costs.',fields:[['rent','Rent per month (€)',1700],['electric','Electricity (€ / mo)',140],['water','Water (€ / mo)',35],['internet','Internet (€ / mo)',55],['move','Move-in costs, one-off (€)',2400]]},
- job:{name:'New employment',area:'Income',icon:'J',help:'Net income replaces existing temporary income, not adds to it.',fields:[['income','Net monthly income (€)',7400]]},
+ rental:{name:'New rental',area:'Housing',icon:'R',help:'Rent, utilities, insurance and move-in costs. Add other named expenses if needed.',fields:[['rent','Rent per month'],['electric','Electricity per month'],['gas','Gas per month'],['water','Water per month'],['internet','Internet per month'],['alarm','Alarm per month'],['insurance','Home insurance per month'],['move','Move-in cost, one-off']]},
+ job:{name:'New employment',area:'Income',icon:'J',help:'Net income replaces existing temporary income, not adds to it.',fields:[['income','Net monthly income']]},
  home:{name:'Existing home cost share',area:'Housing',icon:'H',help:'Changes personal share of existing contributions from this month; most recent rule wins.',fields:[['mortgagePct','Mortgage share (%)',50],['runningPct','Running costs share (%)',0]]},
- uk:{name:'UK rental becomes vacant',area:'Property',icon:'U',help:'Illustrative converted impact only; source remains GBP in a real scenario.',fields:[['lostIncome','Monthly rent no longer received (EUR eq.)',2200],['extra','Extra property costs (€ / mo)',450]]},
- recurring:{name:'New recurring cost',area:'Other',icon:'C',help:'Additional regular expense from a dated month.',fields:[['amount','Additional cost (€ / mo)',120]],label:true},
- once:{name:'One-off expense',area:'One-offs',icon:'1',help:'Single additional payment in its effective month.',fields:[['amount','One-time expense (€)',600]],label:true},
- onceIncome:{name:'One-off income',area:'Income',icon:'+',help:'A one-time eligible personal cash inflow.',fields:[['amount','One-time income (€)',1000]],label:true}
+ uk:{name:'UK rental becomes vacant',area:'Property',icon:'U',help:'GBP by default. Conversion into EUR reporting equivalents is illustrative.',fields:[['lostIncome','Monthly rent no longer received'],['extra','Extra property costs per month']]},
+ recurring:{name:'New recurring cost',area:'Other',icon:'C',help:'Additional regular expense from a dated month.',fields:[['amount','Additional monthly cost']],label:true},
+ once:{name:'One-off expense',area:'One-offs',icon:'1',help:'Single additional payment in its effective month.',fields:[['amount','One-time expense']],label:true},
+ onceIncome:{name:'One-off income',area:'Income',icon:'+',help:'A one-time eligible personal cash inflow.',fields:[['amount','One-time income']],label:true}
 };
 let nextId=100,scenarios=[
- {id:'s-rental',name:'Move into a rental',description:'Additional housing costs, without assuming a new job or removing existing commitments.',changes:[{id:'p1',type:'rental',from:3,rent:1700,electric:140,water:35,internet:55,move:2400}]},
+ {id:'s-rental',name:'Move into a rental',description:'Additional housing costs, without assuming a new job or removing existing commitments.',changes:[{id:'p1',type:'rental',from:3,currency:'EUR',rent:1700,electric:140,gas:65,water:35,internet:55,alarm:35,insurance:30,move:2400,extras:[]}]},
  {id:'s-job',name:'Start a new job',description:'Replace temporary income with employment, leaving housing arrangements unchanged.',changes:[{id:'p2',type:'job',from:2,income:7400}]},
- {id:'s-staged',name:'Move out, then change shared costs',description:'New rental plus two dated stages for existing-home obligations.',changes:[{id:'p3',type:'rental',from:3,rent:1650,electric:130,water:40,internet:55,move:2100},{id:'p4',type:'home',from:3,mortgagePct:50,runningPct:0},{id:'p5',type:'home',from:5,mortgagePct:50,runningPct:50}]},
- {id:'s-uk',name:'London rental becomes vacant',description:'Stop the expected rental inflow and allow for additional property costs.',changes:[{id:'p6',type:'uk',from:4,lostIncome:2200,extra:450}]},
- {id:'s-combined',name:'New role + new rental',description:'Employment resumes alongside a move, with housing commitments unchanged.',changes:[{id:'p7',type:'job',from:2,income:7700},{id:'p8',type:'rental',from:3,rent:1650,electric:140,water:35,internet:55,move:2500}]}
+ {id:'s-staged',name:'Move out, then change shared costs',description:'New rental plus two dated stages for existing-home obligations.',changes:[{id:'p3',type:'rental',from:3,currency:'EUR',rent:1650,electric:130,gas:45,water:40,internet:55,alarm:25,insurance:30,move:2100,extras:[]},{id:'p4',type:'home',from:3,mortgagePct:50,runningPct:0},{id:'p5',type:'home',from:5,mortgagePct:50,runningPct:50}]},
+ {id:'s-uk',name:'London rental becomes vacant',description:'Stop the expected rental inflow and allow for additional property costs.',changes:[{id:'p6',type:'uk',from:4,currency:'GBP',lostIncome:1900,extra:390}]},
+ {id:'s-combined',name:'New role + new rental',description:'Employment resumes alongside a move, with housing commitments unchanged.',changes:[{id:'p7',type:'job',from:2,income:7700},{id:'p8',type:'rental',from:3,currency:'EUR',rent:1650,electric:140,gas:45,water:35,internet:55,alarm:25,insurance:30,move:2500,extras:[]}]}
 ];
 let activeId=null,draft=null,editingId=null,builderOrigin='library',expanded=null,horizon=18,selectedMonth=5,proposal=null,proposalOps=null;
 const screen=name=>{$$('.screen').forEach(n=>n.classList.toggle('show',n.id===name));window.scrollTo(0,0)};
@@ -185,21 +189,24 @@ function monthName(i){return MONTHS[i%12]+' '+(2026+Math.floor((i+9)/12))}
 function longMonth(i){return new Date(2026,9+i,1).toLocaleDateString('en-GB',{month:'long',year:'numeric'})}
 function tooltip(s){return esc(s)}
 function newChange(type,from=3){
- const t=TYPES[type],item={id:'p'+(nextId++),type,from};
+ const t=TYPES[type],item={id:'p'+(nextId++),type,from,currency:type==='uk'?'GBP':'EUR'};
  t.fields.forEach(([k,label,v])=>item[k]=type==='home'?100:0);
- if(t.label)item.label=type==='once'?'One-time purchase':type==='onceIncome'?'One-time inflow':'Additional monthly cost';
+ if(type==='rental')item.extras=[];
+ if(t.label)item.label=type='once'?'One-time purchase':type==='onceIncome'?'One-time inflow':'Additional monthly cost';
  return item;
 }
 function typeLabel(t){return TYPES[t]?.name||t}
+function rentalMonthly(p){return ['electric','gas','water','internet','alarm','insurance'].reduce((n,k)=>n+Number(p[k]||0),0)+(p.extras||[]).reduce((n,e)=>n+Number(e.amount||0),0)}
 function phaseSummary(p){
+ const c=currencyOf(p),native=n=>moneyIn(n,c);
  switch(p.type){
-  case 'rental':return fmt(p.rent)+'/mo rent · '+fmt(p.electric+p.water+p.internet)+'/mo bills · '+fmt(p.move)+' once';
-  case 'job':return fmt(p.income)+'/mo net (replaces '+fmt(TEMP)+'/mo)';
+  case 'rental':return native(p.rent)+'/mo rent · '+native(rentalMonthly(p))+'/mo other costs · '+native(p.move)+' once';
+  case 'job':return native(p.income)+'/mo net (replaces '+fmt(TEMP)+'/mo baseline)';
   case 'home':return p.mortgagePct+'% mortgage · '+p.runningPct+'% running costs';
-  case 'uk':return '−'+fmt(p.lostIncome)+'/mo income · '+fmt(p.extra)+'/mo costs';
-  case 'recurring':return esc(p.label||'Additional cost')+' · '+fmt(p.amount)+'/mo';
-  case 'once':return esc(p.label||'One-off')+' · '+fmt(p.amount)+' once';
-  case 'onceIncome':return esc(p.label||'One-off')+' · +'+fmt(p.amount)+' once';
+  case 'uk':return '−'+native(p.lostIncome)+'/mo income · '+native(p.extra)+'/mo costs';
+  case 'recurring':return esc(p.label||'Additional cost')+' · '+native(p.amount)+'/mo';
+  case 'once':return esc(p.label||'One-off')+' · '+native(p.amount)+' once';
+  case 'onceIncome':return esc(p.label||'One-off')+' · +'+native(p.amount)+' once';
  }
  return '';
 }
@@ -209,7 +216,7 @@ function needItems(s){
  const rental=s.changes.find(p=>p.type==='rental'), job=s.changes.find(p=>p.type==='job'),home=s.changes.filter(p=>p.type==='home'),uk=s.changes.find(p=>p.type==='uk');
  if(rental){
    items.push('Lease start, upfront deposit versus actual expense, and payment account need confirmation.');
-   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check missing or zero-valued rental costs: rent, electricity, water, internet and moving costs. Zero may be deliberate but is not assumed confirmed.');
+   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check zero or missing rental assumptions, including rent, utilities, moving costs and optional gas, alarm or insurance. Zero is not automatically confirmed.');
    if(!home.length)items.push('Existing-home cost responsibility is inherited unchanged; confirm whether or when that split changes.');
  }
  if(job){if(!job.income)items.push('Net income amount is not set. Forecast results are provisional.');items.push('Employment offer, first partial payroll, tax/net-pay basis and receiving account are not confirmed.');}
@@ -224,16 +231,17 @@ function contribution(s,i){
  const active=sorted(s).filter(p=>p.from<=i),detail=[];
  let amount=0;
  const latest=type=>active.filter(p=>p.type===type).at(-1);
- const job=latest('job'); if(job){const n=job.income-TEMP;amount+=n;detail.push({area:'Income',label:'New income replacing temporary income',value:n,stage:job})}
+ const job=latest('job');if(job){const n=inEur(job.income,currencyOf(job))-TEMP;amount+=n;detail.push({area:'Income',label:'New income replacing temporary income',value:n,stage:job})}
  const rental=latest('rental');if(rental){
-  const monthly=-(rental.rent+rental.electric+rental.water+rental.internet);amount+=monthly;detail.push({area:'Housing',label:'New rental and utilities',value:monthly,stage:rental});
-  if(i===rental.from){amount-=rental.move;detail.push({area:'One-offs',label:'Move-in costs',value:-rental.move,stage:rental})}
+  const monthly=-inEur(Number(rental.rent||0)+rentalMonthly(rental),currencyOf(rental));
+  amount+=monthly;detail.push({area:'Housing',label:'New rental and associated costs',value:monthly,stage:rental});
+  if(i===rental.from){const move=-inEur(rental.move,currencyOf(rental));amount+=move;detail.push({area:'One-offs',label:'Move-in costs',value:move,stage:rental})}
  }
  const home=latest('home');if(home){const n=MORTGAGE*(1-home.mortgagePct/100)+RUNNING*(1-home.runningPct/100);amount+=n;detail.push({area:'Housing',label:'Change to existing-home contributions',value:n,stage:home})}
- const uk=latest('uk');if(uk){const n=-(uk.lostIncome+uk.extra);amount+=n;detail.push({area:'Property',label:'UK tenancy change',value:n,stage:uk})}
- active.filter(p=>p.type==='recurring').forEach(p=>{amount-=p.amount;detail.push({area:'Other',label:p.label,value:-p.amount,stage:p})});
- active.filter(p=>p.from===i&&p.type==='once').forEach(p=>{amount-=p.amount;detail.push({area:'One-offs',label:p.label,value:-p.amount,stage:p})});
- active.filter(p=>p.from===i&&p.type==='onceIncome').forEach(p=>{amount+=p.amount;detail.push({area:'Income',label:p.label,value:p.amount,stage:p})});
+ const uk=latest('uk');if(uk){const n=-inEur(Number(uk.lostIncome||0)+Number(uk.extra||0),currencyOf(uk));amount+=n;detail.push({area:'Property',label:'UK tenancy change',value:n,stage:uk})}
+ active.filter(p=>p.type==='recurring').forEach(p=>{const n=-inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'Other',label:p.label,value:n,stage:p})});
+ active.filter(p=>p.from===i&&p.type==='once').forEach(p=>{const n=-inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'One-offs',label:p.label,value:n,stage:p})});
+ active.filter(p=>p.from===i&&p.type==='onceIncome').forEach(p=>{const n=inEur(p.amount,currencyOf(p));amount+=n;detail.push({area:'Income',label:p.label,value:n,stage:p})});
  return {amount,detail};
 }
 function forecast(s,num=24){
