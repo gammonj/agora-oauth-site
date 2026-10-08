@@ -177,8 +177,8 @@ body.v2-pass-a[data-v2-page="transactions"] .sheet-backdrop:not(#classifierSheet
 body.v2-pass-a .sheet-backdrop .sheet,
 body.v2-pass-a #sheet .sheet{touch-action:pan-y}
 body.v2-pass-a .sheet-backdrop,
-body.v2-pass-a #sheet{touch-action:none}
-body.v2-pass-a #v2-menu{touch-action:none}
+body.v2-pass-a #sheet{touch-action:auto}
+body.v2-pass-a #v2-menu{touch-action:auto}
 body.v2-pass-a #v2-menu .v2-menu-panel{touch-action:pan-y}
 
 body.v2-pass-a #v2-menu[hidden]{display:none!important}
