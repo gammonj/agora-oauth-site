@@ -281,8 +281,7 @@ function renderView(){
  $('#structureSummary').innerHTML=phases.length?phases.map((p,i)=>'<div class="line baseline-list"><b>'+esc(longMonth(p.from))+' · '+esc(typeLabel(p.type))+'</b><div class="sensitive">'+phaseSummary(p)+'</div></div>').join(''):'<p class="baseline-list">No changed assumptions. This scenario currently matches the baseline.</p>';
  const warnings=needItems(s);
  $('#needsPreview').innerHTML='<b>'+warnings.length+' areas to check before relying on this result</b><p>'+esc(warnings[0]||'No unresolved assumptions identified in this simplified example.')+'</p><button class="quiet" id="viewWarnings" style="margin-top:10px">Review all in builder →</button>';
- $('#viewWarnings').onclick=()=>beginEdit('viewer',true);
-}
+ }
 function renderPlot(s,fc){
  const rows=fc.rows,h=horizon,max=Math.max(24000,START,...rows.slice(0,h).map(r=>Math.max(0,r.base,r.alt))),ceiling=Math.max(25000,Math.ceil(max/5000)*5000);
  const x=i=>56+(i+1)*524/h,y=v=>182-149*Math.min(1,Math.max(0,v)/ceiling);
