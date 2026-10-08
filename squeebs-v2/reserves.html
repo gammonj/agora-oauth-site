@@ -71,7 +71,7 @@ input[type=number]{width:100%;border:1px solid #3e5061;background:var(--surface2
    <section class="card secondary-card">
      <h3>A tax target isn’t allocated cash</h3>
      <p>The tax payment in this example is already an expected expense, but its reserve starts with nothing allocated. You can protect cash for that future bill without adding a second expense.</p>
-     <div class="pill-row"><span class="pill">Expected Activity · €4,000</span><span class="pill">December payment</span></div>
+     <div class="pill-row"><span class="pill sensitive">Expected Activity · €4,000</span><span class="pill">December payment</span></div>
      <button class="button-secondary" id="taxDemo">Explore the tax example</button>
    </section>
    <div class="sectionhead"><h2>How reserves behave</h2></div>
@@ -124,6 +124,7 @@ function render(){
 }
 function find(id){return reserves.find(r=>r.id===id)}
 function reserveSheet(id){
+ if(document.body.classList.contains('private')){show('Reserve detail','<p class="sheetintro">Sensitive reserve amounts are hidden. Use the eye control to reveal figures before inspecting or changing allocations.</p>');return;}
  active=id;dialog='detail';const r=find(id);
  const summary=r.id==='tax'?'This reserve is linked to an existing '+fmt(r.target)+' expected tax payment. Setting aside cash now must not create a second expense.':r.id==='home'?'This reserve protects money for a future home goal. Its target is aspirational; only the allocated amount is protected.':'The emergency allocation is already fully funded. This money is protected from ordinary runway spending.';
  const info='<p class="sheetintro">'+summary+'</p><div class="facts"><div class="fact"><span class="k">Target</span><span class="v sensitive">'+fmt(r.target)+'</span></div><div class="fact"><span class="k">Currently allocated</span><span class="v sensitive">'+fmt(r.allocated)+'</span></div><div class="fact"><span class="k">Still to allocate</span><span class="v sensitive">'+fmt(r.target-r.allocated)+'</span></div><div class="fact"><span class="k">Protection</span><span class="v">'+safeText(r.priority)+'</span></div><div class="fact"><span class="k">Cycle</span><span class="v">'+safeText(r.type)+'</span></div><div class="fact"><span class="k">When</span><span class="v">'+safeText(r.date)+'</span></div></div>';
