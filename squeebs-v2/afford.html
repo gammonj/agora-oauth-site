@@ -129,7 +129,7 @@ function accountsFor(currency){
  if(valid.some(([key])=>key===existing))el.value=existing;
 }
 function setPattern(value){
- mode=value;$$$('[data-pattern]').forEach(b=>b.classList.toggle('active',b.dataset.pattern===value));
+ mode=value;$$('[data-pattern]').forEach(b=>b.classList.toggle('active',b.dataset.pattern===value));
  const planned=$('#treatment');
  if(value==='monthly'&&planned.value==='planned')planned.value='new';
  planned.querySelector('option[value="planned"]').disabled=value==='monthly';
@@ -324,7 +324,7 @@ function saveReview(){
 const escapeText=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 renderDateOptions();preset('purchase');
 $$('[data-example]').forEach(b=>b.onclick=()=>preset(b.dataset.example));
-$('[data-pattern]').forEach(b=>b.onclick=()=>{selected=null;setPattern(b.dataset.pattern);updateAfterEdit()});
+$$('[data-pattern]').forEach(b=>b.onclick=()=>{selected=null;setPattern(b.dataset.pattern);updateAfterEdit()});
 $('#clearExample').onclick=clearCheck;
 $('#checkImpact').onclick=check;
 $('#discard').onclick=clearCheck;
