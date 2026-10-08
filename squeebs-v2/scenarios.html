@@ -379,10 +379,10 @@ function renderTimeline(){
   else p[key]=Math.max(0,Math.min(key.endsWith('Pct')?100:500000,Number(el.value)||0));
   renderBuilder();expanded=p.id;renderTimeline();
  });
- $('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
- $('[data-extra-add]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraAdd);if(!p)return;p.extras ||= [];p.extras.push({label:'Other cost',amount:0});expanded=p.id;renderBuilder()});
- $('[data-extra-remove]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraOwner);if(!p)return;p.extras.splice(Number(b.dataset.extraRemove),1);expanded=p.id;renderBuilder()});
- $('[data-extra-index]').forEach(el=>el.onchange=()=>{const p=draft.changes.find(x=>x.id===el.dataset.extraPhase),e=p?.extras?.[Number(el.dataset.extraIndex)];if(!e)return;if(el.dataset.extraKey==='label')e.label=String(el.value).trim().slice(0,60);else e.amount=Math.max(0,Math.min(500000,Number(el.value)||0));expanded=p.id;renderBuilder()});
+ $$('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
+ $$('[data-extra-add]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraAdd);if(!p)return;p.extras ||= [];p.extras.push({label:'Other cost',amount:0});expanded=p.id;renderBuilder()});
+ $$('[data-extra-remove]').forEach(b=>b.onclick=()=>{const p=draft.changes.find(x=>x.id===b.dataset.extraOwner);if(!p)return;p.extras.splice(Number(b.dataset.extraRemove),1);expanded=p.id;renderBuilder()});
+ $$('[data-extra-index]').forEach(el=>el.onchange=()=>{const p=draft.changes.find(x=>x.id===el.dataset.extraPhase),e=p?.extras?.[Number(el.dataset.extraIndex)];if(!e)return;if(el.dataset.extraKey==='label')e.label=String(el.value).trim().slice(0,60);else e.amount=Math.max(0,Math.min(500000,Number(el.value)||0));expanded=p.id;renderBuilder()});
  $('#addStageShortcut').onclick=chooseType;
  $('#focusChat').onclick=()=>{const target=$('.chat');target.classList.add('attention');target.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{target.classList.remove('attention');$('#composer').focus({preventScroll:true})},600)};
 }
