@@ -46,6 +46,15 @@
  const name=location.pathname.split("/").pop();
  const kind={ "home.html":"home","transactions.html":"transactions","runway.html":"runway" }[name];
  if(!kind)return;
+ const railFoot=document.querySelector("#squeebs-v2-rail .v2-foot");
+ if(railFoot){
+   const comparison=document.createElement("a");
+   comparison.href="../approved/"+name;
+   comparison.target="_blank";
+   comparison.rel="noopener noreferrer";
+   comparison.textContent="Compare approved original ↗";
+   railFoot.appendChild(document.createElement("div")).appendChild(comparison);
+ }
  document.body.classList.add("v2-pass-a");
  document.body.dataset.v2Page=kind;
  const page=document.querySelector(".app");
