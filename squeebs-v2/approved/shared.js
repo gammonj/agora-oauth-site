@@ -18,7 +18,7 @@
   '<div class="v2-caption">Dashboard</div><nav aria-label="Main sections">'+links()+'</nav>'+
   '<div class="v2-caption">Planning</div><nav class="v2-planning" aria-label="Planning sections">'+sub+'</nav>'+
   '<div class="v2-rule"></div><div class="v2-caption">Administration</div>'+
-  '<div class="v2-foot">Approved content preserved<br>Illustrative synthetic data<br><a href="../consolidation.html">Previous shell study (superseded)</a></div></aside>';
+  '<div class="v2-foot">Approved screens, unchanged<br>Illustrative synthetic data<br>Admin workflows remain in the existing app</div></aside>';
   document.body.insertAdjacentHTML("afterbegin",rail);
   /* Make the legacy mobile nav elements actually traverse the approved screens.
      This changes navigation only, not the underlying screen components. */
