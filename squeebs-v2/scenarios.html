@@ -107,7 +107,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
    <div class="headingrow"><h3>Unallocated cash trajectory</h3><div class="periods" id="periodControls"><button data-horizon="12">12m</button><button data-horizon="18" class="active">18m</button><button data-horizon="24">24m</button></div></div>
    <div class="card">
     <div class="plot"><svg id="chart" viewBox="0 0 600 225" role="img" aria-label="Synthetic baseline compared with saved scenario"><g id="chartLayers"></g></svg></div>
-    <div class="legend"><span>Scenario</span><span class="base">Baseline</span></div>
+    <div class="legend"><span>Scenario</span><span class="base">Baseline</span></div><div class="meta" style="margin:9px 2px 0">Reporting in EUR · GBP examples converted at an illustrative £1 = €1.16</div>
     <div class="month-nav"><button id="monthBack" aria-label="Previous month">‹</button><select id="monthSelect" aria-label="Forecast month"></select><button id="monthForward" aria-label="Next month">›</button></div>
     <div class="month-detail"><div class="first"><b id="monthHeading"></b><b class="sensitive" id="monthDifference"></b></div><div class="cashpairs"><div><small>Baseline month end</small><b class="sensitive" id="monthBaseline"></b></div><div><small>Scenario month end</small><b class="sensitive" id="monthAlternative"></b></div></div><div class="small sensitive" id="monthExplanation"></div></div>
     <div class="library-note" style="margin-bottom:0">The forecast stops at the protected-reserve boundary if cash is exhausted. Future account-level transfers and FX constraints must be checked separately.</div>
@@ -134,7 +134,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
     <details class="checkpanel"><summary>See what stays unchanged</summary><p>Eligible personal cash €35,700, with €12,100 protected for reserves. Existing Expected Activity (income, ordinary/seasonal spending, household contributions and GBP commitments), bank sources and transfer constraints carry forward unless a dated change explicitly overrides them.</p><p>In this synthetic model, current home contributions include €1,350/month mortgage and €370/month running costs. Any changed percentage applies to those baseline contributions and replaces previous scenario percentages from its effective month.</p></details>
     <div class="headingrow"><h3>Needs attention</h3></div><section class="notice" id="builderNeeds"></section>
     <div class="savebar"><button id="discardDraft" class="secondary">Discard edits</button><button id="saveDraft" class="primary">Save scenario</button></div>
-    <div class="library-note">Saving keeps the hypothetical only in this open prototype page. The current plan is never changed, and this mock does not persist anything to a server.</div>
+    <div class="library-note">Any GBP assumptions are converted for the EUR runway example at a fixed illustrative £1 = €1.16, not a live exchange rate. Saving keeps the hypothetical only in this open prototype page. The current plan is never changed, and this mock does not persist anything to a server.</div>
    </main>
    <aside class="sidebar">
      <div class="headingrow"><h3>Describe a change</h3><span class="meta">Interactive demo</span></div>
