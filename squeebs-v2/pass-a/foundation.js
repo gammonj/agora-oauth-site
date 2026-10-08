@@ -80,13 +80,33 @@
    eye.setAttribute("aria-label","Hide overview figures");eye.setAttribute("aria-pressed","false");
    eye.title="Hide overview figures";actions.appendChild(eye);
  }
- const theme=document.createElement("button");
- theme.type="button";theme.id="passATheme";theme.className="v2-tool";
- theme.setAttribute("aria-label","Preview light mode");theme.title="Preview light mode";
- theme.innerHTML=svg("sun");actions.appendChild(theme);
  if(status)actions.appendChild(status);
+ const menuButton=document.createElement("button");
+ menuButton.type="button";menuButton.id="passAMenu";menuButton.className="v2-tool";
+ menuButton.setAttribute("aria-label","Open navigation and settings");
+ menuButton.setAttribute("aria-expanded","false");
+ menuButton.title="Navigation and settings";
+ menuButton.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
+ actions.appendChild(menuButton);
  if(originalActions&&originalActions!==header){originalActions.remove()}
  header.appendChild(actions);
+ const menu=document.createElement("div");
+ menu.id="v2-menu";
+ menu.hidden=true;
+ menu.innerHTML='<div class="v2-menu-panel" role="dialog" aria-modal="true" aria-label="Navigation and preferences">'+
+  '<div class="v2-menu-head"><b>Navigation & settings</b><button type="button" class="v2-menu-close" aria-label="Close menu">×</button></div>'+
+  '<div class="v2-menu-label">Dashboard</div><nav class="v2-menu-links" aria-label="Dashboard destinations">'+
+   [['home.html','Home'],['transactions.html','Transactions'],['insights.html','Insights'],['planning.html','Planning']].map(([href,label])=>'<a href="'+href+'"'+(href===name?' class="active" aria-current="page"':'')+'>'+label+'</a>').join('')+'</nav>'+
+  '<div class="v2-menu-label">Planning</div><nav class="v2-menu-links" aria-label="Planning destinations">'+
+   [['planning.html','Cash Forecast'],['runway.html','Runway'],['reserves.html','Reserves'],['scenarios.html','Scenarios'],['afford.html','Can I afford this?']].map(([href,label])=>'<a href="'+href+'"'+(href===name?' class="active" aria-current="page"':'')+'>'+label+'</a>').join('')+'</nav>'+
+  '<div class="v2-menu-label">Appearance</div><div class="v2-theme-row"><button type="button" data-v2-theme="dark">Dark</button><button type="button" data-v2-theme="light">Light</button></div>'+
+  '<div class="v2-menu-note">This is a reversible mobile navigation experiment. The approved original still uses the bottom navigation.</div></div>';
+ document.body.appendChild(menu);
+ function openMenu(){menu.hidden=false;menuButton.setAttribute("aria-expanded","true");menu.querySelector(".v2-menu-close").focus();}
+ function closeMenu(){if(menu.hidden)return;menu.hidden=true;menuButton.setAttribute("aria-expanded","false");menuButton.focus();}
+ menuButton.addEventListener("click",()=>menu.hidden?openMenu():closeMenu());
+ menu.addEventListener("click",e=>{if(e.target===menu||e.target.closest(".v2-menu-close"))closeMenu();});
+ window.addEventListener("keydown",e=>{if(e.key==="Escape"&&!menu.hidden)closeMenu();});
  const privacy=originalEye||document.querySelector("#passAPrivacy");
  function syncPrivacy(){
    const on=kind==="runway"?document.body.classList.contains("private"):document.body.classList.contains("v2-privacy");
@@ -110,12 +130,42 @@
  function applyTheme(next){
    document.body.dataset.v2Theme=next;
    const light=next==="light";
-   theme.innerHTML=svg(light?"moon":"sun");
-   theme.setAttribute("aria-label",light?"Return to dark mode":"Preview light mode");
-   theme.setAttribute("aria-pressed",String(light));
-   theme.title=light?"Return to dark mode":"Preview light mode";
+   menu.querySelectorAll("[data-v2-theme]").forEach(btn=>{
+     const selected=btn.dataset.v2Theme===next;
+     btn.classList.toggle("active",selected);
+     btn.setAttribute("aria-pressed",String(selected));
+   });
    remember("theme",next);
  }
- theme.addEventListener("click",()=>applyTheme(document.body.dataset.v2Theme==="light"?"dark":"light"));
+ menu.querySelectorAll("[data-v2-theme]").forEach(btn=>btn.addEventListener("click",()=>{
+   applyTheme(btn.dataset.v2Theme);
+   closeMenu();
+ }));
  applyTheme(stored("theme")==="light"?"light":"dark");
+
+ /* Lock the underlying document for any stacked mobile sheet, full-screen
+    transaction inspector, or header menu. The topmost panel remains scrollable. */
+ let scrollLocked=false,previousScroll=0;
+ function hasOverlay(){
+   return !menu.hidden||Boolean(document.querySelector(".sheet-backdrop.show, #sheet.open, #inspector.show"));
+ }
+ function updateScrollLock(){
+   const shouldLock=hasOverlay();
+   if(shouldLock===scrollLocked)return;
+   scrollLocked=shouldLock;
+   if(shouldLock){
+     previousScroll=window.scrollY||window.pageYOffset||0;
+     document.body.style.setProperty("--v2-scroll-top",(-previousScroll)+"px");
+     document.body.classList.add("v2-scroll-lock");
+     document.documentElement.classList.add("v2-pass-a-lock");
+   }else{
+     document.body.classList.remove("v2-scroll-lock");
+     document.documentElement.classList.remove("v2-pass-a-lock");
+     document.body.style.removeProperty("--v2-scroll-top");
+     window.scrollTo(0,previousScroll);
+   }
+ }
+ const observer=new MutationObserver(updateScrollLock);
+ observer.observe(document.body,{attributes:true,attributeFilter:["class","hidden"],subtree:true});
+ updateScrollLock();
 })();
