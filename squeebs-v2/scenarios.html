@@ -185,7 +185,7 @@ function longMonth(i){return new Date(2026,9+i,1).toLocaleDateString('en-GB',{mo
 function tooltip(s){return esc(s)}
 function newChange(type,from=3){
  const t=TYPES[type],item={id:'p'+(nextId++),type,from};
- t.fields.forEach(([k,label,v])=>item[k]=v);
+ t.fields.forEach(([k,label,v])=>item[k]=type==='home'?100:0);
  if(t.label)item.label=type==='once'?'One-time purchase':type==='onceIncome'?'One-time inflow':'Additional monthly cost';
  return item;
 }
@@ -208,11 +208,12 @@ function needItems(s){
  const rental=s.changes.find(p=>p.type==='rental'), job=s.changes.find(p=>p.type==='job'),home=s.changes.filter(p=>p.type==='home'),uk=s.changes.find(p=>p.type==='uk');
  if(rental){
    items.push('Lease start, upfront deposit versus actual expense, and payment account need confirmation.');
+   if(!rental.rent||!rental.electric||!rental.water||!rental.internet||!rental.move)items.push('Check missing or zero-valued rental costs: rent, electricity, water, internet and moving costs. Zero may be deliberate but is not assumed confirmed.');
    if(!home.length)items.push('Existing-home cost responsibility is inherited unchanged; confirm whether or when that split changes.');
  }
- if(job)items.push('Employment offer, first partial payroll, tax/net-pay basis and receiving account are not confirmed.');
+ if(job){if(!job.income)items.push('Net income amount is not set. Forecast results are provisional.');items.push('Employment offer, first partial payroll, tax/net-pay basis and receiving account are not confirmed.');}
  if(home.length)items.push('Stage dates and agreed shares of existing-home costs require confirmation.');
- if(uk)items.push('Tenant departure, vacant-property bills, currency conversion and the GBP funding route need confirmation.');
+ if(uk){if(!uk.lostIncome||!uk.extra)items.push('Check the lost rental income and vacant-property cost assumptions; zero entries may be incomplete.');items.push('Tenant departure, vacant-property bills, currency conversion and the GBP funding route need confirmation.');}
  if(s.changes.some(p=>['rental','uk','home','recurring','once','onceIncome','job'].includes(p.type)))items.push('Account-specific buffers, transfer timing and funding paths need a full Cash Forecast calculation.');
  return items;
 }
@@ -382,7 +383,7 @@ function saveDraft(){
  const name=draft.name;draft=null;proposal=null;renderView();screen('viewer');toast('Saved "'+name+'" in this page only. Baseline unchanged.');
 }
 function chooseType(){
- const html='<p>Choose the type of change to add to this scenario. Every item has a dated start and editable assumptions.</p><div class="addrow">'+Object.entries(TYPES).map(([type,t])=>'<button data-addtype="'+type+'">'+esc(t.name)+'</button>').join('')+'</div><p>No money moves and nothing is added to your real baseline.</p>';
+ const html='<p>Choose a type of change. New items start with unset costs represented as zero in this demo, and missing information is flagged for review rather than filled from example amounts.</p><div class="addrow">'+Object.entries(TYPES).map(([type,t])=>'<button data-addtype="'+type+'">'+esc(t.name)+'</button>').join('')+'</div><p>No money moves and nothing is added to your real baseline.</p>';
  showSheet('Add a dated change',html);
  $$('[data-addtype]').forEach(b=>b.onclick=()=>{
   const type=b.dataset.addtype;
@@ -422,6 +423,8 @@ function detectMonth(raw){
 }
 function parseChat(raw){
  const s=raw.toLowerCase(),ops=[],notes=[],from=detectMonth(raw);
+ const monthsPresent=['october','november','december','january','february','march','april','may','june','july','august','september'].filter(m=>new RegExp('\\b'+m+'\\b').test(s));
+ if(monthsPresent.length>1)return {ops:[],notes:['This demo found more than one month. Describe one dated stage per message so it cannot attach a change to the wrong month. The intended full AI builder will support multi-stage instructions.']};
  const remove=/\b(remove|delete|drop)\b/.test(s);
  if(remove){
   const type=/\b(job|employment|salary)\b/.test(s)?'job':/\b(rental|rent|apartment)\b/.test(s)?'rental':/\b(london|tenant|vacancy)\b/.test(s)?'uk':/\b(home|carrer|calle plana|mortgage)\b/.test(s)?'home':null;
@@ -448,7 +451,7 @@ function parseChat(raw){
   const move=amountAfter(raw,['moving costs','move-in costs','moving cost','move-in']);
   const rentalCurrent=draft.changes.find(p=>p.type==='rental');
   if((mentionsRent||electric!==null||water!==null||internet!==null||move!==null)&&(rentAmt!==null||electric!==null||water!==null||internet!==null||move!==null||from!==null)){
-    if(!rentalCurrent&&rentAmt===null)notes.push('To add a new rental, include the monthly rent. Other rental amounts can be edited after creation.');
+    if(!rentalCurrent&&rentAmt===null)notes.push('To add a new rental, include the monthly rent. Other rental costs should also be specified or clearly left unresolved.');
     else{
       const p=rentalCurrent?clone(rentalCurrent):newChange('rental',from??3);
       if(from!==null&&!home)p.from=from;
