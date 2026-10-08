@@ -66,7 +66,8 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
 .modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.65);display:none}.modal.open{display:block}.sheet{position:absolute;bottom:0;left:0;right:0;background:#131920;border-top:1px solid var(--line);border-radius:23px 23px 0 0;padding:10px 16px calc(25px + env(safe-area-inset-bottom));max-height:88dvh;overflow:auto}.grab{height:5px;width:38px;border-radius:8px;background:#414c58;margin:0 auto 14px}.sheet-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.sheet-head h3{font-size:20px;margin:0}.sheet-close{border:0;background:var(--surface2);border-radius:50%;width:34px;height:34px;font-size:18px}.sheet-body p,.sheet-body li{color:var(--muted);font-size:13px;line-height:1.55}.sheet-body ul{padding-left:20px}.sheet-body li{margin-bottom:7px}
 .toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:70;background:#1c3650;border:1px solid #436887;border-radius:12px;padding:11px 14px;font-size:12px;color:#d6eaff;display:none;max-width:calc(100% - 32px);text-align:center}
 .nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(15,18,22,.96);border-top:1px solid var(--line);backdrop-filter:blur(20px);display:flex;justify-content:space-around;padding:8px 13px calc(9px + env(safe-area-inset-bottom))}.navitem{border:0;background:none;display:flex;align-items:center;flex-direction:column;gap:4px;font-size:11px;color:var(--muted)}.navitem.active{color:var(--blue)}.navitem span{font-size:20px}
-@media(min-width:790px){.app{padding:24px 28px 45px}.head h1{font-size:36px}.library-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,.7fr);gap:20px}.scenario-list{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-item{height:100%;display:flex;flex-direction:column}.itembottom{margin-top:auto}.grid{display:grid;grid-template-columns:minmax(0,1.19fr) minmax(340px,.81fr);align-items:start;gap:20px}.sidebar{position:sticky;top:18px}.plot svg{height:245px}.nav{max-width:650px;margin:30px auto 0;position:sticky;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(550px,92vw)}.hero h2{font-size:26px}}
+.chat.attention{outline:2px solid var(--blue);outline-offset:3px;transition:outline-color .4s}.assistant-reply{font-size:12px;line-height:1.5;background:#203244;border-left:3px solid var(--blue);color:#d1e5f5;border-radius:9px;padding:10px;margin-top:10px}.chat-unclear{font-size:12px;line-height:1.5;color:#ffd5b5;margin:7px 0}
+@media(min-width:790px){.mobile-chat-jump{display:none}.app{padding:24px 28px 45px}.head h1{font-size:36px}.library-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,.7fr);gap:20px}.scenario-list{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-item{height:100%;display:flex;flex-direction:column}.itembottom{margin-top:auto}.grid{display:grid;grid-template-columns:minmax(0,1.19fr) minmax(340px,.81fr);align-items:start;gap:20px}.sidebar{position:sticky;top:18px}.plot svg{height:245px}.nav{max-width:650px;margin:30px auto 0;position:sticky;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(550px,92vw)}.hero h2{font-size:26px}}
 @media(max-width:365px){.result b{font-size:18px}.phase-body .formgrid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -127,7 +128,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
    <h2 class="page-title" id="builderHeading">Edit scenario</h2><p class="lede">A hypothetical is a sequence of dated changes layered on the current forecast. Chat can propose structural edits; you confirm before they affect this draft.</p>
    <div class="grid"><main>
     <section class="editor-header"><div class="micro">Scenario name</div><input class="edit-title sensitive" id="scenarioName" maxlength="80" placeholder="e.g. Move into a rental"><div class="field" style="margin-top:11px"><label class="formlabel" for="scenarioDescription">What are you exploring?</label><textarea id="scenarioDescription" class="sensitive" rows="2" placeholder="Short description"></textarea></div><div class="hero-tags" id="builderTags"></div></section>
-    <div class="headingrow"><h3>Changed assumptions · timeline</h3><button id="addChange">+ Add change</button></div>
+    <div class="headingrow"><h3>Changed assumptions · timeline</h3></div>
     <div class="timeline" id="timeline"></div>
     <div class="headingrow"><h3>Inherited from baseline</h3></div>
     <details class="checkpanel"><summary>See what stays unchanged</summary><p>Eligible personal cash €35,700, with €12,100 protected for reserves. Existing Expected Activity (income, ordinary/seasonal spending, household contributions and GBP commitments), bank sources and transfer constraints carry forward unless a dated change explicitly overrides them.</p><p>In this synthetic model, current home contributions include €1,350/month mortgage and €370/month running costs. Any changed percentage applies to those baseline contributions and replaces previous scenario percentages from its effective month.</p></details>
@@ -143,10 +144,10 @@ button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-w
          <div class="examples" id="chatExamples"></div>
          <label class="formlabel" for="composer">Your instruction</label><textarea class="sensitive" id="composer" rows="3" placeholder="e.g. Add rental in January: rent 1700, electricity 140, water 35, internet 55, moving costs 2400"></textarea>
          <div class="chat-go"><span>Local rule-based demo · no AI service connected</span><button id="interpret">Review suggestion →</button></div>
-         <div id="chatProposal"></div>
+         <div id="chatProposal"></div><div id="chatReply" aria-live="polite"></div>
        </div>
      </div>
-     <div class="headingrow"><h3>Preview effect</h3></div><div class="card"><div id="builderImpact" class="baseline-list"></div><button class="secondary" style="width:100%;margin-top:11px" id="builderPreview">Preview full Runway</button></div>
+     <div class="headingrow"><h3>Runway impact preview</h3></div><div class="card"><div id="builderImpact" class="baseline-list"></div><button class="secondary" style="width:100%;margin-top:11px" id="builderPreview">Preview Runway comparison →</button></div>
    </aside></div>
  </section>
 </div>
@@ -352,7 +353,7 @@ function renderTimeline(){
  const dates=Array.from({length:24},(_,x)=>'<option value="'+x+'"'+(x===p.from?' selected':'')+'>'+longMonth(x)+'</option>').join('');
  return '<div class="phase"><button class="phase-head" data-expand="'+p.id+'"><span class="phase-num">'+(i+1)+'</span><span class="phase-info"><b>'+esc(t.name)+' · '+esc(longMonth(p.from))+'</b><p class="sensitive">'+phaseSummary(p)+'</p></span><span class="chevron">'+(open?'⌃':'⌄')+'</span></button>'+(!open?'':'<div class="phase-body"><p style="font-size:11px;color:var(--muted);line-height:1.45;margin:10px 0 0">'+esc(t.help)+'</p><div class="formgrid"><div class="field span"><label class="formlabel">Effective month</label><select data-phase="'+p.id+'" data-key="from">'+dates+'</select></div>'+(t.label?'<div class="field span"><label class="formlabel">Description</label><input class="sensitive" data-phase="'+p.id+'" data-key="label" value="'+esc(p.label||'')+'"></div>':'')+items+'</div><div class="phase-foot"><button data-remove="'+p.id+'">Remove this change</button></div></div>')+'</div>';
  }).join(''):'<div class="empty">No changes yet. Add a dated assumption below or describe your scenario to the assistant.</div>';
- $('#timeline').innerHTML+='<div class="addrow"><button id="addStageShortcut">+ Add structured change</button><button id="focusChat">Describe using chat →</button></div>';
+ $('#timeline').innerHTML+='<div class="addrow"><button id="addStageShortcut">+ Add structured change</button><button id="focusChat" class="mobile-chat-jump">Go to scenario assistant ↓</button></div>';
  $$('[data-expand]').forEach(b=>b.onclick=()=>{expanded=expanded===b.dataset.expand?null:b.dataset.expand;renderTimeline()});
  $$('[data-phase]').forEach(el=>el.onchange=()=>{
   const p=draft.changes.find(x=>x.id===el.dataset.phase),key=el.dataset.key;
@@ -364,7 +365,7 @@ function renderTimeline(){
  });
  $$('[data-remove]').forEach(b=>b.onclick=()=>{draft.changes=draft.changes.filter(p=>p.id!==b.dataset.remove);expanded=null;proposal=null;renderBuilder()});
  $('#addStageShortcut').onclick=chooseType;
- $('#focusChat').onclick=()=>{$('#composer').focus();$('#composer').scrollIntoView({behavior:'smooth',block:'center'})};
+ $('#focusChat').onclick=()=>{const target=$('.chat');target.classList.add('attention');target.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{target.classList.remove('attention');$('#composer').focus({preventScroll:true})},600)};
 }
 function renderNeeds(){
  const items=needItems(draft);
@@ -539,7 +540,7 @@ $('#discardDraft').onclick=()=>{proposalOps=null;draft=null;if(builderOrigin==='
 $('#saveDraft').onclick=saveDraft;
 $('#scenarioName').oninput=()=>{draft.name=$('#scenarioName').value;};
 $('#scenarioDescription').oninput=()=>{draft.description=$('#scenarioDescription').value;};
-$('#addChange').onclick=chooseType;
+
 $('#interpret').onclick=chatPropose;
 $('#builderPreview').onclick=()=>showSheet('Preview scope','<p>This modelled summary reflects your current unsaved draft.</p><p><b>18-month cash difference:</b> '+signed(forecast(draft,18).rows.reduce((n,r)=>n+r.delta,0))+'.</p><p>To see the full comparative chart, save the scenario first. The current baseline will remain untouched.</p><p>Real implementation must also evaluate account-specific funding and uncertainty before claiming a scenario is viable.</p>');
 $('#periodControls').onclick=e=>{const b=e.target.closest('[data-horizon]');if(!b)return;horizon=Number(b.dataset.horizon);selectedMonth=Math.min(selectedMonth,horizon-1);renderView()};
