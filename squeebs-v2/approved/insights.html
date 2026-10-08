@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0b0d10" />
+<title>Squeebs v2 — Insights Prototype</title>
+<style>
+:root {
+  --bg: #0b0d10;
+  --surface: #12161b;
+  --surface-2: #171c22;
+  --surface-3: #1d232b;
+  --surface-soft: rgba(255,255,255,.045);
+  --text: #f6f7f9;
+  --text-2: #c4c9d1;
+  --text-3: #848b96;
+  --border: rgba(255,255,255,.085);
+  --accent: #ff6a33;
+  --accent-soft: rgba(255,106,51,.16);
+  --blue: #3598ff;
+  --green: #30d476;
+  --amber: #ffb13b;
+  --danger: #ff5b5b;
+  --typical: #89919d;
+  --shadow: 0 22px 70px rgba(0,0,0,.38);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --tap: 44px;
+  --nav-h: 76px;
+  --max: 1180px;
+}
+html[data-theme="light"] {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --surface-2: #f7f8fa;
+  --surface-3: #eef1f4;
+  --surface-soft: rgba(10,20,30,.045);
+  --text: #13171c;
+  --text-2: #4b5563;
+  --text-3: #7b8490;
+  --border: rgba(17,24,39,.10);
+  --typical: #9aa2ad;
+  --shadow: 0 18px 50px rgba(40,50,60,.14);
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif}
+body{min-height:100dvh}
+button,input,select{font:inherit}
+button{color:inherit}
+.app{min-height:100dvh;background:
+  radial-gradient(circle at 25% -10%, rgba(53,152,255,.08), transparent 30%),
+  radial-gradient(circle at 85% 10%, rgba(255,106,51,.06), transparent 32%),
+  var(--bg)}
+.shell{width:min(100%,var(--max));margin:0 auto;min-height:100dvh;display:grid;grid-template-columns:1fr}
+.desktop-rail{display:none}
+.main{min-width:0;padding:0 0 calc(var(--nav-h) + max(8px, env(safe-area-inset-bottom)))}
+.phone-page{width:100%;max-width:600px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 18px 28px}
+.statusbar{display:none}
+.status-icons{display:flex;gap:7px;align-items:center}
+.dot-mini{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.topbar{display:flex;align-items:center;gap:12px;min-height:46px;margin-bottom:10px}
+.topbar h1{font-size:30px;line-height:1.05;margin:0;letter-spacing:-.035em}
+.topbar .spacer{flex:1}
+.status-btn{width:var(--tap);height:var(--tap);display:grid;place-items:center;border:0;background:transparent;padding:0;border-radius:50%;cursor:pointer}
+.status-dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(48,212,118,.08)}
+.back-btn{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;padding:0;color:var(--blue);height:44px;cursor:pointer;font-weight:600}
+.back-btn svg{width:20px;height:20px}
+.segmented{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);padding:4px;border-radius:14px;border:1px solid var(--border);margin:6px 0 16px}
+.segmented button{border:0;background:transparent;border-radius:11px;min-height:40px;color:var(--text-2);cursor:pointer}
+.segmented button.active{background:var(--surface-3);color:var(--text);box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.period-row{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:6px;margin-bottom:14px}
+.icon-btn{height:44px;width:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface-2);display:grid;place-items:center;cursor:pointer;padding:0}.icon-btn svg{width:19px;height:19px;display:block}
+.period-btn{border:0;background:transparent;color:var(--text);font-size:16px;font-weight:700;cursor:pointer;height:44px}
+.card{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;box-shadow:0 1px 0 rgba(255,255,255,.015) inset;margin-bottom:14px}
+.card.hero{padding:20px}
+.eyebrow{display:flex;align-items:center;gap:9px;color:var(--accent);font-size:14px;font-weight:750;margin-bottom:10px}
+.eyebrow .mini-icon,.driver-icon,.detail-icon{display:grid;place-items:center;border-radius:12px;background:var(--accent-soft);color:var(--accent)}
+.eyebrow .mini-icon{width:30px;height:30px}
+.hero h2,.detail-copy h2{margin:0 0 10px;font-size:25px;line-height:1.14;letter-spacing:-.03em}
+.hero p,.detail-copy p{margin:0;color:var(--text-2);font-size:15px;line-height:1.48}
+.metric-grid{display:grid;grid-template-columns:1.2fr .9fr .9fr;border-top:1px solid var(--border);margin-top:17px;padding-top:15px;gap:0}
+.metric{padding:0 12px;border-right:1px solid var(--border)}
+.metric:first-child{padding-left:0}.metric:last-child{border-right:0;padding-right:0}
+.metric strong{display:block;font-size:25px;letter-spacing:-.025em}.metric small{color:var(--text-3);font-size:12px}.metric.warn strong{color:var(--accent)}.metric.plan strong{color:var(--green)}
+.section-title{display:flex;align-items:end;justify-content:space-between;margin:24px 4px 9px}
+.section-title h3{font-size:17px;margin:0;letter-spacing:-.012em}.section-title button{border:0;background:transparent;color:var(--blue);cursor:pointer;padding:4px 0}
+.list{border-top:1px solid var(--border)}
+.driver,.explore-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 2px;border-bottom:1px solid var(--border);cursor:pointer}
+.driver-icon,.detail-icon{width:46px;height:46px;font-size:22px}.driver-icon.house{color:#ffb35a;background:rgba(255,179,90,.12)}.driver-icon.rest{color:#ff4f8a;background:rgba(255,79,138,.13)}.driver-icon.other{color:#6bb1ff;background:rgba(107,177,255,.12)}
+.driver strong,.tx strong,.explore-row strong{display:block;font-size:15px}.driver p,.tx p,.explore-row p{margin:3px 0 0;color:var(--text-3);font-size:13px;line-height:1.35}.driver .delta{color:var(--accent);font-weight:750}.driver .ok{color:var(--green);font-weight:700}.chev{color:var(--text-3);font-size:24px;font-weight:300}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;min-height:var(--nav-h);height:auto;padding:8px 14px max(8px, env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);background:rgba(12,15,19,.94);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border-top:1px solid var(--border);z-index:20;transform:translateZ(0);will-change:transform}
+.nav-btn{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--text-3);font-size:11px;cursor:pointer}.nav-btn.active{color:var(--blue)}.nav-icon{font-size:20px;line-height:1}
+.detail-head{display:flex;align-items:center;gap:13px;margin:4px 0 14px}.detail-icon{width:50px;height:50px;font-size:24px}.detail-head h1{font-size:25px;margin:0;letter-spacing:-.025em}
+.detail-copy .headline{color:var(--accent);font-size:29px;font-weight:800;letter-spacing:-.03em;margin-bottom:8px}.detail-copy{margin-bottom:14px}
+.reference-pill{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:10px 14px;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;margin:12px 0}.reference-pill span{color:var(--text-2);font-size:13px}.reference-pill strong{font-size:15px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 12px 10px;margin-bottom:14px;overflow:hidden}.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.chart-head strong{font-size:13px}.legend{display:flex;gap:12px;color:var(--text-3);font-size:11px}.legend span{display:flex;gap:5px;align-items:center}.legend i{width:8px;height:8px;border-radius:50%;display:block}.legend .actual i{background:var(--blue)}.legend .typical i{background:var(--typical)}
+.chart{width:100%;height:auto;display:block}.chart text{font-family:inherit;fill:var(--text-3);font-size:10px}.chart .grid{stroke:var(--border);stroke-width:1}.chart .actual{fill:none;stroke:var(--blue);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.chart .typical{fill:none;stroke:var(--typical);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.chart .today{stroke:rgba(255,255,255,.55);stroke-dasharray:3 4}.chart .point{fill:var(--blue);stroke:var(--surface);stroke-width:3}
+.why{display:grid;grid-template-columns:auto 1fr;gap:12px}.why-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:20px}.why h3{margin:1px 0 5px;font-size:15px}.why p{margin:0;color:var(--text-2);font-size:13px;line-height:1.4}
+.tx{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:12px 1px;border-bottom:1px solid var(--border);cursor:pointer}.tx-avatar{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--surface-3);font-size:17px}.tx-copy{min-width:0}.tx p{margin-top:1px}.amount{font-weight:700;white-space:nowrap;align-self:center}.primary-btn{width:100%;border:0;border-radius:14px;background:var(--blue);color:white;min-height:48px;font-weight:750;margin-top:14px;cursor:pointer}
+.explore-toolbar{display:flex;gap:8px;overflow:auto;padding:0 0 12px;scrollbar-width:none}.explore-toolbar::-webkit-scrollbar{display:none}.chip{border:1px solid var(--border);background:var(--surface-2);border-radius:999px;color:var(--text-2);padding:9px 12px;white-space:nowrap;cursor:pointer}.chip.active{background:rgba(53,152,255,.15);color:#8bc6ff;border-color:rgba(53,152,255,.3)}
+.explore-summary{margin-bottom:12px}.explore-summary h2{font-size:23px;margin:0 0 6px}.explore-summary p{margin:0;color:var(--text-2);font-size:14px;line-height:1.45}.bar-list{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:1fr auto;gap:6px}.bar-row .label{font-size:14px}.bar-row .value{font-weight:700}.bar-bg{grid-column:1/-1;height:8px;background:var(--surface-3);border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),#6fb8ff);border-radius:999px}.bar-row.warn .bar-fill{background:linear-gradient(90deg,var(--accent),#ff936e)}.compare{font-size:12px;color:var(--text-3);margin-top:2px}.compare.up{color:#ff9875}.compare.ok{color:var(--green)}
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.46);backdrop-filter:blur(6px);display:none;align-items:end;justify-content:center;z-index:60}.sheet-backdrop.open{display:flex}.sheet{width:100%;max-width:540px;background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:var(--shadow);max-height:84vh;overflow:auto}.grabber{width:44px;height:5px;background:var(--border);border-radius:999px;margin:2px auto 10px}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.sheet-head h2{font-size:20px;margin:0}.close{width:44px;height:44px;border:0;background:transparent;color:var(--text-3);font-size:28px;cursor:pointer}.sheet-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:14px 2px;border-bottom:1px solid var(--border);cursor:pointer}.sheet-row strong{font-size:15px}.sheet-row p{margin:3px 0 0;color:var(--text-3);font-size:13px}.check{color:var(--blue);font-weight:800}.account-row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 2px;border-bottom:1px solid var(--border)}.bank-icon{width:34px;height:34px;border-radius:10px;background:#d81818;display:grid;place-items:center;color:white;font-weight:800}.account-row p{margin:2px 0 0;color:var(--text-3);font-size:12px}.ok-dot{width:20px;height:20px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:#082b15;font-weight:900;font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 22px);transform:translateX(-50%) translateY(18px);background:#262d36;border:1px solid var(--border);box-shadow:var(--shadow);padding:11px 15px;border-radius:999px;color:var(--text);font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:80;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.view{display:none}.view.active{display:block}
+.kicker{color:var(--text-3);font-size:12px;margin-top:-5px;margin-bottom:11px}
+.mobile-secondary-insights{margin-top:18px}.mobile-secondary-insights .card{padding:16px}.mobile-secondary-insights h3{margin:0 0 7px;font-size:18px}.mobile-secondary-insights p{margin:0;color:var(--text-2);font-size:13px;line-height:1.45}
+button,[data-open-detail],[data-open-transactions],.driver,.bar-row,.chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media (min-width: 900px){
+  .shell{grid-template-columns:220px minmax(0,1fr);padding:18px;gap:18px;align-items:start}
+  .desktop-rail{display:flex;position:sticky;top:18px;height:calc(100vh - 36px);flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:24px 14px;box-shadow:var(--shadow)}
+  .brand{font-size:24px;font-weight:850;letter-spacing:-.04em;margin:0 10px 24px}.brand span{color:var(--blue)}
+  .rail-nav{display:grid;gap:7px}.rail-nav button{border:0;background:transparent;color:var(--text-2);text-align:left;padding:12px 14px;border-radius:13px;cursor:pointer}.rail-nav button.active{background:rgba(53,152,255,.13);color:#91caff}.rail-note{margin-top:auto;color:var(--text-3);font-size:12px;line-height:1.45;padding:10px}
+  .main{padding:0}.phone-page{max-width:none;padding:28px 34px 48px}.bottom-nav{display:none}.topbar{margin-bottom:14px}.topbar h1{font-size:36px}
+  #reviewView .desktop-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);gap:18px;align-items:start}.desktop-right{display:block!important}
+  #detailView .detail-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:18px;align-items:start}.detail-side{display:block!important}
+  #exploreView .explore-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(330px,.8fr);gap:18px;align-items:start}
+  .detail-mobile-transactions,.mobile-secondary-insights{display:none}
+  .sheet-backdrop{align-items:center;padding:30px}.sheet{border-radius:24px;max-height:78vh}.toast{bottom:30px}
+}
+@media (max-width:899px){.desktop-right,.detail-side{display:none}}
+@media (min-width:700px) and (max-width:899px) and (orientation:landscape){
+  .phone-page{max-width:none;padding:18px 24px 34px}
+  #reviewView .desktop-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:16px;align-items:start}
+  #reviewView .desktop-right{display:block!important}
+  #reviewView .mobile-secondary-insights{display:none}
+  #detailView .detail-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(290px,.88fr);gap:16px;align-items:start}
+  #detailView .detail-side{display:block!important}
+  #detailView .detail-mobile-transactions{display:none}
+  #exploreView .explore-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:16px;align-items:start}
+}
+
+</style>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <div class="shell">
+    <aside class="desktop-rail" aria-label="Primary">
+      <div class="brand">Squeebs <span>v2</span></div>
+      <nav class="rail-nav">
+        <button>⌂ &nbsp; Home</button>
+        <button>☷ &nbsp; Transactions</button>
+        <button class="active">▥ &nbsp; Insights</button>
+        <button>▣ &nbsp; Planning</button>
+      </nav>
+      <div class="rail-note">Synthetic prototype data.<br/>Dark-first visual exploration.</div>
+    </aside>
+    <main class="main">
+      <section id="reviewView" class="view active phone-page" aria-label="Insights review">
+        <div class="topbar"><h1>Insights</h1><div class="spacer"></div><button class="status-btn" data-sheet="status" aria-label="Data status"><span class="status-dot"></span></button></div>
+        <div class="segmented" role="tablist"><button class="active" data-mode="review">Review</button><button data-mode="explore">Explore</button></div>
+        <div class="period-row"><button class="icon-btn" data-shift="prev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg></button><button class="period-btn" data-sheet="period">October 2026</button><button class="icon-btn" data-shift="next" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></div>
+        <div class="desktop-grid">
+          <div>
+            <article class="card hero">
+              <div class="eyebrow"><span class="mini-icon">▥</span><span>Spending</span></div>
+              <h2>Spending is a little higher than typical, but in line with your plan.</h2>
+              <p>You’ve spent €2,340 so far this month, €320 (16%) above typical for this point in the month, mainly due to restaurants and one home repair. You’re broadly in line with your expected plan.</p>
+              <div class="metric-grid">
+                <div class="metric"><strong>€2,340</strong><small>spent so far</small></div>
+                <div class="metric warn"><strong>+16%</strong><small>vs typical</small></div>
+                <div class="metric plan"><strong>+2%</strong><small>vs expected</small></div>
+              </div>
+            </article>
+            <div class="section-title"><h3>Key drivers</h3></div>
+            <div class="list">
+              <div class="driver" data-open-detail="restaurants"><div class="driver-icon rest">🍴</div><div><strong>Restaurants</strong><div class="delta">€340 above typical</div><p>Several higher-than-usual meals at weekends.</p></div><div class="chev">›</div></div>
+              <div class="driver" data-open-detail="home"><div class="driver-icon house">⌂</div><div><strong>Home maintenance</strong><div class="delta">€550 above typical</div><p>Most of the difference comes from one repair.</p></div><div class="chev">›</div></div>
+              <div class="driver"><div class="driver-icon other">▥</div><div><strong>Everything else</strong><div class="ok">Close to typical</div><p>Other spending is broadly normal so far this month.</p></div><div class="chev">›</div></div>
+            </div>
+            <div class="mobile-secondary-insights">
+              <article class="card">
+                <div class="eyebrow"><span class="mini-icon">↗</span><span>Worth knowing</span></div>
+                <h3>Weekend restaurant spending is doing most of the work.</h3>
+                <p>Four meals account for most of the overspend versus your typical October pace. Home maintenance is concentrated in one repair rather than a broader pattern.</p>
+              </article>
+              <article class="card">
+                <div class="eyebrow"><span class="mini-icon" style="color:var(--green);background:rgba(48,212,118,.12)">✓</span><span style="color:var(--green)">On track</span></div>
+                <h3>Your expected plan still looks reasonable.</h3>
+                <p>The current difference from expected is small enough that no plan adjustment is suggested.</p>
+              </article>
+            </div>
+          </div>
+          <aside class="desktop-right">
+            <article class="card">
+              <div class="eyebrow"><span class="mini-icon">↗</span><span>Worth knowing</span></div>
+              <h3 style="margin:0 0 8px;font-size:19px">Weekend restaurant spending is doing most of the work.</h3>
+              <p style="margin:0;color:var(--text-2);line-height:1.45;font-size:14px">Four meals account for most of the overspend versus your typical October pace. Home maintenance is concentrated in one repair rather than a broader pattern.</p>
+            </article>
+            <article class="card">
+              <div class="eyebrow"><span class="mini-icon" style="color:var(--green);background:rgba(48,212,118,.12)">✓</span><span style="color:var(--green)">On track</span></div>
+              <h3 style="margin:0 0 8px;font-size:19px">Your expected plan still looks reasonable.</h3>
+              <p style="margin:0;color:var(--text-2);line-height:1.45;font-size:14px">The current difference from expected is small enough that no plan adjustment is suggested.</p>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section id="detailView" class="view phone-page" aria-label="Insight detail">
+        <button class="back-btn" data-back-review><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Insights</button>
+        <div class="detail-layout">
+          <div>
+            <div class="detail-head"><div id="detailIcon" class="detail-icon">🍴</div><h1 id="detailTitle">Restaurants</h1></div>
+            <div class="detail-copy">
+              <div id="detailHeadline" class="headline">€340 above typical</div>
+              <p id="detailSummary">You’ve spent €620 on restaurants so far this month, compared with €280 at the same point in a typical month.</p>
+            </div>
+            <div class="reference-pill"><span>Expected this month</span><strong id="detailExpected">€600</strong></div>
+            <div class="chart-card">
+              <div class="chart-head"><strong>Cumulative spending</strong><div class="legend"><span class="actual"><i></i>Actual</span><span class="typical"><i></i>Typical</span></div></div>
+              <svg class="chart" viewBox="0 0 420 220" role="img" aria-label="Actual versus typical cumulative spending">
+                <line class="grid" x1="42" y1="30" x2="405" y2="30"/><line class="grid" x1="42" y1="75" x2="405" y2="75"/><line class="grid" x1="42" y1="120" x2="405" y2="120"/><line class="grid" x1="42" y1="165" x2="405" y2="165"/>
+                <text x="8" y="34">€800</text><text x="8" y="79">€600</text><text x="8" y="124">€400</text><text x="8" y="169">€200</text><text x="22" y="208">1 Oct</text><text x="108" y="208">8 Oct</text><text x="196" y="208">15 Oct</text><text x="286" y="208">22 Oct</text><text x="365" y="208">31 Oct</text>
+                <path id="typicalPath" class="typical" d="M44 183 C75 170, 90 160, 110 153 S160 137, 184 128 S230 110, 256 101 S310 85, 338 74 S380 62, 402 56"/>
+                <path id="actualPath" class="actual" d="M44 184 C66 176, 82 162, 92 150 S105 119, 112 101 S128 86, 140 78 S171 69, 190 66 S224 58, 242 55 S280 49, 300 46 S342 39, 363 37 S389 35, 402 34"/>
+                <line class="today" x1="120" y1="28" x2="120" y2="184"/><circle class="point" cx="120" cy="92" r="6"/><text x="102" y="17">Today</text><text x="106" y="27">5 Oct</text>
+              </svg>
+            </div>
+            <article class="card why"><div class="why-icon">💡</div><div><h3 id="whyTitle">Why is this higher?</h3><p id="whyCopy">Restaurant spending is 121% above your typical level for this point in the month, mainly due to four higher-than-usual weekend meals, including two larger group dinners.</p></div></article>
+          </div>
+          <aside class="detail-side">
+            <div class="section-title" style="margin-top:0"><h3>Top contributing transactions</h3></div>
+            <div id="desktopTxList" class="list"></div>
+            <button class="primary-btn" data-open-transactions>View transactions</button>
+          </aside>
+        </div>
+        <div class="detail-mobile-transactions">
+          <div class="section-title"><h3>Top contributing transactions</h3></div>
+          <div id="mobileTxList" class="list"></div>
+          <button class="primary-btn" data-open-transactions>View transactions</button>
+        </div>
+      </section>
+
+      <section id="exploreView" class="view phone-page" aria-label="Insights explore">
+        <div class="topbar"><h1>Insights</h1><div class="spacer"></div><button class="status-btn" data-sheet="status" aria-label="Data status"><span class="status-dot"></span></button></div>
+        <div class="segmented" role="tablist"><button data-mode="review">Review</button><button class="active" data-mode="explore">Explore</button></div>
+        <div class="period-row"><button class="icon-btn" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 6-6 6 6 6"/></svg></button><button class="period-btn" data-sheet="period">October 2026</button><button class="icon-btn" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9.5 6 6 6-6 6"/></svg></button></div>
+        <div class="explore-toolbar"><button class="chip active">Spending</button><button class="chip">Personal</button><button class="chip">Category</button><button class="chip" data-sheet="filters">Filters</button></div>
+        <div class="explore-layout">
+          <div>
+            <div class="explore-summary"><div class="eyebrow"><span class="mini-icon">⌕</span><span>Explore</span></div><h2>Where is your spending going?</h2><p>October spending by category, compared with your typical level for the same point in the month.</p></div>
+            <article class="card">
+              <div class="bar-list">
+                <div class="bar-row warn" data-open-detail="restaurants"><span class="label">Restaurants</span><span class="value">€620</span><div class="bar-bg"><div class="bar-fill" style="width:84%"></div></div><div class="compare up">€340 above typical</div></div>
+                <div class="bar-row warn" data-open-detail="home"><span class="label">Home maintenance</span><span class="value">€780</span><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div><div class="compare up">€550 above typical</div></div>
+                <div class="bar-row"><span class="label">Groceries</span><span class="value">€410</span><div class="bar-bg"><div class="bar-fill" style="width:52%"></div></div><div class="compare ok">Close to typical</div></div>
+                <div class="bar-row"><span class="label">Transport</span><span class="value">€230</span><div class="bar-bg"><div class="bar-fill" style="width:29%"></div></div><div class="compare">€30 below typical</div></div>
+                <div class="bar-row"><span class="label">Subscriptions</span><span class="value">€112</span><div class="bar-bg"><div class="bar-fill" style="width:14%"></div></div><div class="compare">In line with typical</div></div>
+              </div>
+            </article>
+          </div>
+          <aside>
+            <article class="card">
+              <div class="eyebrow"><span class="mini-icon">↕</span><span>Current view</span></div>
+              <div class="explore-row"><div class="driver-icon other">▥</div><div><strong>Breakdown</strong><p>Category → Detail</p></div><div class="chev">›</div></div>
+              <div class="explore-row"><div class="driver-icon other">◷</div><div><strong>Comparison</strong><p>Typical to date</p></div><div class="chev">›</div></div>
+              <div class="explore-row"><div class="driver-icon house">⌂</div><div><strong>Attribution</strong><p>None</p></div><div class="chev">›</div></div>
+            </article>
+            <article class="card">
+              <div class="eyebrow"><span class="mini-icon">↗</span><span>Try another question</span></div>
+              <div class="explore-row"><div class="driver-icon house">⌂</div><div><strong>Property</strong><p>Costs and income across categories</p></div><div class="chev">›</div></div>
+              <div class="explore-row"><div class="driver-icon other">◎</div><div><strong>Child</strong><p>Jacob, Evie, Both or related</p></div><div class="chev">›</div></div>
+              <div class="explore-row"><div class="driver-icon rest">✦</div><div><strong>Purpose</strong><p>Work, trip or other context</p></div><div class="chev">›</div></div>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+  <nav class="bottom-nav" aria-label="Primary mobile navigation">
+    <button class="nav-btn"><span class="nav-icon">⌂</span>Home</button>
+    <button class="nav-btn"><span class="nav-icon">☷</span>Transactions</button>
+    <button class="nav-btn active"><span class="nav-icon">▥</span>Insights</button>
+    <button class="nav-btn"><span class="nav-icon">▣</span>Planning</button>
+  </nav>
+</div>
+
+<div id="periodSheet" class="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Select period"><div class="sheet"><div class="grabber"></div><div class="sheet-head"><h2>Select period</h2><button class="close" data-close>×</button></div>
+  <div class="sheet-row" data-select-period><div><strong>This month</strong><p>October 2026</p></div><div class="check">✓</div></div>
+  <div class="sheet-row"><div><strong>Last month</strong><p>September 2026</p></div><div></div></div>
+  <div class="sheet-row"><div><strong>Last 3 months</strong><p>Aug – Oct 2026</p></div><div></div></div>
+  <div class="sheet-row"><div><strong>This year</strong><p>Jan – Oct 2026</p></div><div></div></div>
+  <div class="sheet-row"><div><strong>Custom range</strong><p>Select start and end month</p></div><div>▣</div></div>
+</div></div>
+
+<div id="statusSheet" class="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Data status"><div class="sheet"><div class="grabber"></div><div class="sheet-head"><h2>Data status</h2><button class="close" data-close>×</button></div>
+  <article class="card" style="margin-bottom:10px"><div class="eyebrow" style="color:var(--green);margin-bottom:6px"><span class="mini-icon" style="color:var(--green);background:rgba(48,212,118,.12)">✓</span>Up to date</div><p style="margin:0;color:var(--text-2);font-size:14px;line-height:1.45">Last successful update completed 5 Oct 2026 at 08:12. Latest transaction date: 5 Oct 2026.</p></article>
+  <div class="account-row"><div class="bank-icon">S</div><div><strong>Sabadell Personal</strong><p>Updated 5 Oct, 08:12</p></div><div class="ok-dot">✓</div></div>
+  <div class="account-row"><div class="bank-icon">S</div><div><strong>Sabadell Joint</strong><p>Updated 5 Oct, 08:12</p></div><div class="ok-dot">✓</div></div>
+  <div class="account-row"><div class="bank-icon">S</div><div><strong>Sabadell Savings</strong><p>Updated 5 Oct, 08:12</p></div><div class="ok-dot">✓</div></div>
+</div></div>
+
+<div id="filtersSheet" class="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Explore filters"><div class="sheet"><div class="grabber"></div><div class="sheet-head"><h2>Explore filters</h2><button class="close" data-close>×</button></div>
+  <div class="sheet-row"><div><strong>Scope</strong><p>Personal</p></div><div class="chev">›</div></div>
+  <div class="sheet-row"><div><strong>Breakdown</strong><p>Category → Detail</p></div><div class="chev">›</div></div>
+  <div class="sheet-row"><div><strong>Comparison</strong><p>Typical to date</p></div><div class="chev">›</div></div>
+  <div class="sheet-row"><div><strong>Attribution</strong><p>None</p></div><div class="chev">›</div></div>
+</div></div>
+
+<div id="txSheet" class="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Transaction handoff"><div class="sheet"><div class="grabber"></div><div class="sheet-head"><h2>Transactions handoff</h2><button class="close" data-close>×</button></div>
+  <article class="card"><div class="eyebrow"><span class="mini-icon">☷</span>Transactions</div><h3 style="margin:0 0 8px">Open the contributing set</h3><p style="margin:0;color:var(--text-2);line-height:1.45;font-size:14px">In the real product this opens Transactions with the October + Restaurants filters applied and preserves this Insight as the return context.</p></article>
+  <button class="primary-btn" data-close>Return to insight</button>
+</div></div>
+
+<div id="toast" class="toast">Prototype interaction</div>
+
+<script>
+const views={review:document.getElementById('reviewView'),detail:document.getElementById('detailView'),explore:document.getElementById('exploreView')};
+let currentView='review';
+const data={
+ restaurants:{title:'Restaurants',icon:'🍴',headline:'€340 above typical',summary:'You’ve spent €620 on restaurants so far this month, compared with €280 at the same point in a typical month.',expected:'€600',whyTitle:'Why is this higher?',why:'Restaurant spending is 121% above your typical level for this point in the month, mainly due to four higher-than-usual weekend meals, including two larger group dinners.',actual:'M44 184 C66 176, 82 162, 92 150 S105 119, 112 101 S128 86, 140 78 S171 69, 190 66 S224 58, 242 55 S280 49, 300 46 S342 39, 363 37 S389 35, 402 34',typical:'M44 183 C75 170, 90 160, 110 153 S160 137, 184 128 S230 110, 256 101 S310 85, 338 74 S380 62, 402 56',tx:[['La Finca','Sat 4 Oct','€96'],['El Portalón','Fri 3 Oct','€84'],['Casa Marcial','Sat 27 Sep','€72'],['La Chalana','Sun 21 Sep','€68']]},
+ home:{title:'Home maintenance',icon:'⌂',headline:'€550 above typical',summary:'You’ve spent €780 on home maintenance so far this month, compared with €230 at the same point in a typical month.',expected:'€820',whyTitle:'Why is this higher?',why:'Most of the difference comes from one €500 repair. Excluding that transaction, home maintenance is broadly in line with typical spending.',actual:'M44 184 C72 182, 90 176, 98 166 S106 134, 111 95 S118 69, 127 61 S170 60, 202 58 S250 57, 290 55 S345 52, 372 45 S392 43, 402 42',typical:'M44 184 C75 177, 102 170, 126 162 S170 151, 196 143 S245 130, 273 120 S327 104, 354 95 S386 86, 402 81',tx:[['Plumbing Services','Fri 3 Oct','€500'],['Bricomart','Tue 30 Sep','€86'],['Screwfix','Sat 20 Sep','€64'],['B&Q','Sat 13 Sep','€48']]}
+};
+function showView(name){Object.values(views).forEach(v=>v.classList.remove('active'));views[name].classList.add('active');currentView=name;window.scrollTo({top:0,behavior:'instant'});}
+function renderTx(target,rows){target.innerHTML=rows.map(([m,d,a])=>`<div class="tx" data-open-transactions><div class="tx-avatar">${currentDetail==='home'?'🔧':'🍴'}</div><div class="tx-copy"><strong>${m}</strong><p>${d}</p></div><span class="amount">${a}</span><div class="chev">›</div></div>`).join('');}
+let currentDetail='restaurants';
+let detailOrigin='review';
+function openDetail(kind){detailOrigin=currentView==='explore'?'explore':'review';currentDetail=kind;const x=data[kind];document.getElementById('detailTitle').textContent=x.title;document.getElementById('detailIcon').textContent=x.icon;document.getElementById('detailHeadline').textContent=x.headline;document.getElementById('detailSummary').textContent=x.summary;document.getElementById('detailExpected').textContent=x.expected;document.getElementById('whyTitle').textContent=x.whyTitle;document.getElementById('whyCopy').textContent=x.why;document.getElementById('actualPath').setAttribute('d',x.actual);document.getElementById('typicalPath').setAttribute('d',x.typical);renderTx(document.getElementById('mobileTxList'),x.tx);renderTx(document.getElementById('desktopTxList'),x.tx);showView('detail');}
+function openSheet(name){document.getElementById(name+'Sheet').classList.add('open')}
+function closeSheets(){document.querySelectorAll('.sheet-backdrop').forEach(x=>x.classList.remove('open'))}
+document.addEventListener('click',e=>{
+  const mode=e.target.closest('[data-mode]');if(mode){showView(mode.dataset.mode);return}
+  const detail=e.target.closest('[data-open-detail]');if(detail){openDetail(detail.dataset.openDetail);return}
+  if(e.target.closest('[data-back-review]')){showView(detailOrigin);return}
+  const sheet=e.target.closest('[data-sheet]');if(sheet){openSheet(sheet.dataset.sheet);return}
+  if(e.target.closest('[data-close]')){closeSheets();return}
+  if(e.target.classList.contains('sheet-backdrop')){closeSheets();return}
+  if(e.target.closest('[data-open-transactions]')){openSheet('tx');return}
+  if(e.target.closest('[data-select-period]')){closeSheets();showToast('October 2026 selected');return}
+  const chip=e.target.closest('.chip');if(chip){document.querySelectorAll('.explore-toolbar .chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');showToast(`${chip.textContent.trim()} selected`)}
+});
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove('show'),1600)}
+openDetail('restaurants');showView('review');
+</script>
+<script src="shared.js" defer></script>
+</body>
+</html>
