@@ -76,9 +76,9 @@ body{min-height:100dvh}button,input,select{font:inherit;color:inherit}button{cur
       <section class="card">
         <div class="comparegrid">
           <div class="comparecard"><div class="label">Current baseline</div><div class="figure sensitive">~4.2 months</div><div class="small">Cash runway, estimated limit around February</div></div>
-          <div class="comparecard scenario"><div class="label">With this scenario</div><div class="figure sensitive" id="scenarioHeadline">No depletion</div><div class="small" id="scenarioSub">Within next 18 months</div></div>
+          <div class="comparecard scenario"><div class="label">With this scenario</div><div class="figure sensitive" id="scenarioHeadline">No depletion</div><div class="small sensitive" id="scenarioSub">Within next 18 months</div></div>
         </div>
-        <div class="impact"><div class="headline" id="impactHeadline">The income change improves your outlook.</div><p id="impactText">The new rent and move-in cost partially offset the extra income. Protected reserves remain intact in this projection.</p></div>
+        <div class="impact"><div class="headline" id="impactHeadline">The income change improves your outlook.</div><p id="impactText" class="sensitive">The new rent and move-in cost partially offset the extra income. Protected reserves remain intact in this projection.</p></div>
       </section>
       <div class="sectionhead"><h2>Cash impact over time</h2></div>
       <section class="card">
@@ -97,7 +97,7 @@ body{min-height:100dvh}button,input,select{font:inherit;color:inherit}button{cur
             <div><span>Baseline month end</span><b class="sensitive" id="baselineCash">€0</b></div>
             <div><span>Scenario month end</span><b class="sensitive" id="scenarioCash">€0</b></div>
           </div>
-          <div class="note" id="monthNote">Scenario applies changed assumptions only after their effective months.</div>
+          <div class="note sensitive" id="monthNote">Scenario applies changed assumptions only after their effective months.</div>
         </div>
         <div class="note-box">The gray baseline line stops at its forecast limit. The scenario line stops too if eligible unallocated cash would be exhausted—never extend a negative balance as though the plan remains sustainable.</div>
       </section>
@@ -109,15 +109,15 @@ body{min-height:100dvh}button,input,select{font:inherit;color:inherit}button{cur
       <section class="card fields">
         <div class="fieldgroup">
           <h3>New employment <span>Changed</span></h3>
-          <div class="field"><label for="income">New net monthly income · €</label><input id="income" type="number" min="0" max="16000" step="100" value="7700"><small>Replaces a synthetic €1,500/month temporary-income stream already in baseline, rather than adding to it twice.</small></div>
+          <div class="field"><label for="income">New net monthly income · €</label><input id="income" class="sensitive" type="number" min="0" max="16000" step="100" value="7700"><small>Replaces a synthetic €1,500/month temporary-income stream already in baseline, rather than adding to it twice.</small></div>
           <div class="field" style="margin-top:11px"><label for="incomeStart">First full month</label><select id="incomeStart"></select></div>
         </div>
         <div class="fieldgroup">
           <h3>New rental <span>Changed</span></h3>
-          <div class="field"><label for="rent">Additional monthly rent · €</label><input id="rent" type="number" min="0" max="6000" step="50" value="1650"><small>Additional housing cost. Existing baseline housing commitments are not silently removed.</small></div>
+          <div class="field"><label for="rent">Additional monthly rent · €</label><input id="rent" class="sensitive" type="number" min="0" max="6000" step="50" value="1650"><small>Additional housing cost. Existing baseline housing commitments are not silently removed.</small></div>
           <div class="twofields" style="margin-top:11px">
             <div class="field"><label for="rentStart">Start month</label><select id="rentStart"></select></div>
-            <div class="field"><label for="oneOff">Move-in cost · €</label><input id="oneOff" type="number" min="0" max="20000" step="100" value="2500"></div>
+            <div class="field"><label for="oneOff">Move-in cost · €</label><input id="oneOff" class="sensitive" type="number" min="0" max="20000" step="100" value="2500"></div>
           </div>
           <small style="display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:9px">Move-in cost is modelled once, in the rent start month.</small>
         </div>
@@ -125,9 +125,16 @@ body{min-height:100dvh}button,input,select{font:inherit;color:inherit}button{cur
       </section>
       <div class="sectionhead"><h2>Inherited from baseline</h2></div>
       <section class="card" id="inheritedList">
-        <div class="assumption"><b>Current account balances and source eligibility</b><p>Starting unallocated personal cash €23,600, with original currency/funding constraints retained.</p></div>
-        <div class="assumption"><b>Protected reserves</b><p>Emergency and Future Home allocations total €12,100, unchanged in this scenario.</p></div>
+        <div class="assumption"><b>Current account balances and source eligibility</b><p class="sensitive">Starting unallocated personal cash €23,600, with original currency/funding constraints retained.</p></div>
+        <div class="assumption"><b>Protected reserves</b><p class="sensitive">Emergency and Future Home allocations total €12,100, unchanged in this scenario.</p></div>
         <div class="assumption"><b>Existing spending, income and shared obligations</b><p>Current recurring activity, seasonality and contributions to Joint/GBP accounts continue unless overridden.</p></div>
+      </section>
+      <div class="sectionhead"><h2>Operational account impact</h2></div>
+      <section class="card">
+        <div class="assumption"><b>Sabadell Personal · EUR</b><p>The new income destination is not yet confirmed. If paid here, the account-level funding trajectory must reflect the dated income change.</p><span class="badge warn">Account & first payment to verify</span></div>
+        <div class="assumption"><b>Sabadell Joint · EUR</b><p>Existing Joint funding obligations remain inherited. No transfer is removed just because overall personal runway improves.</p><span class="badge">Inherits existing obligations</span></div>
+        <div class="assumption"><b>HSBC Joint · GBP</b><p>GBP commitments and any required FX/funding route remain in the baseline; they are not automatically covered by an increase in EUR income.</p><span class="badge">GBP route still applies</span></div>
+        <div class="note-box">A real scenario must recalculate each operational account’s buffer and funding chain from these assumptions. This synthetic chart only calculates aggregate runway impact.</div>
       </section>
       <div class="sectionhead"><h2>Needs attention</h2></div>
       <section class="card">
@@ -227,7 +234,8 @@ function renderMonth(){
  if(rentAt(month))info.push('−'+money(rentAt(month))+' additional rent');
  if(oneOffAt(month))info.push('−'+money(oneOffAt(month))+' move-in cost');
  if(!info.length)info.push('No overrides active yet; this month inherits the baseline.');
- $('#monthNote').textContent=info.join(' · ')+'. The month’s baseline cashflow is '+signed(base.net)+'.';
+ const blocked=endScenario!==null&&month>=endScenario?(' The scenario has reached its cash limit in '+label(endScenario)+'; later months are not fundable without resolving the shortfall.'):'';
+ $('#monthNote').textContent=info.join(' · ')+'. The month’s baseline cashflow is '+signed(base.net)+'.'+blocked;
  $('#prevMonth').disabled=month<=0;$('#nextMonth').disabled=month>=state.horizon-1;
 }
 function renderImpact(){
