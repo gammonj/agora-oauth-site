@@ -54,7 +54,7 @@
 <div class="sectionhead"><h3>Your proposed expense</h3><button id="meaning">How this works</button></div>
 <section class="card" id="formCard">
 <div class="fieldgrid">
-<div class="field wide"><label for="description">What are you considering?</label><input id="description" placeholder="e.g. A new desk" maxlength="70"></div>
+<div class="field wide"><label for="description">What are you considering?</label><input class="sensitive" id="description" placeholder="e.g. A new desk" maxlength="70"></div>
 <div class="field"><label for="amount">Amount</label><input class="money sensitive" id="amount" inputmode="decimal" type="number" min="0" step="10" value="1800"></div>
 <div class="field"><label for="currency">Currency</label><select id="currency"><option value="EUR">EUR · Euro</option><option value="GBP">GBP · Pound</option></select></div>
 <div class="field wide"><label>Payment pattern</label><div class="modechoices" id="patterns"><button class="choice active" data-pattern="once">One-off</button><button class="choice" data-pattern="monthly">Recurring monthly</button></div></div>
@@ -64,7 +64,7 @@
 <div class="field wide hidden" id="plannedWrap"><label for="plannedItem">Which expected expense?</label><select id="plannedItem"><option value="tax">Annual tax payment · €4,000 · December</option><option value="insurance">Annual insurance · €900 · January</option></select><small>Squeebs would link the proposal to a specific Expected Activity item rather than count it as another payment.</small></div>
 <div class="field wide"><label for="reserve">Will this use a protected reserve?</label><select id="reserve"><option value="none">No — unallocated personal cash</option><option value="home">Future Home · €4,100 protected</option><option value="emergency">Emergency · €8,000 protected</option></select><small id="reserveHelp">A reserve is a virtual allocation, not a bank account. It doesn't necessarily hold the cash in the paying account.</small></div>
 </div>
-<div class="info" id="inputNote">This €1,800 is additional spending. The existing forecast doesn't already include it.</div>
+<div class="info sensitive" id="inputNote">This €1,800 is additional spending. The existing forecast doesn't already include it.</div>
 <button class="btn-primary" id="checkImpact">Check the consequences →</button>
 </section>
 <div class="sectionhead"><h3>What this check does</h3></div>
@@ -77,7 +77,7 @@
 <div id="placeholder"><div class="sectionhead"><h3>Your answer</h3></div><section class="card"><div style="display:flex;align-items:center;gap:11px"><span style="display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:#20374b;color:#b8dfff;font-size:22px">↗</span><div><b style="font-size:14px">A decision, not a budget verdict</b><p style="font-size:12px;color:var(--muted);line-height:1.5;margin:5px 0 0">Choose an example or enter a purchase, then check how it changes your financial outlook.</p></div></div></section></div>
 <section id="results" class="hidden" aria-live="polite">
 <div class="sectionhead"><h3>Your answer</h3><button id="whyAnswer">Why this answer?</button></div>
-<div class="result-hero" id="resultHero"><div class="result-kicker" id="resultKicker">● Outcome</div><h3 id="resultTitle"></h3><p id="resultText"></p></div>
+<div class="result-hero" id="resultHero"><div class="result-kicker" id="resultKicker">● Outcome</div><h3 id="resultTitle"></h3><p id="resultText" class="sensitive"></p></div>
 <div class="impact-grid">
 <div class="impact-box"><div class="label">Runway · baseline → with purchase</div><div class="number sensitive" id="runwaySummary"></div><div class="detail" id="runwayDetail"></div></div>
 <div class="impact-box"><div class="label">Protected reserves used</div><div class="number sensitive" id="reserveSummary"></div><div class="detail" id="reserveDetail"></div></div>
@@ -197,7 +197,9 @@ function calculate(x){
   rows.push({i,base:b,alt:a,change:paymentDelta+released,baseNet});
  }
  const account=accounts[x.account];
- const netPay=x.treatment==='planned'?Math.max(0,x.amount-(x.currency===planned[x.planned].currency?planned[x.planned].amount:0)):x.amount;
+ const samePlannedCurrency=x.treatment==='planned'&&x.currency===planned[x.planned].currency;
+ const unchangedPlannedDate=x.treatment==='planned'&&x.month===planned[x.planned].month;
+ const netPay=x.treatment==='planned'&&samePlannedCurrency&&unchangedPlannedDate?Math.max(0,x.amount-planned[x.planned].amount):x.amount;
  const transfer=Math.max(0,netPay-account.room);
  const coverable=transfer<=account.topupAvailable&&(account.topup!==null||transfer===0);
  const afterPurchase=Math.max(0,account.room-netPay);
@@ -223,6 +225,7 @@ function flags(r){
  if(r.x.treatment==='planned')return {type:'neutral',title:'This updates an expected payment',desc:'The baseline expectation is replaced, not duplicated. Changes in amount or timing can change your cash path and account funding requirements.'};
  if(r.reserved>0)return {type:'neutral',title:'Coverable by using a protected reserve',desc:'The protected allocation covers '+fmt(r.reserved)+' of this purchase. That cash would be spent for its purpose, reducing the named Reserve; only any uncovered portion draws on ordinary Runway cash.'};
  if(r.altAt!==null&&r.altAt.index<=r.x.month)return {type:'warn',title:'This threatens protected-reserve runway',desc:'This expense would exhaust unallocated personal cash at or before the planned payment month. It requires different timing, resources or a conscious change to protection.'};
+ if(r.x.pattern==='monthly'&&r.altAt!==null&&r.baseAt!==null&&timeAt(r.altAt)<timeAt(r.baseAt))return {type:'neutral',title:'An ongoing commitment shortens Runway',desc:'This repeating expense brings the protected-reserve boundary closer. Its impact compounds monthly; account funding would also need an ongoing plan.'};
  if(r.transfer>0&&!r.coverable&&r.x.month<=2)return {type:'warn',title:'The paying account has an unresolved shortfall',desc:'Cash available in the chosen operational account is below the estimated payment requirement, with no modelled viable top-up from its synthetic funding source.'};
  if(r.transfer>0&&r.x.month<=2)return {type:'neutral',title:'Possible, with an account top-up',desc:'The overall cash may cover this expense, but the paying account is forecast to need replenishment. A plausible source exists in this synthetic example; this is not a transfer instruction.'};
  return {type:'good',title:'Manageable within the modelled resources',desc:'This choice changes your financial position but does not immediately breach the protected reserve boundary. The trade-off is shown below rather than reduced to a yes/no verdict.'};
@@ -264,7 +267,8 @@ function renderAnswer(r){
  if(r.x.treatment==='planned')affected=toEUR(r.x.amount,r.x.currency)-toEUR(planned[r.x.planned].amount,planned[r.x.planned].currency);
  else affected=toEUR(r.x.amount,r.x.currency);
  let funding='';
- if(r.x.month>2)funding='Future account capacity must be recalculated at the actual payment date. Not verified by this near-term illustrative funding check.';
+ if(r.x.treatment==='planned')funding='This payment is already represented in the baseline. The account-level route remains inherited if unchanged; any revised amount, date or account needs a fresh funding check.';
+ else if(r.x.month>2)funding='Future account capacity must be recalculated at the actual payment date. Not verified by this near-term illustrative funding check.';
  else if(r.netPay<=r.account.room)funding='Within the synthetic available room above the selected account’s operating buffer.';
  else if(r.coverable)funding='Would require about '+native(r.transfer,r.x.currency)+' top-up via '+r.account.topup+' before paying, subject to the source remaining eligible.';
  else funding='Unresolved '+native(r.transfer,r.x.currency)+' paying-account shortfall; the selected source has no confirmed fundable path in this demonstration.';
@@ -272,7 +276,7 @@ function renderAnswer(r){
   outputLine('Treatment',type,r.x.treatment==='planned'?'Replace linked expected payment, do not add a second copy.':'Temporary hypothetical, not yet represented in baseline.')+
   outputLine('Payment timing',getMonth(r.x.month),r.x.pattern==='monthly'?'Monthly from this month onward':'Expected payment month (not the decision date)')+
   outputLine('Change to forecast cashflows',signed(incremental),'EUR-equivalent aggregate cashflow difference over 18 months, including allocation use; not a bank balance.')+
-  outputLine('Account funding',r.account.name,r.x.month>2?'Longer-term funding path unresolved until recalculation':funding)+
+  outputLine('Account funding',r.account.name,funding)+
   (r.reserved>0?outputLine('Protected allocation consumed',fmt(r.reserved),'No extra transfer is implied by using a virtual reserve. Future Home / Emergency allocation falls accordingly.'):'');
  $('#chartNote').textContent='Illustrative first 8 months of unallocated EUR-equivalent cash. Each path stops at its protected-reserve boundary. Long-range cashflow is modelled monthly, not day by day.';
  drawChart(r);
