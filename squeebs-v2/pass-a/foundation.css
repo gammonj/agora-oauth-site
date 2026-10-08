@@ -296,3 +296,12 @@ body.v2-pass-a input,body.v2-pass-a select,body.v2-pass-a textarea{
   font-size:16px!important;
  }
 }
+
+/* App-wide iOS input focus guard; mobile zoom remains available by pinch. */
+@media(max-width:1023px){
+ body.v2-zoomguard input,body.v2-zoomguard select,
+ body.v2-zoomguard textarea{font-size:16px!important}
+}
+body.v2-zoomguard button,body.v2-zoomguard a,
+body.v2-zoomguard input,body.v2-zoomguard select,
+body.v2-zoomguard textarea{touch-action:manipulation}
