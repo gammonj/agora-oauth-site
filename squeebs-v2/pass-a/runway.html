@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0d10">
+<title>Squeebs v2 — Planning / Runway prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;--text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;--orange:#ff8a4c;--red:#ff5d62;--purple:#a878ff;--cyan:#51c8d9;--shadow:0 16px 44px rgba(0,0,0,.36)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100dvh}button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;cursor:pointer}
+.app{max-width:1180px;margin:auto;min-height:100dvh;padding:18px 16px calc(92px + env(safe-area-inset-bottom))}
+.header{display:flex;align-items:center;justify-content:space-between;margin:2px 0 14px}.header h1{font-size:30px;letter-spacing:-.6px;margin:0}.header-actions{display:flex;align-items:center;gap:12px}
+.iconbtn{width:35px;height:35px;border:1px solid var(--line);background:var(--surface);border-radius:50%;display:grid;place-items:center;color:var(--muted)}.iconbtn svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none}.status-dot{height:11px;width:11px;background:var(--green);border:0;border-radius:50%;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
+.modes{display:flex;gap:8px;overflow:auto;scrollbar-width:none;margin:0 0 14px}.modes::-webkit-scrollbar{display:none}
+.mode{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 13px;text-decoration:none;font-size:14px;color:var(--muted)}.mode.active{color:#a9d5ff;background:#17395a;border-color:#245f93}.mode.disabled{opacity:.42;cursor:default}
+.hero{border:1px solid #2b3946;background:linear-gradient(180deg,#192129,#14191f);border-radius:22px;padding:18px;margin-bottom:13px}
+.eyebrow{display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;font-weight:650}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}.hero .metric{font-size:42px;letter-spacing:-1.2px;font-weight:780;line-height:1.05;margin:11px 0 4px}
+.hero h2{font-size:18px;margin:6px 0 8px;letter-spacing:-.2px}.hero p{font-size:14px;line-height:1.5;color:#c7ced7;margin:0}
+.hero-bottom{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #34404b;padding-top:11px}
+.hero-bottom span{font-size:12px;color:var(--muted)}.hero-bottom button{color:#8cc6ff;border:0;background:none;font-size:12px;font-weight:700;padding:4px 0;white-space:nowrap}
+.pretend{font-size:10px;letter-spacing:.04em;color:var(--muted2);margin:0 0 13px 2px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:21px 2px 10px}.sectionhead h2{font-size:17px;letter-spacing:-.2px;margin:0}.sectionhead button{border:0;background:none;color:var(--blue);font-size:13px;padding:0}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px}
+.projection .micro{font-size:12px;color:var(--muted)}
+.projection-title{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.projection-title strong{font-size:15px}
+.projection-title .sub{color:var(--muted);font-size:11px;margin-top:4px;line-height:1.4}
+.chart-shell{margin:13px 0 7px;background:var(--surface2);border-radius:15px;padding:10px 8px 7px;position:relative}
+.chart{display:block;width:100%;height:205px}
+.chart .grid{stroke:#34404a;stroke-width:.8;opacity:.7}.chart .axis{stroke:#6f8495;stroke-width:1;stroke-dasharray:4 4}.chart .path{fill:none;stroke:var(--blue);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.chart .fill{fill:rgba(61,155,255,.08)}.chart .tip{fill:var(--orange)}.chart .month-dot{fill:var(--blue);stroke:var(--surface2);stroke-width:2}.chart .month-dot.chosen{fill:var(--text);stroke:var(--blue);stroke-width:3}.chart text{font-size:10px;fill:#9aa5af;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.chart-legend{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:5px 2px 0;flex-wrap:wrap}.chart-legend span{font-size:11px;color:var(--muted)}.chart-legend .zero{color:#f2aa78}.chart-shield{display:none;position:absolute;inset:8px;border-radius:11px;background:rgba(20,25,31,.93);align-items:center;justify-content:center;flex-direction:column;gap:7px;font-size:13px;color:var(--muted)}
+.chart-shield svg{width:23px;height:23px;fill:none;stroke:var(--muted);stroke-width:1.8}
+.months{display:flex;gap:6px;overflow:auto;scrollbar-width:none;margin-top:12px}.months::-webkit-scrollbar{display:none}
+.months button{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:8px 11px;min-width:57px;font-size:12px;color:var(--muted)}.months button.active{border-color:#2f6fa6;background:#17395a;color:#bfdefc}
+.selected-month{background:var(--surface2);border-radius:14px;margin-top:12px;padding:12px}
+.selected-title{display:flex;justify-content:space-between;align-items:center;gap:10px}.selected-title b{font-size:14px}.selected-title .value{font-size:14px;font-weight:740;white-space:nowrap}
+.selected-month .small{font-size:11px;color:var(--muted);margin-top:3px}
+.lineitem{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}.lineitem:last-child{border-bottom:0}.lineitem .label{font-size:12px;color:var(--muted)}.lineitem .num{font-size:13px;font-weight:650;white-space:nowrap}
+.baseline-row{display:flex;align-items:center;justify-content:space-between;gap:13px;padding:12px 0;border-bottom:1px solid var(--line)}.baseline-row:last-child{border-bottom:0}.baseline-row .key{font-size:13px}.baseline-row .detail{font-size:11px;color:var(--muted);line-height:1.4;margin-top:4px}.baseline-row .val{font-size:14px;white-space:nowrap;font-weight:750}.baseline-row .val.emph{color:#8cc6ff}
+.callout{margin:12px 0 0;border:1px solid rgba(61,155,255,.2);background:rgba(61,155,255,.06);border-radius:12px;padding:12px;font-size:12px;color:#cad5e1;line-height:1.5}
+.cardtitle{font-size:15px;margin:0 0 8px}
+.compare{border-left:3px solid #9dabb8}
+.compare h3{font-size:17px;margin:4px 0 5px}.compare p,.caution p{font-size:13px;line-height:1.45;color:var(--muted);margin:0}
+.compare-kicker{font-size:12px;font-weight:700;color:#b0c2d4}
+.caution{border-left:3px solid var(--orange)}
+.caution h3{font-size:16px;margin:0 0 7px}
+.footnote{font-size:11px;color:var(--muted2);line-height:1.5;margin:9px 1px 0}
+.desktop{display:block}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.57);z-index:50;display:none}.sheetbg.open{display:block}
+.sheet{position:absolute;bottom:0;left:0;right:0;max-height:min(88dvh,780px);overflow:auto;background:#12161b;border-radius:24px 24px 0 0;padding:10px 16px calc(23px + env(safe-area-inset-bottom));border-top:1px solid var(--line);box-shadow:0 -18px 48px rgba(0,0,0,.4)}
+.grabber{height:5px;width:38px;border-radius:6px;background:#3c454f;margin:0 auto 14px}
+.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.sheethead h2{font-size:21px;margin:0}.close{border:0;background:var(--surface2);border-radius:50%;width:34px;height:34px;font-size:20px}
+.sheet p{color:var(--muted);font-size:13px;line-height:1.5}.sheet h3{font-size:14px;margin:20px 0 7px}
+.sheetlist{padding:0;margin:0}.sheetlist li{margin:7px 0;color:#cbd4de;font-size:13px;line-height:1.5}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:space-around;background:rgba(15,18,22,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.navitem{font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:4px;align-items:center;border:0;background:transparent;text-decoration:none}.navitem.active{color:var(--blue)}.navicon{font-size:20px}
+.private .sensitive{filter:blur(8px);user-select:none}.private .chart-shield{display:flex}
+@media(min-width:760px){
+ .app{padding:24px 28px 40px}.header h1{font-size:36px}
+ .desktop{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(310px,.75fr);gap:20px;align-items:start}
+ .rightcol{display:flex;flex-direction:column;gap:0}
+ .hero .metric{font-size:48px}.chart{height:245px}
+ .bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}
+ .sheet{left:50%;right:auto;transform:translateX(-50%);width:min(530px,92vw)}
+}
+@media(max-width:360px){.hero .metric{font-size:36px}.chart{height:175px}}
+</style><link rel="stylesheet" href="foundation.css">
+</head>
+<body>
+<div class="app" id="app">
+  <div class="header"><h1>Planning</h1><div class="header-actions">
+    <button class="iconbtn" id="privacy" aria-label="Hide sensitive figures" aria-pressed="false" title="Hide sensitive figures"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+    <button class="status-dot" id="status" aria-label="Data status"></button>
+  </div></div>
+  <nav class="modes" aria-label="Planning views">
+    <a class="mode" href="planning.html">Cash Forecast</a>
+    <a class="mode active" href="runway.html" aria-current="page">Runway</a>
+    <a class="mode" href="reserves.html">Reserves</a>
+    <a class="mode" href="scenarios.html">Scenarios</a><a class="mode" href="afford.html">Can I afford this?</a>
+  </nav>
+
+  <section class="hero">
+    <div class="eyebrow"><i class="dot"></i> Baseline · preserving reserves</div>
+    <div class="metric sensitive">About 4 months</div>
+    <h2 class="sensitive">Cash runway ends around February 2027.</h2>
+    <p>Your unallocated personal cash is projected to be exhausted <span class="sensitive">around February</span>, while <span class="sensitive">€12.1k</span> in protected reserves stays untouched.</p>
+    <div class="hero-bottom"><span>Monthly projection · not an exact cutoff date</span><button id="explainRunway">How is this calculated? →</button></div>
+  </section>
+  <div class="pretend">ILLUSTRATIVE FINANCIAL DATA · NOT CONNECTED TO YOUR ACCOUNTS</div>
+
+  <div class="desktop">
+    <div>
+      <div class="sectionhead"><h2>Runway trajectory</h2><button id="assumptions">View assumptions</button></div>
+      <section class="card projection">
+        <div class="projection-title"><div><strong>Unallocated personal cash</strong><div class="sub">After protected reserves · EUR reporting equivalent</div></div></div>
+        <div class="chart-shell"><svg class="chart" viewBox="0 0 600 222" role="img" aria-label="Monthly synthetic remaining unallocated cash, from 23.6 thousand euros now toward zero around February 2027">
+          <line x1="66" y1="25" x2="583" y2="25" class="grid"/><line x1="66" y1="80" x2="583" y2="80" class="grid"/><line x1="66" y1="135" x2="583" y2="135" class="grid"/><line x1="66" y1="190" x2="583" y2="190" class="axis"/>
+          <text x="5" y="30">€24k</text><text x="5" y="85">€16k</text><text x="5" y="140">€8k</text><text x="13" y="193">€0</text>
+          <path id="area" class="fill" d="M66 28 L150 48 L238 87 L324 128 L410 166 L463 190 L463 190 L66 190Z"/>
+          <path id="line" class="path" d="M66 28 L150 48 L238 87 L324 128 L410 166 L463 190"/>
+          <line x1="463" y1="20" x2="463" y2="190" stroke="#ff8a4c" stroke-width="1.3" stroke-dasharray="4 5"/>
+          <circle cx="463" cy="190" r="5.5" class="tip"/><text x="455" y="17" text-anchor="end">Estimated limit</text>
+          <g id="selectedDot"><circle cx="150" cy="48" r="6" class="month-dot chosen"/></g>
+          <text x="66" y="214" text-anchor="middle">Now</text><text x="150" y="214" text-anchor="middle">Oct</text><text x="238" y="214" text-anchor="middle">Nov</text><text x="324" y="214" text-anchor="middle">Dec</text><text x="410" y="214" text-anchor="middle">Jan</text><text x="500" y="214" text-anchor="middle">Feb</text>
+        </svg>
+        <div class="chart-shield"><svg viewBox="0 0 24 24"><path d="M3 3l18 18M10.5 6.1C16.5 5 20.7 12 20.7 12a17 17 0 0 1-3.1 3.4M6.9 7.1C4.3 8.4 2 12 2 12s3.5 6 10 6c1.7 0 3.3-.4 4.7-1.2M9.5 9.5a3.4 3.4 0 0 0 4.9 4.8"/></svg>Financial projection hidden</div></div>
+        <div class="chart-legend"><span>Blue: eligible cash after protected reserves</span><span class="zero">Orange: estimated limit</span></div>
+        <div class="months" id="monthButtons" aria-label="Inspect forecast month">
+          <button class="active" data-m="0">Oct</button><button data-m="1">Nov</button><button data-m="2">Dec</button><button data-m="3">Jan</button><button data-m="4">Feb</button>
+        </div>
+        <div class="selected-month">
+          <div class="selected-title"><b id="monthName">October · remaining days</b><span class="value sensitive" id="monthNet">−€3,050 net</span></div>
+          <div class="small" id="monthHint">Remaining October only · amounts are modelled, not individual scheduled transactions.</div>
+          <div class="lineitem"><span class="label">Expected inflows</span><span class="num sensitive" id="inflow">+€2,500</span></div>
+          <div class="lineitem"><span class="label">Ordinary spending (distributed)</span><span class="num sensitive" id="ordinary">−€2,800</span></div>
+          <div class="lineitem"><span class="label">Other known / expected commitments</span><span class="num sensitive" id="commitments">−€1,800</span></div>
+          <div class="lineitem"><span class="label">My Sabadell Joint funding</span><span class="num sensitive" id="joint">−€800</span></div>
+          <div class="lineitem"><span class="label">My GBP / property funding</span><span class="num sensitive" id="gbp">−€150</span></div>
+        </div>
+        <div class="callout">Funding a tracked Joint account is counted as an outgoing use of your personal cash, but moving money between two eligible personal accounts doesn't reduce total runway cash. The model avoids double-counting those transfers.</div>
+      </section>
+    </div>
+    <div class="rightcol">
+      <div class="sectionhead"><h2>What’s included?</h2><button id="sources">See sources</button></div>
+      <section class="card">
+        <div class="baseline-row"><div><div class="key">Eligible personal cash</div><div class="detail">Personal accounts, Trading 212 Cash, parked cash and eligible foreign-currency cash</div></div><div class="val sensitive">€35.7k</div></div>
+        <div class="baseline-row"><div><div class="key">Protected reserves</div><div class="detail">Emergency €8k · Future home €4.1k</div></div><div class="val sensitive">−€12.1k</div></div>
+        <div class="baseline-row"><div><div class="key"><b>Unallocated runway cash</b></div><div class="detail">Starting available resource for the projection</div></div><div class="val emph sensitive">€23.6k</div></div>
+      </section>
+      <div class="sectionhead"><h2>What has changed?</h2></div>
+      <section class="card compare"><div class="compare-kicker">Compared with the previously expected path</div><h3><span class="sensitive">0.3 months</span> ahead of forecast</h3><p>In this synthetic example, ordinary spending was a little lower than expected. This compares actual progress with the previous forecast—not simply last month's runway number.</p><div style="margin-top:12px"><button class="link" id="movement" style="color:var(--blue);padding:0;background:none;border:0;font-weight:700;font-size:13px">Why did it move? →</button></div></section>
+      <div class="sectionhead"><h2>Account liquidity is different</h2></div>
+      <section class="card caution"><h3>Runway doesn't replace Cash Forecast.</h3><p>Sabadell Joint may need a top-up long before your overall unallocated cash is exhausted. Cash Forecast tracks those account-specific needs, funding paths and operating buffers.</p><div style="margin-top:13px"><a class="mode" style="display:inline-block;color:#a9d5ff;background:#17395a;border-color:#245f93" href="planning.html">Open Cash Forecast →</a></div></section>
+      <p class="footnote">Monthly figures are estimates. The end month may change with new transactions, expected income, commitments, currency values or reserve protection choices.</p>
+    </div>
+  </div>
+</div>
+<nav class="bottomnav"><a class="navitem" href="home.html"><span class="navicon">⌂</span>Home</a><a class="navitem" href="transactions.html"><span class="navicon">≡</span>Transactions</a><button class="navitem" id="insightsNav"><span class="navicon">▥</span>Insights</button><a class="navitem active" href="runway.html"><span class="navicon">□</span>Planning</a></nav>
+<div id="sheet" class="sheetbg"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grabber"></div><div class="sheethead"><h2 id="sheetTitle">Explanation</h2><button class="close" id="close" aria-label="Close">×</button></div><div id="sheetBody"></div></section></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const months=[
+ {label:'October · remaining days',net:-3050,income:2500,ordinary:-2800,commitments:-1800,joint:-800,gbp:-150,note:'Remaining October only · amounts are modelled, not individual scheduled transactions.',remaining:20550,point:[150,48]},
+ {label:'November',net:-5400,income:3000,ordinary:-2100,commitments:-4100,joint:-1800,gbp:-400,note:'Whole month · known items use dates in Cash Forecast; ordinary spending is distributed.',remaining:15150,point:[238,87]},
+ {label:'December',net:-6300,income:3000,ordinary:-2600,commitments:-4000,joint:-1800,gbp:-900,note:'Whole month · higher property and seasonal costs are included in this synthetic expectation.',remaining:8850,point:[324,128]},
+ {label:'January',net:-5200,income:3000,ordinary:-2000,commitments:-4000,joint:-1800,gbp:-400,note:'Whole month · existing expected activity and funding responsibilities.',remaining:3650,point:[410,166]},
+ {label:'February',net:-5000,income:3000,ordinary:-1800,commitments:-4000,joint:-1800,gbp:-400,note:'Whole month · resources reach the protected-reserve boundary partway through this period. The exact day is not justified.',remaining:-1350,point:[463,190]}
+];
+function signed(n){return (n<0?'−':'+')+'€'+Math.abs(n).toLocaleString('en-GB')}
+function renderMonth(i){
+ const m=months[i];$$('#monthButtons button').forEach(b=>b.classList.toggle('active',Number(b.dataset.m)===i));
+ $('#monthName').textContent=m.label;$('#monthNet').textContent=signed(m.net)+' net';
+ $('#monthHint').textContent=m.note;
+ $('#inflow').textContent=signed(m.income);$('#ordinary').textContent=signed(m.ordinary);
+ $('#commitments').textContent=signed(m.commitments);$('#joint').textContent=signed(m.joint);$('#gbp').textContent=signed(m.gbp);
+ $('#selectedDot').innerHTML='<circle cx="'+m.point[0]+'" cy="'+m.point[1]+'" r="6" class="month-dot chosen"/>';
+}
+$$('#monthButtons button').forEach(b=>b.onclick=()=>renderMonth(Number(b.dataset.m)));
+function show(title,body){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=document.body.classList.contains('private')?'<p>Sensitive financial detail is hidden. Use the eye icon to reveal figures before inspecting this breakdown.</p>':body;$('#sheet').classList.add('open')}
+function dismiss(){$('#sheet').classList.remove('open')}
+$('#close').onclick=dismiss;
+$('#sheet').onclick=e=>{if(e.target===$('#sheet'))dismiss()};
+window.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss()});
+$('#explainRunway').onclick=()=>show('How runway is calculated', '<p>Runway uses the same baseline expected-activity model as Cash Forecast, but answers a different question: when will unallocated eligible personal cash be exhausted while the selected protected reserves remain intact?</p><h3>Current synthetic composition</h3><ul class="sheetlist"><li>€35.7k eligible personal cash/cash-equivalents (including converted GBP and USD).</li><li>€12.1k protected reserve allocations remain unavailable to ordinary runway.</li><li>€23.6k unallocated cash funds expected future net outflows.</li></ul><h3>What counts and what does not</h3><ul class="sheetlist"><li>Required personal funding of shared obligations counts as an outgoing resource use.</li><li>Joint balances do not become personal resources merely because the accounts are tracked.</li><li>Transfers between eligible personal accounts and FX conversions change location/currency, not cashflow by themselves; fees or FX effects can change value.</li><li>Trading 212 Cash can fund the baseline. FWRA investments and pensions are excluded unless explicitly allowed by a separate hypothetical scenario.</li></ul><p>Forecast time is expressed as a month/range because longer-horizon expected activity is modelled monthly. This is not a guaranteed cutoff day.</p>');
+$('#assumptions').onclick=()=>show('Baseline assumptions','<p>This is an illustrative, not live, baseline. The assumptions are the structured inputs behind the answer, not a second editable forecast.</p><div class="baseline-row"><span class="key">Eligible cash</span><b>€35,700</b></div><div class="baseline-row"><span class="key">Protected reserves</span><b>€12,100</b></div><div class="baseline-row"><span class="key">Income</span><b>€3,000 / typical full month</b></div><div class="baseline-row"><span class="key">Ordinary spending</span><b>Monthly / seasonal estimate</b></div><div class="baseline-row"><span class="key">Known commitments</span><b>Current expected activity</b></div><div class="baseline-row"><span class="key">Shared funding</span><b>Personal contribution only</b></div><div class="baseline-row"><span class="key">Alternative investment sale</span><b>Not assumed</b></div><p>In the real product, changing assumptions happens in Planning, with evidence, effective dates and a recalculated Cash Forecast—not by secretly editing the Runway answer.</p>');
+$('#sources').onclick=()=>show('Eligible resources & exclusions','<p>The initial eligible cash total is a converted reporting-currency value. Original balances and funding constraints remain attached to each source.</p><h3>Included</h3><ul class="sheetlist"><li>Sabadell Personal EUR and Sabadell Savings EUR (Savings can move only via Personal).</li><li>Trading 212 Cash EUR, GBP and USD (including card activity).</li><li>Trade Republic parked cash and HSBC Personal GBP.</li></ul><h3>Excluded from ordinary runway</h3><ul class="sheetlist"><li>Sabadell Joint and HSBC Joint balances: shared, not personal runway resources.</li><li>Trading 212 FWRA holdings, other investments and pensions.</li><li>Property values and hypothetical property-sale proceeds not yet part of the baseline.</li></ul><p>Expected personal contributions to shared bills are still debited through projected future cashflows.</p>');
+$('#movement').onclick=()=>show('Why runway moved','<p>The comparison is against where the previous forecast expected you to be today, not a simple subtraction of calendar time from last month’s runway headline.</p><ul class="sheetlist"><li>Lower-than-forecast ordinary spending: positive contribution.</li><li>Expected income and shared funding unchanged in this synthetic example.</li><li>No change to protected reserve allocations.</li></ul><p>Once connected to actual history, this view should quantify the contributors and allow a drill-down to transactions or Expected Activity as relevant.</p>');
+$('#insightsNav').onclick=()=>show('Insights','<p>The Insights interactive prototype is a separate discovery surface for now. This prototype focuses only on the Runway model.</p>');
+$('#status').onclick=()=>show('Data status','<p>Prototype data is entirely synthetic. A real freshness state must distinguish the last successful update/import from the most recent transaction date.</p>');
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures');$('#privacy').title=on?'Reveal sensitive figures':'Hide sensitive figures'};
+renderMonth(0);
+</script><script src="foundation.js" defer></script>
+</body></html>
