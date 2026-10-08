@@ -167,7 +167,7 @@ const inEur=(n,c='EUR')=>Number(n||0)*(c==='GBP'?EXAMPLE_GBP_EUR:1);
 const currencyOf=p=>p.currency|| (p.type==='uk'?'GBP':'EUR');
 const MONTHS=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
 const TYPES={
- rental:{name:'New rental',area:'Housing',icon:'R',help:'Rent, utilities, insurance and move-in costs. Add other named expenses if needed.',fields:[['rent','Rent per month'],['electric','Electricity per month'],['gas','Gas per month'],['water','Water per month'],['internet','Internet per month'],['alarm','Alarm per month'],['insurance','Home insurance per month'],['move','Move-in cost, one-off']]},
+ rental:{name:'New rental',area:'Housing',icon:'R',help:'Rent, utilities, insurance and move-in costs. Add other named expenses if needed. UK vacancies default to GBP, with EUR/GBP selectors on monetary changes.',fields:[['rent','Rent per month'],['electric','Electricity per month'],['gas','Gas per month'],['water','Water per month'],['internet','Internet per month'],['alarm','Alarm per month'],['insurance','Home insurance per month'],['move','Move-in cost, one-off']]},
  job:{name:'New employment',area:'Income',icon:'J',help:'Net income replaces existing temporary income, not adds to it.',fields:[['income','Net monthly income']]},
  home:{name:'Existing home cost share',area:'Housing',icon:'H',help:'Changes personal share of existing contributions from this month; most recent rule wins.',fields:[['mortgagePct','Mortgage share (%)',50],['runningPct','Running costs share (%)',0]]},
  uk:{name:'UK rental becomes vacant',area:'Property',icon:'U',help:'GBP by default. Conversion into EUR reporting equivalents is illustrative.',fields:[['lostIncome','Monthly rent no longer received'],['extra','Extra property costs per month']]},
@@ -415,10 +415,10 @@ function chooseType(){
  });
 }
 const examples=[
- {name:'Add a complete rental',text:'Add rental in January: rent 1700, electricity 140, water 35, internet 55, moving costs 2400'},
+ {name:'Add a complete rental',text:'Add rental in January: rent €1700, electricity €140, gas €60, water €35, internet €55, alarm €30, home insurance €25, moving costs €2400'},
  {name:'Change existing-home split',text:'From March change Calle Plana mortgage to 50% and running costs to 50%'},
- {name:'Start a job',text:'Start a job in December with net income 7400'},
- {name:'Add a one-off',text:'Add one-off repair 600 in February'},
+ {name:'Start a job',text:'Start a job in December with net income €7400'},
+ {name:'Add a one-off',text:'Add one-off repair €600 in February'},
  {name:'Remove employment',text:'Remove the new job'}
 ];
 function renderExamples(){
@@ -516,13 +516,16 @@ function parseChat(raw){
  return {ops:dedup,notes};
 }
 function chatPropose(){
+ $('#chatReply').innerHTML='';
  if(document.body.classList.contains('private')){toast('Reveal amounts first to edit scenario assumptions.');return}
  const raw=$('#composer').value.trim();if(!raw){toast('Enter a change or use one of the examples.');return}
  const parsed=parseChat(raw);
+ if(parsed.notes.length&&parsed.ops.length){parsed.ops=[];parsed.notes.unshift('Please clarify before I apply anything. Give one complete, dated change at a time.');}
  proposalOps=parsed.ops;
  const lines=parsed.ops.map(x=>'<li>'+esc(x.text)+'</li>').join('');
  const notes=parsed.notes.map(x=>'<p>'+esc(x)+'</p>').join('');
- $('#chatProposal').innerHTML='<div class="proposal"><h4>'+parsed.ops.length+' proposed structured change'+(parsed.ops.length===1?'':'s')+'</h4>'+(lines?'<ul>'+lines+'</ul>':'<p>No supported change was recognised.</p>')+notes+(parsed.ops.length?'<div class="proposal-actions"><button id="acceptProposal">Accept into draft</button><button id="rejectProposal" class="reject">Dismiss</button></div>':'<p>Try an example above, or use “Add structured change” for anything the demo parser cannot interpret.</p>')+'</div>';
+ $('#chatReply').innerHTML=parsed.ops.length?'<div class="assistant-reply">I found '+parsed.ops.length+' possible change'+(parsed.ops.length===1?'':'s')+'. Check the proposal below before I update your draft.</div>':('<div class="assistant-reply">'+esc(parsed.notes[0]||'I cannot interpret that reliably yet. Try a preset or add a structured change.')+'</div>');
+ $('#chatProposal').innerHTML='<div class="proposal"><h4>'+parsed.ops.length+' proposed structured change'+(parsed.ops.length===1?'':'s')+'</h4>'+(lines?'<ul>'+lines+'</ul>':'<p>I need a little more information before suggesting a safe change.</p>')+notes+(parsed.ops.length?'<div class="proposal-actions"><button id="acceptProposal">Accept into draft</button><button id="rejectProposal" class="reject">Dismiss</button></div>':'<p>Try an example above, or use “Add structured change” for anything the demo parser cannot interpret.</p>')+'</div>';
  if(parsed.ops.length){
    $('#acceptProposal').onclick=()=>{
      for(const op of proposalOps){
@@ -531,9 +534,9 @@ function chatPropose(){
        else draft.changes.push(clone(op.item));
      }
      proposalOps=null;$('#chatProposal').innerHTML='';$('#composer').value='';
-     renderBuilder();toast('Proposal accepted into draft — save separately to keep it.');
+     renderBuilder();$('#chatReply').innerHTML='<div class="assistant-reply">Updated your draft. You can inspect the change above, then save when ready.</div>';toast('Proposal accepted into draft — save separately to keep it.');
    };
-   $('#rejectProposal').onclick=()=>{proposalOps=null;$('#chatProposal').innerHTML='';toast('Proposal dismissed. Draft unchanged.')};
+   $('#rejectProposal').onclick=()=>{proposalOps=null;$('#chatProposal').innerHTML='';$('#chatReply').innerHTML='<div class="assistant-reply">Dismissed. Nothing changed in your draft.</div>';toast('Proposal dismissed. Draft unchanged.')};
  }
 }
 function showSheet(title,html){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;$('#modal').classList.add('open')}
