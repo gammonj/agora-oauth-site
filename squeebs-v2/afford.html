@@ -252,7 +252,7 @@ function drawChart(r){
  for(let i=0;i<8;i++)if(i%2===0||i===7)svg+='<text x="'+x(i)+'" y="195" text-anchor="middle">'+MONTHS[i%12]+'</text>';
  $('#chartContent').innerHTML=svg;
 }
-function renderAnswer(r){
+function renderAnswer(r,shouldScroll=true){
  const outcome=flags(r);
  $('#resultHero').className='result-hero '+(outcome.type==='warn'?'warn':outcome.type==='neutral'?'neutral':'');
  $('#resultKicker').textContent=outcome.type==='warn'?'● Funding / runway attention':outcome.type==='neutral'?'● Conditional consequence':'● Projected consequence';
@@ -281,7 +281,11 @@ function renderAnswer(r){
  $('#chartNote').textContent='Illustrative first 8 months of unallocated EUR-equivalent cash. Each path stops at its protected-reserve boundary. Long-range cashflow is modelled monthly, not day by day.';
  drawChart(r);
  $('#placeholder').classList.add('hidden');$('#results').classList.remove('hidden');
- if(window.innerWidth<800)setTimeout(()=>$('#results').scrollIntoView({behavior:'smooth',block:'start'}),50);
+ if(shouldScroll&&window.innerWidth<800)setTimeout(()=>$('#results').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function updateAfterEdit(){
+ if(!checked)return;
+ const x=readInput();if(x){checked=calculate(x);renderAnswer(checked,false)}else{checked=null;$('#results').classList.add('hidden');$('#placeholder').classList.remove('hidden')}
 }
 function check(){
  if(document.body.classList.contains('mask')){toast('Reveal figures before evaluating a financial amount.');return}
@@ -320,7 +324,7 @@ function saveReview(){
 const escapeText=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 renderDateOptions();preset('purchase');
 $$('[data-example]').forEach(b=>b.onclick=()=>preset(b.dataset.example));
-$$('[data-pattern]').forEach(b=>b.onclick=()=>{selected=null;setPattern(b.dataset.pattern)});
+$('[data-pattern]').forEach(b=>b.onclick=()=>{selected=null;setPattern(b.dataset.pattern);updateAfterEdit()});
 $('#clearExample').onclick=clearCheck;
 $('#checkImpact').onclick=check;
 $('#discard').onclick=clearCheck;
@@ -339,10 +343,19 @@ $('#calculation').onclick=()=>{if(!checked)return;const r=checked,x=r.x;const fi
  '<p>Month-level sample: '+first.map(t=>getMonth(t.i)+' baseline '+fmt(t.base)+' / proposal '+fmt(t.alt)).join(' · ')+'</p><p>In the real product: answer → composition → assumption → methodology → source transaction/Expected Activity.</p>');
 };
 $('#timelineHelp').onclick=()=>detailSheet('Reading the Runway comparison','<p>Gray is the baseline path. Blue includes this hypothetical purchase or recurring commitment. Both start with unallocated personal cash after reserved allocations and use the same pre-existing expected activity.</p><p>When a path reaches zero it stops. A later month cannot be treated as funded simply because a projection formula continues.</p><p>A reserve-funded purchase can leave unallocated Runway unchanged while still using up a protected purpose allocation. Cash Forecast must separately assess how money reaches the paying account.</p>');
-$('#treatment').onchange=renderConditional;
-$('#plannedItem').onchange=()=>{const p=planned[$('#plannedItem').value];if(p){$('#description').value=p.name;$('#amount').value=p.amount;$('#currency').value=p.currency;accountsFor(p.currency);$('#paymentAccount').value=p.account;$('#payMonth').value=p.month;}renderConditional()};
-$('#reserve').onchange=renderInputNotes;
-$('#currency').onchange=()=>{accountsFor($('#currency').value);renderInputNotes()};
+function selectExpectedItem(){
+ const p=planned[$('#plannedItem').value];
+ if(p){
+   $('#description').value=p.name;$('#amount').value=p.amount;$('#currency').value=p.currency;
+   accountsFor(p.currency);$('#paymentAccount').value=p.account;$('#payMonth').value=p.month;
+ }
+ renderConditional();updateAfterEdit();
+}
+$('#treatment').onchange=()=>{if($('#treatment').value==='planned'&&mode==='once')selectExpectedItem();else{renderConditional();updateAfterEdit()}};
+$('#plannedItem').onchange=selectExpectedItem;
+$('#reserve').onchange=()=>{renderInputNotes();updateAfterEdit()};
+$('#currency').onchange=()=>{accountsFor($('#currency').value);renderInputNotes();updateAfterEdit()};
+['#description','#amount','#payMonth','#paymentAccount'].forEach(selector=>{const item=$(selector);item.addEventListener('input',updateAfterEdit);item.addEventListener('change',updateAfterEdit)});
 $('#privacy').onclick=()=>{const on=document.body.classList.toggle('mask');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures')};
 $('#fresh').onclick=()=>detailSheet('Data status','<p>Prototype only. The account balances, funding room, modelled obligations and reserves shown here are entirely synthetic.</p><p>No connected AI, real Squeebs API, user bank data or persistence is involved.</p>');
 $('#insights').onclick=()=>detailSheet('Insights','<p>The Insights prototype is a separate discovery surface. In v2, a relevant spending insight could open this check with appropriate context.</p>');
