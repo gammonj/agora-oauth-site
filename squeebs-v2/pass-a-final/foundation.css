@@ -666,6 +666,11 @@ body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .v2-header-action
     inset:0!important;
     z-index:110!important;
   }
+  /* Insights' original desktop sheet backdrop retains 30px padding.
+     Remove it so right-hand inspector surfaces meet the viewport edges. */
+  body.v2-pass-a[data-v2-page="insights"] .sheet-backdrop{
+    padding:0!important;
+  }
   body.v2-pass-a .sheet-backdrop.show,
   body.v2-pass-a .sheet-backdrop.open,
   body.v2-pass-a .sheetbg.show,
