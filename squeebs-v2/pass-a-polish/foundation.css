@@ -784,3 +784,263 @@ body.v2-pass-a[data-v2-page="insights"] .bar-row.warn .label{
 @media(min-width:760px){
  body.v2-pass-a[data-v2-page="insights"] .chart text{font-size:11px!important}
 }
+
+
+/* Light mode contrast repair — text, interactive states and chart details.
+   No semantic status relies on a colour alone. The originals remain untouched. */
+body.v2-pass-a[data-v2-theme="light"]{
+ --v2-chart-grid:#cbd6e0;
+ --v2-chart-label:#526679;
+ --v2-today-marker:#7e94a6;
+ --v2-negative:#ae491d;
+ --bg:#f4f6f9;
+ --surface:#ffffff;
+ --surface2:#edf2f6;
+ --surface3:#e7eef5;
+ --line:#d8e0e9;
+ --text:#1b2a39;
+ --muted:#526679;
+ --muted2:#65798b;
+ --blue:#126db6;
+ --green:#17774e;
+ --orange:#a9521d;
+ --purple:#6853ab;
+ color:var(--text)!important;
+}
+/* Readable controls and their actual hover/selected/focus states. */
+body.v2-pass-a[data-v2-theme="light"] button,
+body.v2-pass-a[data-v2-theme="light"] input,
+body.v2-pass-a[data-v2-theme="light"] select,
+body.v2-pass-a[data-v2-theme="light"] textarea{
+ color:inherit;
+}
+body.v2-pass-a[data-v2-theme="light"] input,
+body.v2-pass-a[data-v2-theme="light"] select,
+body.v2-pass-a[data-v2-theme="light"] textarea{
+ background:#f9fbfd!important;border-color:#bdcdd9!important;
+ color:#1b2937!important;
+}
+body.v2-pass-a[data-v2-theme="light"] input::placeholder,
+body.v2-pass-a[data-v2-theme="light"] textarea::placeholder{color:#61758a!important;opacity:1!important}
+body.v2-pass-a[data-v2-theme="light"] .field label,
+body.v2-pass-a[data-v2-theme="light"] .field .label,
+body.v2-pass-a[data-v2-theme="light"] .eyebrow,
+body.v2-pass-a[data-v2-theme="light"] .hint,
+body.v2-pass-a[data-v2-theme="light"] .context,
+body.v2-pass-a[data-v2-theme="light"] .detail,
+body.v2-pass-a[data-v2-theme="light"] .sub,
+body.v2-pass-a[data-v2-theme="light"] .small,
+body.v2-pass-a[data-v2-theme="light"] .caption{
+ color:#526679!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .context b,
+body.v2-pass-a[data-v2-theme="light"] .field b{color:#1f3548!important}
+body.v2-pass-a[data-v2-theme="light"] a:not(.v2-link):hover,
+body.v2-pass-a[data-v2-theme="light"] .linkbtn:hover{color:#05558d!important}
+body.v2-pass-a[data-v2-theme="light"] .mode:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .tab:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .chip:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .choice:not(.active):hover{
+ background:#e8f1f9!important;border-color:#97b7d0!important;color:#1e527a!important;
+}
+body.v2-pass-a[data-v2-theme="light"] button:focus-visible,
+body.v2-pass-a[data-v2-theme="light"] input:focus-visible,
+body.v2-pass-a[data-v2-theme="light"] a:focus-visible{
+ outline:2px solid #157bc3!important;outline-offset:2px;
+}
+/* Original styles sometimes hardcode pale foreground on dark selected states. */
+body.v2-pass-a[data-v2-theme="light"] .example.active,
+body.v2-pass-a[data-v2-theme="light"] .account-chip.active,
+body.v2-pass-a[data-v2-theme="light"] .choice.active,
+body.v2-pass-a[data-v2-theme="light"] .segment button.active,
+body.v2-pass-a[data-v2-theme="light"] .periods button.active,
+body.v2-pass-a[data-v2-theme="light"] .chip.active,
+body.v2-pass-a[data-v2-theme="light"] .segmented button.active{
+ background:#dcecf9!important;border-color:#7ab0d5!important;color:#114d7c!important;
+ box-shadow:none!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .example.active *,
+body.v2-pass-a[data-v2-theme="light"] .account-chip.active *,
+body.v2-pass-a[data-v2-theme="light"] .choice.active *,
+body.v2-pass-a[data-v2-theme="light"] .chip.active *{
+ color:#234e70!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .segmented{
+ background:#e8eef4!important;border-color:#cdd9e4!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .segmented button{
+ color:#37556d!important;box-shadow:none!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .segmented button.active{
+ color:#0c5e9e!important;background:#fff!important;
+ border:1px solid #9bc4e6!important;
+ box-shadow:0 2px 8px rgba(20,59,89,.08)!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .segmented button:not(.active):hover{
+ background:#dfe9f2!important;color:#1d5277!important;
+}
+/* Preserve useful purpose colours while giving chips meaningful contrast. */
+body.v2-pass-a[data-v2-theme="light"] .pill{
+ background:#edf2f7!important;border-color:#d1dce5!important;color:#3d5265!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .pill.purple{
+ background:#ede7f9!important;color:#584798!important;border-color:#c2b3e7!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .pill.amber{
+ background:#fcf0e5!important;color:#995021!important;border-color:#eac6a8!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .pill.green,
+body.v2-pass-a[data-v2-theme="light"] .flag{
+ background:#e3f4eb!important;color:#13683c!important;border-color:#bee1ca!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .flag.partial{
+ background:#f0eafb!important;color:#6247a9!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .flag.empty{
+ background:#fff0e6!important;color:#9c481c!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .reserve-icon{
+ background:#e2edf9!important;color:#165e9b!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .reserve-icon.future{
+ background:#eee9fa!important;color:#6451a9!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .reserve-icon.tax{
+ background:#fff0e3!important;color:#995221!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .square{
+ background:#e5eaf4!important;color:#324f78!important;
+}
+/* Surfaces that were specifically hardcoded for dark theme. */
+body.v2-pass-a[data-v2-theme="light"] .result.changed,
+body.v2-pass-a[data-v2-theme="light"] .result-hero.neutral{
+ background:#eaf2fa!important;border-color:#cadce9!important;color:#24394c!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .result-hero.warn{
+ background:#fff2e8!important;border-color:#dfb69a!important;color:#44372c!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .result-hero p,
+body.v2-pass-a[data-v2-theme="light"] .result-hero .result-kicker{
+ color:#3c5366!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .result-hero.warn .result-kicker{
+ color:#98461f!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .info,
+body.v2-pass-a[data-v2-theme="light"] .mini-note,
+body.v2-pass-a[data-v2-theme="light"] .library-note,
+body.v2-pass-a[data-v2-theme="light"] .preview{
+ background:#edf5fc!important;border:1px solid #c8dff1!important;color:#34556e!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .notice,
+body.v2-pass-a[data-v2-theme="light"] .info.warn{
+ background:#fff3e8!important;border:1px solid #eccdb2!important;color:#84451f!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .notice p,
+body.v2-pass-a[data-v2-theme="light"] .info.warn p{color:#874b2b!important}
+body.v2-pass-a[data-v2-theme="light"] .result.changed .label,
+body.v2-pass-a[data-v2-theme="light"] .notice strong{color:#523c69!important}
+body.v2-pass-a[data-v2-theme="light"] .chat-header{
+ background:#e1ecf6!important;color:#23394e!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .chat-header *,
+body.v2-pass-a[data-v2-theme="light"] .chat-subtitle{color:#28475f!important}
+body.v2-pass-a[data-v2-theme="light"] .addrow button{
+ background:#f7fafc!important;color:#2c455a!important;border-color:#d1dde7!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .phase-head .phase-num{
+ background:#dfeefa!important;color:#155c96!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .choice{
+ background:#f0f5f9!important;color:#314e66!important;border-color:#cbdae6!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .suggestions{
+ background:#fff!important;border-color:#c6d5e2!important;
+ box-shadow:0 13px 35px rgba(18,46,72,.11)!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .suggestion:hover{
+ background:#edf5fb!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .tx-icon,
+body.v2-pass-a[data-v2-theme="light"] .scope-icon.all{
+ background:#e4ebf2!important;color:#3b566c!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .matching-banner,
+body.v2-pass-a[data-v2-theme="light"] .selection-rail{
+ background:#e6f2fb!important;border-color:#b5d4ea!important;color:#264b69!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .selection-rail span,
+body.v2-pass-a[data-v2-theme="light"] .matching-banner *{
+ color:#275980!important;
+}
+/* Charts should remain easy to read in light mode, not pale-on-pale. */
+body.v2-pass-a[data-v2-theme="light"] .plot,
+body.v2-pass-a[data-v2-theme="light"] .chart,
+body.v2-pass-a[data-v2-theme="light"] .chart-shell{
+ background:#edf3f8!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .chart svg text,
+body.v2-pass-a[data-v2-theme="light"] .chart text,
+body.v2-pass-a[data-v2-theme="light"] .plot svg text{
+ fill:#475e70!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .chart .grid,
+body.v2-pass-a[data-v2-theme="light"] .chart .gridline,
+body.v2-pass-a[data-v2-theme="light"] .plot .guide{
+ stroke:#cad5df!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .chart .today{stroke:#7c95a8!important}
+/* Consistent subdued structural rules rather than hard dark dividers. */
+body.v2-pass-a[data-v2-theme="light"] .baseline-row,
+body.v2-pass-a[data-v2-theme="light"] .phase,
+body.v2-pass-a[data-v2-theme="light"] .account-row,
+body.v2-pass-a[data-v2-theme="light"] .sheet-row,
+body.v2-pass-a[data-v2-theme="light"] .driver,
+body.v2-pass-a[data-v2-theme="light"] .tx,
+body.v2-pass-a[data-v2-theme="light"] .explore-row{
+ border-color:#d8e2ea!important;
+}
+body.v2-pass-a[data-v2-theme="light"] hr,
+body.v2-pass-a[data-v2-theme="light"] .separator,
+body.v2-pass-a[data-v2-theme="light"] .divider{
+ border-color:#d8e2ea!important;background:#d8e2ea!important;
+}
+/* All in-menu hover/focus states must be light-native too. */
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-menu-links a:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-menu-links a:not(.active):focus-visible{
+ background:#e5f1fa!important;color:#075f9a!important;border-color:#a1c8e5!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-menu-links a.active:hover{
+ background:#cae6f8!important;color:#075f9a!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-theme-row button:hover{
+ background:#e1eef8!important;color:#145e91!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-link:hover{
+ background:#e7f0f8!important;color:#164c72!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-menu-label,
+body.v2-pass-a[data-v2-theme="light"] #v2-menu .v2-menu-note{color:#61788b!important}
+/* Insights: blue for navigational context, amber/orange only for differences
+   requiring attention, dark foreground for ordinary labels. */
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"]{
+ --accent:var(--blue);
+ --accent-soft:rgba(18,109,182,.12);
+ --v2-negative:#ab461d;
+}
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .eyebrow,
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .eyebrow .mini-icon{
+ color:#126db6!important;
+}
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .compare.up,
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .metric.warn strong,
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .driver .delta,
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .detail-copy .headline{
+ color:#a84321!important;
+}
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .bar-row.warn .bar-fill{
+ background:linear-gradient(90deg,#c86739,#ea9270)!important;
+}
+body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .status-dot{
+ background:#188350!important;
+}
