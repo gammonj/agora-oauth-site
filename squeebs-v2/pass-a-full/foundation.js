@@ -136,6 +136,7 @@
  window.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
  const setTheme=theme=>{
   document.body.dataset.v2Theme=theme;
+  if(config.type==="insights")document.documentElement.dataset.theme=theme;
   menu.querySelectorAll("[data-v2-theme]").forEach(b=>{
    const on=b.dataset.v2Theme===theme;
    b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on));
