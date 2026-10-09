@@ -1044,3 +1044,37 @@ body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .bar-row.warn .ba
 body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .status-dot{
  background:#188350!important;
 }
+
+
+/* Desktop sheet UX: a calm scrim, readable context and an anchored header. */
+@media(min-width:1024px){
+  body.v2-pass-a .sheet-backdrop.show,
+  body.v2-pass-a .sheet-backdrop.open,
+  body.v2-pass-a .sheetbg.show,
+  body.v2-pass-a .sheetbg.open,
+  body.v2-pass-a #modal.open{
+    background:rgba(18,34,49,.29)!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  body.v2-pass-a .sheet .sheethead,
+  body.v2-pass-a .sheet .sheet-head,
+  body.v2-pass-a .sheet .modalhead{
+    position:sticky!important;top:-27px!important;z-index:2!important;
+    background:var(--surface,#14181d)!important;
+    padding:16px 0 12px!important;
+    margin:-16px 0 14px!important;
+    border-bottom:1px solid var(--line,#334454)!important;
+  }
+  body.v2-pass-a .sheet .close,
+  body.v2-pass-a .sheet .sheethead button,
+  body.v2-pass-a .sheet .sheet-head button{
+    flex:none!important;
+    min-width:32px;min-height:32px;
+  }
+  body.v2-pass-a[data-v2-theme="light"] .sheet .sheethead,
+  body.v2-pass-a[data-v2-theme="light"] .sheet .sheet-head,
+  body.v2-pass-a[data-v2-theme="light"] .sheet .modalhead{
+    background:#fff!important;border-bottom-color:#d6e0e8!important;
+  }
+}
