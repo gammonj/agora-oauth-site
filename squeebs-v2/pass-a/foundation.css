@@ -305,3 +305,165 @@ body.v2-pass-a input,body.v2-pass-a select,body.v2-pass-a textarea{
 body.v2-zoomguard button,body.v2-zoomguard a,
 body.v2-zoomguard input,body.v2-zoomguard select,
 body.v2-zoomguard textarea{touch-action:manipulation}
+
+
+/* Pass A micro-refinement: compact visual anchors and transaction hierarchy.
+   All selectors are scoped to the three approved representative pages. */
+body.v2-pass-a[data-v2-page="home"] .position-item{
+ position:relative;
+}
+body.v2-pass-a[data-v2-page="home"] .position-item .label{
+ padding-right:40px;
+ min-height:17px;
+}
+body.v2-pass-a[data-v2-page="home"] .v2-bucket-icon{
+ position:absolute;
+ top:12px;right:12px;
+ display:grid;place-items:center;
+ width:32px;height:32px;
+ border-radius:10px;
+ background:rgba(61,155,255,.13);
+ color:#80c2ff;
+}
+body.v2-pass-a[data-v2-page="home"] .v2-bucket-icon svg{
+ width:19px;height:19px;
+ fill:none;stroke:currentColor;stroke-width:1.8;
+ stroke-linecap:round;stroke-linejoin:round;
+}
+body.v2-pass-a[data-v2-page="home"] .v2-pos-shared .v2-bucket-icon{
+ background:rgba(56,190,183,.13);color:#72dacf;
+}
+body.v2-pass-a[data-v2-page="home"] .v2-pos-invest .v2-bucket-icon{
+ background:rgba(168,120,255,.14);color:#c0a1ff;
+}
+body.v2-pass-a[data-v2-page="home"][data-v2-theme="light"] .v2-pos-cash .v2-bucket-icon{background:#e1eefb;color:#177bc4}
+body.v2-pass-a[data-v2-page="home"][data-v2-theme="light"] .v2-pos-shared .v2-bucket-icon{background:#e0f3f0;color:#147a70}
+body.v2-pass-a[data-v2-page="home"][data-v2-theme="light"] .v2-pos-invest .v2-bucket-icon{background:#efe5fc;color:#7050a6}
+
+/* One cohesive summary strip, not another visually heavy card. */
+body.v2-pass-a[data-v2-page="transactions"] .v2-tx-summary{
+ margin:4px 0 10px;
+ padding:0;
+}
+body.v2-pass-a[data-v2-page="transactions"] .v2-tx-scope{
+ display:flex;
+ align-items:baseline;
+ justify-content:space-between;
+ gap:10px;
+ min-width:0;
+ margin:0;
+}
+body.v2-pass-a[data-v2-page="transactions"] .v2-tx-scope .context{
+ flex:1;min-width:0;
+ margin:0!important;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ font-size:12px!important;line-height:17px;
+}
+body.v2-pass-a[data-v2-page="transactions"] .v2-result-count{
+ flex:none;color:var(--muted);
+ font-size:11px;line-height:17px;
+ font-variant-numeric:tabular-nums;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-actions{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) auto!important;
+ gap:7px!important;
+ align-items:end!important;
+ margin:7px 0 0!important;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-block{min-width:0}
+body.v2-pass-a[data-v2-page="transactions"] .summary-label{
+ font-size:10.5px!important;
+ font-weight:650;
+ letter-spacing:.055em;
+ text-transform:uppercase;
+ line-height:14px;
+ margin:0 0 2px!important;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-main{
+ display:block!important;min-width:0;
+ line-height:1.08;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-main strong{
+ display:block;
+ font-size:clamp(26px,7vw,31px)!important;
+ letter-spacing:-.6px;
+ font-variant-numeric:tabular-nums;
+ line-height:1.1;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-sub{
+ font-size:11.5px!important;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ line-height:16px;
+ margin:4px 0 0!important;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-actions .toolbar{
+ display:flex!important;justify-content:flex-end!important;
+ flex-wrap:nowrap;align-items:center;
+ gap:6px!important;
+ min-width:0;
+}
+body.v2-pass-a[data-v2-page="transactions"] .summary-actions .toolbtn{
+ font-size:12px!important;
+ font-weight:550;
+ line-height:18px;
+ white-space:nowrap;
+ padding:8px 9px!important;
+ border-radius:10px!important;
+ min-height:36px;
+}
+@media(max-width:390px){
+ body.v2-pass-a[data-v2-page="transactions"] .summary-actions{
+  gap:4px!important;
+ }
+ body.v2-pass-a[data-v2-page="transactions"] .summary-actions .toolbar{gap:4px!important}
+ body.v2-pass-a[data-v2-page="transactions"] .summary-actions .toolbtn{padding:7px 7px!important}
+ body.v2-pass-a[data-v2-page="transactions"] .summary-main strong{font-size:25px!important}
+ body.v2-pass-a[data-v2-page="transactions"] .summary-sub{font-size:10.5px!important}
+}
+
+/* Derived Runway amount remains the visual endpoint; compact icons clarify inputs. */
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-row{
+ gap:9px!important;
+ padding:10px 0!important;
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-row-main{
+ display:grid;
+ grid-template-columns:27px minmax(0,1fr);
+ align-items:start;
+ gap:8px;
+ flex:1;
+ min-width:0;
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-row-copy{
+ min-width:0;
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-icon{
+ width:27px;height:27px;
+ display:grid;place-items:center;
+ border-radius:9px;
+ color:#88c4fa;background:rgba(61,155,255,.12);
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-icon svg{
+ width:16px;height:16px;
+ stroke:currentColor;fill:none;stroke-width:1.8;
+ stroke-linecap:round;stroke-linejoin:round;
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-reserves .v2-balance-icon{
+ color:#c8b1ff;background:rgba(166,132,255,.12);
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-runway .v2-balance-icon{
+ color:#79bfff;background:rgba(70,163,255,.18);
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-runway .key{
+ color:#e2f0ff;
+}
+body.v2-pass-a[data-v2-page="runway"] .v2-balance-runway .val{
+ font-size:16px;
+ font-variant-numeric:tabular-nums;
+}
+body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] .v2-balance-runway .key{color:#185b99}
+body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] .v2-balance-runway .val{color:#086fc6}
+body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] .v2-balance-eligible .v2-balance-icon{background:#e0eefb;color:#176bb3}
+body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] .v2-balance-reserves .v2-balance-icon{background:#ede8f8;color:#684fb0}
+body.v2-pass-a[data-v2-page="runway"][data-v2-theme="light"] .v2-balance-runway .v2-balance-icon{background:#d9eafa;color:#086fc6}
