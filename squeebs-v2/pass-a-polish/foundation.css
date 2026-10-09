@@ -1078,3 +1078,58 @@ body.v2-pass-a[data-v2-page="insights"][data-v2-theme="light"] .status-dot{
     background:#fff!important;border-bottom-color:#d6e0e8!important;
   }
 }
+
+/* Final light-mode separators and navigation-state repair. */
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail{
+ background:#fff!important;color:#1c3044!important;border-right-color:#d7e1e9!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-rule{
+ background:#dbe4eb!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-planning{
+ border-left-color:#d3dfe8!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-foot{
+ border-top-color:#d9e4ec!important;color:#647b8e!important;
+}
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-caption,
+body.v2-pass-a[data-v2-theme="light"] #squeebs-v2-rail .v2-byline{
+ color:#61798d!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .sheet-backdrop .sheet,
+body.v2-pass-a[data-v2-theme="light"] .sheetbg .sheet,
+body.v2-pass-a[data-v2-theme="light"] #modal .sheet{
+ background:#fff!important;color:#263c50!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .sheet .sheet-body,
+body.v2-pass-a[data-v2-theme="light"] .sheet .sheetbody{
+ color:#2d4558!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .sheethead .close,
+body.v2-pass-a[data-v2-theme="light"] .sheet-head .sheet-close,
+body.v2-pass-a[data-v2-theme="light"] .sheet-head .close{
+ background:#edf3f8!important;color:#35566e!important;border-color:#d3e0e9!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .grab,
+body.v2-pass-a[data-v2-theme="light"] .grabber{
+ background:#cbd9e4!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .toast{
+ background:#edf4fa!important;color:#244d6d!important;border-color:#b7d5e9!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .segment button:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .periods button:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .account-chip:not(.active):hover,
+body.v2-pass-a[data-v2-theme="light"] .example:not(.active):hover{
+ background:#e7f1f9!important;color:#1a5f8d!important;border-color:#99c5e2!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .result.changed *,
+body.v2-pass-a[data-v2-theme="light"] .result-hero.neutral *{
+ color:#284259!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .result-hero.warn *{
+ color:#854b2a!important;
+}
+body.v2-pass-a[data-v2-theme="light"] .v2-menu-panel{
+ border-color:#d5e1eb!important;
+}
