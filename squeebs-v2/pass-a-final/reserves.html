@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0d10">
+<title>Squeebs v2 — Planning / Reserves prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#14181d;--surface2:#1a2027;--surface3:#202731;--line:#2b333d;--text:#f6f7f8;--muted:#9da6b2;--muted2:#747f8c;--blue:#3d9bff;--green:#42d27a;--orange:#ff9b62;--red:#ff6d75;--purple:#a78fff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100%}button,input{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{opacity:.35;cursor:default}a{color:inherit;text-decoration:none}
+.app{max-width:1170px;margin:auto;min-height:100dvh;padding:18px 16px calc(96px + env(safe-area-inset-bottom))}
+.header{display:flex;justify-content:space-between;align-items:center;margin:2px 0 14px}.header h1{font-size:30px;letter-spacing:-.6px;margin:0}.header-actions{display:flex;align-items:center;gap:12px}.iconbtn{width:35px;height:35px;border:1px solid var(--line);background:var(--surface);border-radius:50%;display:grid;place-items:center;color:var(--muted)}.iconbtn svg{height:19px;width:19px;stroke:currentColor;stroke-width:2;fill:none}.status-dot{width:11px;height:11px;background:var(--green);border:0;border-radius:50%;box-shadow:0 0 0 4px rgba(66,210,122,.08)}
+.modes{display:flex;gap:8px;overflow:auto;scrollbar-width:none;margin-bottom:13px}.modes::-webkit-scrollbar{display:none}.mode{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 13px;font-size:14px;color:var(--muted)}.mode.active{color:#a9d5ff;background:#17395a;border-color:#245f93}.mode.disabled{opacity:.43}
+.hero{background:linear-gradient(180deg,#192129,#14191f);border:1px solid #2b3946;border-radius:22px;padding:18px 17px;margin:0 0 11px}.kicker{font-size:12px;font-weight:700;color:#a3bed3;display:flex;align-items:center;gap:7px}.kicker i{height:8px;width:8px;border-radius:50%;background:var(--blue)}.hero .money{font-size:41px;font-weight:780;letter-spacing:-1.1px;margin:10px 0 3px}.hero h2{font-size:17px;margin:0 0 8px;letter-spacing:-.1px}.hero p{font-size:13px;color:#c5cfd9;line-height:1.48;margin:0}.hero .metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.microstat{border-top:1px solid #34404b;padding-top:11px}.microstat .label{font-size:11px;color:var(--muted)}.microstat .value{font-size:21px;font-weight:750;margin-top:4px}.fake{font-size:10px;color:var(--muted2);margin:0 0 14px 2px;letter-spacing:.045em}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 2px 9px}.sectionhead h2{font-size:17px;margin:0;letter-spacing:-.2px}.sectionhead button,.text-link{color:var(--blue);background:none;border:0;font-size:13px;padding:0}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:14px}
+.composition{padding:15px}.balance-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.balance-title .name{font-size:12px;color:var(--muted)}.balance-title .amount{font-size:14px;font-weight:750}
+.bar{display:flex;height:15px;overflow:hidden;border-radius:7px;background:var(--surface3)}.bar .allocated{background:var(--blue);min-width:0;transition:width .3s ease}.bar .free{background:#42566a;min-width:0;transition:width .3s ease}.bar .empty{background:var(--surface3)}
+.bar-legend{margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.legend-item{display:flex;gap:7px;align-items:flex-start}.swatch{width:9px;height:9px;border-radius:3px;flex:none;margin-top:4px;background:var(--blue)}.swatch.free{background:#42566a}.legend-copy{font-size:12px;color:var(--muted);line-height:1.35}.legend-copy b{display:block;font-size:13px;color:var(--text);margin-top:2px}
+.hint{margin:11px 0 0;color:var(--muted);font-size:12px;line-height:1.5}.mini-note{border:1px solid rgba(61,155,255,.16);background:rgba(61,155,255,.06);border-radius:13px;padding:11px 12px;font-size:12px;color:#becbda;line-height:1.5;margin-top:12px}
+.reserve-list{display:grid;gap:9px}.reserve{display:block;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;transition:border .15s}.reserve:active{border-color:#346797}.reserve-head{display:flex;gap:11px;align-items:center}.reserve-icon{height:36px;width:36px;display:grid;place-items:center;border-radius:11px;font-weight:780;font-size:12px;background:#203244;color:#a9d5ff;flex:none}.reserve-icon.future{background:#2b2944;color:#c7bbff}.reserve-icon.tax{background:#3c2d25;color:#f3bc89}.reserve-main{min-width:0;flex:1}.reserve-name{font-size:14px;font-weight:730}.reserve-sub{font-size:11px;color:var(--muted);margin-top:4px}.reserve-arrow{font-size:23px;color:var(--muted2)}.reserve-amounts{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:15px 0 8px}.amount-main{font-size:23px;font-weight:770}.amount-main small{font-size:12px;color:var(--muted);font-weight:500}.reserve-progress{height:6px;overflow:hidden;border-radius:8px;background:#303841}.reserve-progress i{display:block;background:var(--blue);height:100%;border-radius:8px}.reserve-progress.future i{background:var(--purple)}.reserve-progress.tax i{background:var(--orange)}.reserve-footer{display:flex;justify-content:space-between;gap:9px;margin-top:10px;color:var(--muted);font-size:11px}.flag{font-size:11px;border-radius:999px;padding:4px 7px;background:rgba(66,210,122,.1);color:#9ae8b8;font-weight:680;white-space:nowrap}.flag.partial{background:rgba(167,143,255,.1);color:#cec1ff}.flag.empty{background:rgba(255,155,98,.09);color:#ffbb90}
+.explain{font-size:12px;line-height:1.5;color:var(--muted);margin-top:11px}
+.steps .step{padding:10px 0;border-bottom:1px solid var(--line)}.steps .step:last-child{border-bottom:0}.steps b{font-size:13px}.steps p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+.secondary-card h3{font-size:15px;margin:0 0 8px}.secondary-card p{font-size:12px;line-height:1.55;color:var(--muted);margin:0}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.pill{font-size:11px;border-radius:999px;border:1px solid var(--line);padding:6px 8px;background:var(--surface2);color:#c4ced8}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:space-around;background:rgba(15,18,22,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(14px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.navitem{border:0;background:none;color:var(--muted);font-size:11px;display:flex;flex-direction:column;gap:4px;align-items:center}.navitem.active{color:var(--blue)}.navicon{font-size:20px}
+.sheetbg{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.64)}.sheetbg.show{display:block}.sheet{position:absolute;bottom:0;left:0;right:0;max-height:min(90dvh,790px);background:#12161b;border-radius:24px 24px 0 0;border-top:1px solid var(--line);box-shadow:0 -18px 50px rgba(0,0,0,.44);overflow:auto;padding:10px 16px calc(24px + env(safe-area-inset-bottom))}
+.grab{height:5px;width:38px;border-radius:7px;background:#3d4650;margin:0 auto 15px}.sheethead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.sheethead h2{font-size:21px;margin:0}.close{border:0;background:var(--surface2);border-radius:50%;width:34px;height:34px;font-size:19px}.sheetintro{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 10px}.facts{margin:6px 0 13px}.fact{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid var(--line)}.fact .k{font-size:13px;color:var(--muted)}.fact .v{font-size:13px;font-weight:690;text-align:right}.button-primary{display:block;border:0;color:#0c1b2c;background:#78bfff;font-size:14px;font-weight:750;border-radius:12px;padding:13px 16px;width:100%;margin-top:12px}.button-secondary{border:1px solid var(--line);background:var(--surface2);padding:12px;border-radius:12px;width:100%;font-size:13px;margin-top:9px;color:#cdd8e3}.preview{background:var(--surface2);border:1px solid #354454;border-radius:14px;padding:13px;margin:12px 0}.preview .eyebrow{font-size:11px;color:#9dc9f3;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.preview p{font-size:12px;color:#cad4df;line-height:1.5;margin:7px 0 0}
+input[type=number]{width:100%;border:1px solid #3e5061;background:var(--surface2);border-radius:12px;padding:12px;margin:7px 0 0;font-size:18px}
+.formlabel{font-size:12px;color:var(--muted)}.validation{font-size:12px;color:var(--red);margin-top:6px;min-height:16px}
+.sheet h3{font-size:15px;margin:18px 0 7px}.sheet ul{padding-left:20px;margin:7px 0}.sheet li{font-size:13px;line-height:1.55;color:var(--muted);margin-bottom:6px}
+.toast{position:fixed;z-index:70;bottom:calc(85px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);border:1px solid #365371;border-radius:12px;background:#183047;padding:12px 16px;font-size:12px;box-shadow:0 10px 30px #0008;display:none;max-width:calc(100% - 32px);text-align:center}.toast.show{display:block}
+.private .sensitive{filter:blur(8px);user-select:none}.private .bar-wrap{position:relative}.private .bar-wrap:after{content:'Allocation chart hidden';display:grid;place-items:center;position:absolute;inset:0;background:var(--surface2);border-radius:7px;color:var(--muted);font-size:11px}.private .reserve-progress{filter:blur(5px)}
+.desktop-grid{display:block}
+@media(min-width:760px){.app{padding:24px 28px 40px}.header h1{font-size:36px}.desktop-grid{display:grid;grid-template-columns:minmax(0,1.14fr) minmax(320px,.86fr);gap:20px;align-items:start}.rightcol{display:flex;flex-direction:column;gap:0}.reserve-list{grid-template-columns:1fr}.hero .money{font-size:48px}.bottomnav{position:sticky;max-width:650px;margin:30px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(535px,92vw)}}
+</style>
+<link rel="stylesheet" href="foundation.css">
+</head><body>
+<div class="app" id="app">
+ <div class="header"><h1>Planning</h1><div class="header-actions">
+  <button id="privacy" class="iconbtn" aria-label="Hide sensitive figures" aria-pressed="false" title="Hide sensitive figures"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></svg></button>
+  <button id="status" class="status-dot" aria-label="Data status"></button>
+ </div></div>
+ <nav class="modes"><a class="mode" href="planning.html">Cash Forecast</a><a class="mode" href="runway.html">Runway</a><a class="mode active" href="reserves.html" aria-current="page">Reserves</a><a class="mode" href="scenarios.html">Scenarios</a><a class="mode" href="afford.html">Can I afford this?</a></nav>
+ <section class="hero">
+  <div class="kicker"><i></i> Baseline · personal cash allocations</div>
+  <div class="money sensitive" id="protectedTop">€12,100</div>
+  <h2>Protected for future purposes</h2>
+  <p>Money is still in your accounts. Reserves decide which part of your personal cash is set aside—not where it is held.</p>
+  <div class="metrics">
+   <div class="microstat"><div class="label">Unallocated for runway</div><div class="value sensitive" id="unallocatedTop">€23,600</div></div>
+   <div class="microstat"><div class="label">Total eligible personal cash</div><div class="value sensitive">€35,700</div></div>
+  </div>
+ </section>
+ <div class="fake">ILLUSTRATIVE FINANCIAL DATA · CHANGES STAY IN THIS PROTOTYPE</div>
+ <div class="desktop-grid">
+  <main>
+   <div class="sectionhead"><h2>Cash allocation</h2><button id="meaning">What counts?</button></div>
+   <section class="card composition">
+    <div class="balance-title"><span class="name">Eligible personal cash</span><span class="amount sensitive">€35,700</span></div>
+    <div class="bar-wrap"><div class="bar"><div class="allocated" id="allocatedBar" style="width:33.9%"></div><div class="free" id="freeBar" style="width:66.1%"></div></div></div>
+    <div class="bar-legend">
+      <div class="legend-item"><span class="swatch"></span><div class="legend-copy">Allocated to reserves <b class="sensitive" id="legendAllocated">€12,100</b></div></div>
+      <div class="legend-item"><span class="swatch free"></span><div class="legend-copy">Unallocated cash <b class="sensitive" id="legendFree">€23,600</b></div></div>
+    </div>
+    <div class="mini-note"><b>Allocation isn’t a transfer.</b> Funding a reserve here changes its virtual protection, not your bank balances. This is the same cash used by Cash Forecast and Runway.</div>
+   </section>
+   <div class="sectionhead"><h2>Your reserves</h2><button id="createReserve">+ New reserve</button></div>
+   <div class="reserve-list" id="reserveList"></div>
+  </main>
+  <div class="rightcol">
+   <div class="sectionhead"><h2>Worth understanding</h2></div>
+   <section class="card secondary-card">
+     <h3>A tax target isn’t allocated cash</h3>
+     <p>The tax payment in this example is already an expected expense, but its reserve starts with nothing allocated. You can protect cash for that future bill without adding a second expense.</p>
+     <div class="pill-row"><span class="pill sensitive">Expected Activity · €4,000</span><span class="pill">December payment</span></div>
+     <button class="button-secondary" id="taxDemo">Explore the tax example</button>
+   </section>
+   <div class="sectionhead"><h2>How reserves behave</h2></div>
+   <section class="card steps">
+     <div class="step"><b>Protect a purpose</b><p>Creating a target changes no balances. Allocating cash reduces the unallocated share available to normal runway.</p></div>
+     <div class="step"><b>Spend for the purpose</b><p>When a linked bill settles, the allocation is consumed alongside the actual cash payment. It must not count twice.</p></div>
+     <div class="step"><b>Prepare the next cycle</b><p>Annual or other recurring reserves can start a new cycle, without silently allocating fresh cash unless a rule explicitly allows it.</p></div>
+   </section>
+   <div class="sectionhead"><h2>Runway connection</h2></div>
+   <section class="card secondary-card">
+     <h3>Protection changes what’s unallocated</h3>
+     <p>With your current prototype allocations, the Runway starting resource is <b class="sensitive" id="runwayResource">€23,600</b>. Newly allocated cash is protected now; it isn’t spent.</p>
+     <div class="mini-note">This prototype recalculates amounts on this screen only. The separate Runway mock remains a static example until we unify prototype state.</div>
+     <a class="mode" style="display:inline-block;margin-top:12px;background:#17395a;color:#b8dcff;border-color:#245f93" href="runway.html">Open Runway →</a>
+   </section>
+  </div>
+ </div>
+</div>
+<nav class="bottomnav"><a class="navitem" href="home.html"><span class="navicon">⌂</span>Home</a><a class="navitem" href="transactions.html"><span class="navicon">≡</span>Transactions</a><button class="navitem" id="insightsNav"><span class="navicon">▥</span>Insights</button><a class="navitem active" href="reserves.html"><span class="navicon">□</span>Planning</a></nav>
+<div id="sheetbg" class="sheetbg"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div><div class="sheethead"><h2 id="sheetTitle">Reserve</h2><button class="close" id="close" aria-label="Close">×</button></div><div id="sheetBody"></div></section></div>
+<div id="toast" class="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const TOTAL=35700,fmt=n=>'€'+Number(n).toLocaleString('en-GB',{maximumFractionDigits:0});
+const reserves=[
+ {id:'emergency',name:'Emergency',badge:'E',target:8000,allocated:8000,priority:'Protected · first priority',type:'Ongoing purpose',desc:'Safety buffer, no scheduled spend',date:'No due date',linked:false},
+ {id:'home',name:'Future Home',badge:'H',target:10000,allocated:4100,priority:'Protected · strategic',type:'One-off goal',desc:'Longer-term home goal',date:'Target date not set',linked:false},
+ {id:'tax',name:'Annual tax',badge:'T',target:4000,allocated:0,priority:'Linked expected commitment',type:'Recurring · current cycle',desc:'December payment already expected',date:'December 2026 (illustrative)',linked:true}
+];
+let active=null,dialog='list';
+const allocated=()=>reserves.reduce((a,r)=>a+r.allocated,0);
+const free=()=>TOTAL-allocated();
+function safeText(v){return String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function show(title,body){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=body;$('#sheetbg').classList.add('show')}
+function dismiss(){$('#sheetbg').classList.remove('show')}
+$('#close').onclick=dismiss;$('#sheetbg').onclick=e=>{if(e.target===$('#sheetbg'))dismiss()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss()});
+function render(){
+ const a=allocated();
+ $('#protectedTop').textContent=fmt(a);$('#unallocatedTop').textContent=fmt(free());$('#legendAllocated').textContent=fmt(a);$('#legendFree').textContent=fmt(free());$('#runwayResource').textContent=fmt(free());
+ $('#allocatedBar').style.width=(100*a/TOTAL)+'%';$('#freeBar').style.width=(100*free()/TOTAL)+'%';
+ $('#reserveList').innerHTML=reserves.map(r=>{
+ const ratio=Math.min(100,(r.allocated/r.target)*100),full=r.allocated>=r.target;
+ const badge=full?'<span class="flag">Fully allocated</span>':r.allocated>0?'<span class="flag partial">Part-allocated</span>':'<span class="flag empty">Not allocated</span>';
+ const ico=r.id==='emergency'?'':r.id==='home'?' future':' tax';
+ const remain=Math.max(0,r.target-r.allocated);
+ return '<button class="reserve" data-reserve="'+r.id+'"><div class="reserve-head"><span class="reserve-icon'+ico+'">'+safeText(r.badge)+'</span><div class="reserve-main"><div class="reserve-name">'+safeText(r.name)+'</div><div class="reserve-sub">'+safeText(r.type)+' · '+safeText(r.date)+'</div></div><span class="reserve-arrow">›</span></div><div class="reserve-amounts"><div><div class="amount-main sensitive">'+fmt(r.allocated)+' <small>of '+fmt(r.target)+'</small></div></div>'+badge+'</div><div class="reserve-progress'+ico+'"><i style="width:'+ratio+'%"></i></div><div class="reserve-footer"><span>'+safeText(r.priority)+'</span><span class="sensitive">'+(full?'Target met':fmt(remain)+' to target')+'</span></div></button>';
+ }).join('');
+ $$('[data-reserve]').forEach(b=>b.onclick=()=>reserveSheet(b.dataset.reserve));
+}
+function find(id){return reserves.find(r=>r.id===id)}
+function reserveSheet(id){
+ if(document.body.classList.contains('private')){show('Reserve detail','<p class="sheetintro">Sensitive reserve amounts are hidden. Use the eye control to reveal figures before inspecting or changing allocations.</p>');return;}
+ active=id;dialog='detail';const r=find(id);
+ const summary=r.id==='tax'?'This reserve is linked to an existing '+fmt(r.target)+' expected tax payment. Setting aside cash now must not create a second expense.':r.id==='home'?'This reserve protects money for a future home goal. Its target is aspirational; only the allocated amount is protected.':'The emergency allocation is already fully funded. This money is protected from ordinary runway spending.';
+ const info='<p class="sheetintro">'+summary+'</p><div class="facts"><div class="fact"><span class="k">Target</span><span class="v sensitive">'+fmt(r.target)+'</span></div><div class="fact"><span class="k">Currently allocated</span><span class="v sensitive">'+fmt(r.allocated)+'</span></div><div class="fact"><span class="k">Still to allocate</span><span class="v sensitive">'+fmt(r.target-r.allocated)+'</span></div><div class="fact"><span class="k">Protection</span><span class="v">'+safeText(r.priority)+'</span></div><div class="fact"><span class="k">Cycle</span><span class="v">'+safeText(r.type)+'</span></div><div class="fact"><span class="k">When</span><span class="v">'+safeText(r.date)+'</span></div></div>';
+ const buttons='<button id="editAllocation" class="button-primary">Adjust allocation</button>'+(r.linked?'<button id="paymentPreview" class="button-secondary">Preview linked tax payment</button>':'');
+ const end='<p class="sheetintro" style="margin-top:13px">Allocations are virtual. No transfer is made, and no bank transaction is written in this prototype.</p>';
+ show(r.name,info+buttons+end);
+ $('#editAllocation').onclick=()=>editAllocation(id);
+ if(r.linked)$('#paymentPreview').onclick=()=>paymentSheet();
+}
+function editAllocation(id){
+ active=id;dialog='edit';const r=find(id);
+ show('Allocate · '+r.name,'<p class="sheetintro">Set the total amount protected for this purpose. You are adjusting a virtual allocation, not moving cash between accounts.</p><label class="formlabel" for="allocationInput">Total allocation · EUR</label><input id="allocationInput" type="number" min="0" step="100" value="'+r.allocated+'" inputmode="numeric"><div class="validation" id="validation"></div><div class="preview"><div class="eyebrow">Allocation preview</div><div id="previewText"></div></div><button class="button-primary" id="saveAllocation">Apply to prototype</button><button class="button-secondary" id="backDetail">Back to reserve</button>');
+ const input=$('#allocationInput'),error=$('#validation'),preview=$('#previewText'),save=$('#saveAllocation');
+ function recalc(){
+  const value=Number(input.value),valid=input.value!==''&&Number.isFinite(value)&&value>=0&&value<=r.target&&value-r.allocated<=free();
+  error.textContent=!valid?'Enter an amount between €0 and '+fmt(r.target)+', without allocating more than unallocated cash.':'';
+  save.disabled=!valid;
+  if(!valid){preview.innerHTML='<p>Enter a valid total allocation to preview the change.</p>';return;}
+  const delta=value-r.allocated,unalloc=free()-delta;
+  const verb=delta>0?'protect an additional '+fmt(delta):delta<0?'release '+fmt(-delta)+' back to unallocated cash':'leave protection unchanged';
+  preview.innerHTML='<p>This would '+verb+'.</p><div class="fact"><span class="k">Protected across reserves</span><span class="v sensitive">'+fmt(allocated()+delta)+'</span></div><div class="fact"><span class="k">Unallocated for runway</span><span class="v sensitive">'+fmt(unalloc)+'</span></div><p>Total physical cash remains '+fmt(TOTAL)+'. Expected bill amounts do not change.</p>';
+ }
+ input.addEventListener('input',recalc);recalc();
+ save.onclick=()=>{
+  const value=Number(input.value);
+  if(input.value===''||!Number.isFinite(value)||value<0||value>r.target||value-r.allocated>free())return;
+  r.allocated=value;render();reserveSheet(r.id);toast('Prototype allocation updated — no bank movement or saved change.');
+ };
+ $('#backDetail').onclick=()=>reserveSheet(id);
+}
+function paymentSheet(){
+ active='tax';dialog='payment';const r=find('tax'),bill=r.target,before=free(),after=TOTAL-bill-(allocated()-r.allocated),delta=after-before;
+ const explanation=r.allocated===bill?'The entire bill was already protected, so settling it consumes the reserve allocation and does not further reduce unallocated runway cash.':r.allocated===0?'No cash was protected for this bill. The full payment reduces unallocated runway cash.':'The allocated portion is consumed with the payment. Only the unallocated remainder reduces runway cash at settlement.';
+ show('Tax payment · preview','<p class="sheetintro">This synthetic '+fmt(bill)+' payment already exists in Expected Activity. This is a preview of its settlement—not another forecast expense.</p><div class="facts"><div class="fact"><span class="k">Personal cash now</span><span class="v sensitive">'+fmt(TOTAL)+'</span></div><div class="fact"><span class="k">Allocation supporting bill</span><span class="v sensitive">'+fmt(r.allocated)+'</span></div><div class="fact"><span class="k">Unallocated before settlement</span><span class="v sensitive">'+fmt(before)+'</span></div><div class="fact"><span class="k">Cash after paying bill</span><span class="v sensitive">'+fmt(TOTAL-bill)+'</span></div><div class="fact"><span class="k">Unallocated after settlement</span><span class="v sensitive">'+fmt(after)+'</span></div><div class="fact"><span class="k">Change in unallocated cash</span><span class="v sensitive">'+(delta<0?'−':'')+fmt(Math.abs(delta))+'</span></div></div><div class="preview"><div class="eyebrow">No double counting</div><p>'+explanation+'</p></div><p class="sheetintro">The entire '+fmt(bill)+' leaves the bank in all cases. Allocation affects only how much of that was already protected. After this cycle, the recurring reserve could open a new cycle without silently allocating new cash.</p><button id="backTax" class="button-primary">Back to tax reserve</button>');
+ $('#backTax').onclick=()=>reserveSheet('tax');
+}
+function toast(message){const t=$('#toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3400)}
+$('#taxDemo').onclick=()=>reserveSheet('tax');
+$('#createReserve').onclick=()=>show('Create a reserve','<p class="sheetintro">In v2, creating a reserve establishes a purpose and target. The amount allocated begins at zero unless you explicitly allocate cash or accept a funding rule.</p><div class="fact"><span class="k">Purpose</span><span class="v">Named future use</span></div><div class="fact"><span class="k">Target</span><span class="v">Chosen amount</span></div><div class="fact"><span class="k">Initial allocation</span><span class="v">€0</span></div><div class="fact"><span class="k">Optional</span><span class="v">Due date, recurring cycle, linked bill, funding rule</span></div><div class="preview"><div class="eyebrow">Why no creation form?</div><p>This first prototype validates allocation, protection and linked-spending consequences. The create/edit flow will be designed after these semantics are accepted.</p></div>');
+$('#meaning').onclick=()=>show('What counts as reserved cash?','<p class="sheetintro">Reserve allocations are portions of eligible personal cash. They are not separate physical accounts or movements, and they do not create new cash.</p><h3>Included in the pool</h3><ul><li>Sabadell Personal and Savings, HSBC Personal, Trading 212 Cash and parked cash when eligible.</li><li>Multiple currencies contribute in converted EUR terms while retaining account/currency constraints.</li></ul><h3>Not freely pooled</h3><ul><li>Joint balances are not automatically yours to allocate to personal reserves.</li><li>Investment securities and pensions are not ordinary eligible runway resources.</li><li>Protected allocations require priority if actual eligible cash becomes insufficient. Lower-priority goals should show underfunding instead of implying all reserves are intact.</li></ul><p>A reserve allocation does not eliminate account-specific funding constraints. Cash Forecast still determines which operational account needs cash.</p>');
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('private');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures')};
+$('#status').onclick=()=>show('Data status','<p class="sheetintro">All amounts on this prototype are synthetic. Nothing here reads or writes Squeebs live data.</p><div class="fact"><span class="k">Source freshness</span><span class="v">Illustrative only</span></div>');
+$('#insightsNav').onclick=()=>show('Insights','<p class="sheetintro">Insights remains a separate discovery prototype. This screen focuses on the Reserves model.</p>');
+render();
+</script>
+<script src="foundation.js" defer></script>
+</body></html>

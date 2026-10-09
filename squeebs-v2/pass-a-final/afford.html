@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0d10">
+<title>Squeebs v2 — Can I afford this?</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--surface:#15191e;--surface2:#1b222a;--surface3:#232d37;--line:#303a45;--text:#f7f8fa;--muted:#a7b0bc;--muted2:#74808b;--blue:#55a8ff;--green:#52d99b;--orange:#ffb17a;--purple:#b09afb;--red:#ff7a83}
+*{box-sizing:border-box}html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;min-height:100%}button,input,select{font:inherit;color:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default;opacity:.45}a{text-decoration:none;color:inherit}
+.app{max-width:1170px;margin:auto;min-height:100dvh;padding:18px 16px calc(96px + env(safe-area-inset-bottom))}
+.head{display:flex;justify-content:space-between;align-items:center;margin:2px 0 13px}.head h1{font-size:30px;letter-spacing:-.6px;margin:0}.head-actions{display:flex;gap:12px;align-items:center}
+.eye{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);border-radius:50%;color:var(--muted)}.eye svg{height:18px;width:18px;stroke:currentColor;stroke-width:2;fill:none}.fresh{background:var(--green);border:0;border-radius:50%;height:11px;width:11px;box-shadow:0 0 0 4px rgba(82,217,155,.08)}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:16px}.tabs::-webkit-scrollbar{display:none}.tab{font-size:14px;color:var(--muted);white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:100px;padding:9px 12px}.tab.active{background:#193e60;border-color:#306e9e;color:#c0e0ff}
+.back{font-size:12px;color:var(--blue);background:none;border:0;padding:0;margin-bottom:11px;display:inline-block}.hero{background:linear-gradient(180deg,#192532,#151b21);border:1px solid #304557;border-radius:22px;padding:17px;margin:0 0 10px}.eyebrow{color:#c3d6e8;font-size:11px;font-weight:750;display:flex;align-items:center;gap:7px}.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--blue)}.hero h2{font-size:26px;letter-spacing:-.45px;margin:10px 0 6px}.hero p{font-size:13px;line-height:1.5;color:#c3ced8;margin:0}.tagline{color:var(--muted2);font-size:10px;letter-spacing:.04em;margin:12px 2px 13px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:20px 2px 9px}.sectionhead h3{margin:0;font-size:17px;letter-spacing:-.2px}.sectionhead button{background:none;border:0;color:var(--blue);font-size:13px;padding:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:15px}.examples{display:grid;grid-template-columns:1fr 1fr;gap:8px}.example{border:1px solid #354250;border-radius:14px;text-align:left;background:var(--surface2);padding:12px;min-height:82px}.example.active{background:#233648;border-color:#5285ae}.example strong{display:block;font-size:13px;margin:0 0 6px}.example small{font-size:11px;color:var(--muted);line-height:1.4;display:block}
+.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{min-width:0}.field.wide{grid-column:1/-1}.field label{display:block;font-size:12px;color:#c9d3dd;font-weight:660;margin:0 0 6px}.field input,.field select{width:100%;background:var(--surface2);border:1px solid #3c4957;padding:11px 10px;border-radius:11px;font-size:14px;min-width:0}.field input:focus,.field select:focus{outline:none;border-color:var(--blue)}.field small{font-size:11px;color:var(--muted);line-height:1.45;display:block;margin-top:5px}
+.modechoices{display:flex;gap:7px;margin:2px 0 16px;flex-wrap:wrap}.choice{background:var(--surface2);border:1px solid var(--line);font-size:12px;color:#c3cfdb;border-radius:11px;padding:9px 11px}.choice.active{color:#bcdfff;border-color:#4781b3;background:#213b54}
+.info{font-size:12px;line-height:1.5;color:#c0ccda;border:1px solid rgba(85,168,255,.17);background:rgba(85,168,255,.07);border-radius:12px;padding:11px;margin-top:12px}.info.warn{color:#e5c2a7;border-color:rgba(255,177,122,.2);background:rgba(255,177,122,.07)}
+.btn-primary{display:block;border:0;border-radius:13px;background:#7fbeff;color:#0d2334;font-size:14px;font-weight:770;padding:13px;width:100%;margin-top:14px}.btn-secondary{display:block;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:13px;padding:12px;width:100%;margin-top:8px}
+.result-hero{border:1px solid #356047;background:linear-gradient(180deg,#172c26,#161c1d);padding:17px;border-radius:20px}.result-hero.warn{border-color:#66503f;background:linear-gradient(180deg,#2a241f,#1d1b1b)}.result-hero.neutral{border-color:#354557;background:linear-gradient(180deg,#192533,#171d23)}
+.result-kicker{color:#9ce3c1;font-size:11px;font-weight:750;display:flex;align-items:center;gap:6px}.result-hero.warn .result-kicker{color:#f0c9a7}.result-hero.neutral .result-kicker{color:#c7dff6}
+.result-hero h3{font-size:23px;letter-spacing:-.35px;line-height:1.2;margin:9px 0 7px}.result-hero p{font-size:13px;color:#c5d2cc;line-height:1.55;margin:0}
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.impact-box{border-radius:13px;background:var(--surface2);padding:12px}.impact-box .label{font-size:11px;color:var(--muted);line-height:1.35}.impact-box .number{font-size:20px;font-weight:760;line-height:1.2;margin-top:7px}.impact-box .detail{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
+.impact-list .item{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}.impact-list .item:last-child{border:0}.impact-list .item b{display:block;font-size:13px;margin-bottom:4px}.impact-list .item p{font-size:11px;color:var(--muted);line-height:1.45;margin:0}.impact-list .item strong{white-space:nowrap;font-size:13px;text-align:right}
+.chart{background:var(--surface2);padding:8px 7px 7px;border-radius:14px;margin-top:12px;position:relative}.chart svg{display:block;width:100%;height:190px}.chart svg text{fill:#a1adbb;font-size:10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.chart .gridline{stroke:#384653;stroke-width:.7}.chart .zeroline{stroke:#8094a7;stroke-width:1;stroke-dasharray:4 4}.chart .pathbase{fill:none;stroke:#9ba9b8;stroke-width:2;stroke-dasharray:5 5}.chart .pathnew{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.chart .edge{fill:var(--orange)}
+.legend{display:flex;gap:13px;color:var(--muted);font-size:11px;margin-top:9px}.legend span:before{content:"";height:3px;width:13px;display:inline-block;vertical-align:middle;margin-right:6px;background:var(--blue);border-radius:2px}.legend .grey:before{background:#9ba9b8}
+.caveat{font-size:11px;color:var(--muted);line-height:1.5;margin-top:12px}
+.source{border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--surface2);margin-top:11px}.source b{font-size:12px}.source p{font-size:11px;color:var(--muted);margin:5px 0 0;line-height:1.5}
+.actionrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actionrow button{margin-top:12px}
+.foot{color:var(--muted);font-size:11px;line-height:1.5;margin:10px 2px 0}
+.hidden{display:none!important}.desktopgrid{display:block}
+.mask .sensitive{filter:blur(8px);user-select:none}.mask .chart:after{content:"Projection hidden";position:absolute;inset:6px;border-radius:12px;background:rgba(27,34,42,.97);display:grid;place-items:center;font-size:12px;color:var(--muted)}.mask input.money{filter:blur(7px);pointer-events:none}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;display:none}.sheetbg.open{display:block}.sheet{position:absolute;bottom:0;left:0;right:0;background:#131920;border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));max-height:88dvh;overflow:auto}.grab{width:38px;height:5px;border-radius:8px;background:#444e59;margin:0 auto 14px}.sheethead{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}.sheethead h3{margin:0;font-size:20px}.close{border:0;border-radius:50%;width:34px;height:34px;background:var(--surface2);font-size:20px}.sheetbody p,.sheetbody li{color:var(--muted);font-size:13px;line-height:1.55}.sheetbody ul{padding-left:20px}.sheetbody li{margin:7px 0}.sheetbody b{color:var(--text)}.sheet-item{border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;padding:10px 0;font-size:12px}.sheet-item span{color:var(--muted)}.sheet-item b{text-align:right}
+.toast{position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:calc(85px + env(safe-area-inset-bottom));border:1px solid #3c6687;border-radius:12px;background:#193652;padding:12px;color:#cde6fc;font-size:12px;display:none;width:max-content;max-width:calc(100% - 30px)}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;justify-content:space-around;background:rgba(15,18,22,.97);backdrop-filter:blur(19px);border-top:1px solid var(--line);padding:8px 13px calc(8px + env(safe-area-inset-bottom))}.navitem{font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none}.navitem.active{color:var(--blue)}.navitem span{font-size:20px}
+@media(min-width:800px){.app{padding:25px 28px 40px}.head h1{font-size:36px}.desktopgrid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(320px,1.05fr);gap:23px;align-items:start}.result-column{position:sticky;top:18px}.chart svg{height:220px}.sheet{left:50%;right:auto;transform:translateX(-50%);width:min(540px,92vw)}.bottomnav{position:sticky;max-width:650px;margin:28px auto 0;border:1px solid var(--line);border-radius:18px;padding:9px 14px}}
+@media(max-width:380px){.hero h2{font-size:24px}.impact-box .number{font-size:18px}.examples{gap:7px}.example{padding:10px}.fieldgrid{gap:8px}}
+</style><link rel="stylesheet" href="foundation.css">
+</head>
+<body>
+<div class="app">
+<header class="head"><h1>Planning</h1><div class="head-actions"><button class="eye" id="privacy" aria-label="Hide sensitive figures" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></svg></button><button class="fresh" id="fresh" aria-label="Data status"></button></div></header>
+<nav class="tabs"><a class="tab" href="planning.html">Cash Forecast</a><a class="tab" href="runway.html">Runway</a><a class="tab" href="reserves.html">Reserves</a><a class="tab" href="scenarios.html">Scenarios</a><a class="tab active" href="afford.html" aria-current="page">Can I afford this?</a></nav>
+<section class="hero"><div class="eyebrow"><i></i> Quick decision · current baseline</div><h2>Can I afford this?</h2><p>Explore the effect of a purchase or commitment before deciding. This check won't change your actual financial plan.</p></section>
+<p class="tagline">ILLUSTRATIVE PERSONAL FINANCE DATA · NOT CONNECTED TO YOUR ACCOUNTS</p>
+<div class="desktopgrid"><main>
+<div class="sectionhead"><h3>Try an example</h3><button id="clearExample">Start fresh</button></div>
+<div class="examples" id="examples">
+<button class="example active" data-example="purchase"><strong>New purchase</strong><small>€1,800 · one-off, unplanned</small></button>
+<button class="example" data-example="recurring"><strong>New subscription</strong><small>€160/mo · ongoing</small></button>
+<button class="example" data-example="planned"><strong>Already expected</strong><small>€4,000 · tax payment</small></button>
+<button class="example" data-example="reserve"><strong>Use a reserve</strong><small>€1,600 · Future Home</small></button>
+</div>
+<div class="sectionhead"><h3>Your proposed expense</h3><button id="meaning">How this works</button></div>
+<section class="card" id="formCard">
+<div class="fieldgrid">
+<div class="field wide"><label for="description">What are you considering?</label><input class="sensitive" id="description" placeholder="e.g. A new desk" maxlength="70"></div>
+<div class="field"><label for="amount">Amount</label><input class="money sensitive" id="amount" inputmode="decimal" type="number" min="0" step="10" value="1800"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option value="EUR">EUR · Euro</option><option value="GBP">GBP · Pound</option></select></div>
+<div class="field wide"><label>Payment pattern</label><div class="modechoices" id="patterns"><button class="choice active" data-pattern="once">One-off</button><button class="choice" data-pattern="monthly">Recurring monthly</button></div></div>
+<div class="field"><label for="payMonth" id="dateLabel">Expected payment month</label><select id="payMonth"></select></div>
+<div class="field"><label for="paymentAccount">Paying account</label><select id="paymentAccount"></select></div>
+<div class="field wide"><label for="treatment">Is this already in your financial plan?</label><select id="treatment"><option value="new">No — additional spending</option><option value="planned">Yes — fulfil / amend an expected expense</option></select></div>
+<div class="field wide hidden" id="plannedWrap"><label for="plannedItem">Which expected expense?</label><select id="plannedItem"><option value="tax">Annual tax payment · €4,000 · December</option><option value="insurance">Annual insurance · €900 · January</option></select><small>Squeebs would link the proposal to a specific Expected Activity item rather than count it as another payment.</small></div>
+<div class="field wide"><label for="reserve">Will this use a protected reserve?</label><select id="reserve"><option value="none">No — unallocated personal cash</option><option value="home">Future Home · €4,100 protected</option><option value="emergency">Emergency · €8,000 protected</option></select><small id="reserveHelp">A reserve is a virtual allocation, not a bank account. It doesn't necessarily hold the cash in the paying account.</small></div>
+</div>
+<div class="info sensitive" id="inputNote">This €1,800 is additional spending. The existing forecast doesn't already include it.</div>
+<button class="btn-primary" id="checkImpact">Check the consequences →</button>
+</section>
+<div class="sectionhead"><h3>What this check does</h3></div>
+<section class="card" style="font-size:12px;color:var(--muted);line-height:1.6">
+ It compares the proposal with the current baseline. It considers cash timing, personal Runway, protected Reserves, and the proposed paying account. It doesn't classify you as a good or bad spender.
+ <div class="info">Checking is disposable. Only an explicit subsequent save would create or amend future Expected Activity—and even that would have a separate review.</div>
+</section>
+</main>
+<aside class="result-column">
+<div id="placeholder"><div class="sectionhead"><h3>Your answer</h3></div><section class="card"><div style="display:flex;align-items:center;gap:11px"><span style="display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:#20374b;color:#b8dfff;font-size:22px">↗</span><div><b style="font-size:14px">A decision, not a budget verdict</b><p style="font-size:12px;color:var(--muted);line-height:1.5;margin:5px 0 0">Choose an example or enter a purchase, then check how it changes your financial outlook.</p></div></div></section></div>
+<section id="results" class="hidden" aria-live="polite">
+<div class="sectionhead"><h3>Your answer</h3><button id="whyAnswer">Why this answer?</button></div>
+<div class="result-hero" id="resultHero"><div class="result-kicker" id="resultKicker">● Outcome</div><h3 id="resultTitle"></h3><p id="resultText" class="sensitive"></p></div>
+<div class="impact-grid">
+<div class="impact-box"><div class="label">Runway · baseline → with purchase</div><div class="number sensitive" id="runwaySummary"></div><div class="detail" id="runwayDetail"></div></div>
+<div class="impact-box"><div class="label">Protected reserves used</div><div class="number sensitive" id="reserveSummary"></div><div class="detail" id="reserveDetail"></div></div>
+</div>
+<div class="sectionhead"><h3>What changes?</h3><button id="calculation">See calculation</button></div>
+<section class="card impact-list" id="impactList"></section>
+<div class="sectionhead"><h3>Runway comparison</h3><button id="timelineHelp">About the chart</button></div>
+<section class="card">
+<div class="chart"><svg viewBox="0 0 600 205" role="img" aria-label="Comparison of baseline and purchase-adjusted unallocated personal cash"><g id="chartContent"></g></svg></div>
+<div class="legend"><span>With this purchase</span><span class="grey">Baseline</span></div>
+<p class="caveat" id="chartNote"></p>
+</section>
+<div class="sectionhead"><h3>Next step</h3></div>
+<section class="card">
+<p style="font-size:12px;color:var(--muted);line-height:1.55;margin:0">Nothing has been saved. Decide whether to leave it as a one-time check or review it as future planned activity.</p>
+<div class="actionrow"><button class="btn-secondary" id="discard">Discard check</button><button class="btn-primary" id="savePlan">Review for planning →</button></div>
+</section>
+</section>
+</aside></div>
+</div>
+<nav class="bottomnav"><a class="navitem" href="home.html"><span>⌂</span>Home</a><a class="navitem" href="transactions.html"><span>≡</span>Transactions</a><button class="navitem" id="insights"><span>▥</span>Insights</button><a class="navitem active" href="afford.html"><span>□</span>Planning</a></nav>
+<div class="sheetbg" id="sheetbg"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab"></div><div class="sheethead"><h3 id="sheetTitle">Details</h3><button class="close" id="close" aria-label="Close">×</button></div><div class="sheetbody" id="sheetBody"></div></section></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const MONTHS=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'];
+const fmt=n=>(n<0?'−':'')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const native=(n,c)=>(n<0?'−':'')+(c==='GBP'?'£':'€')+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const signed=n=>(n>=0?'+':'−')+'€'+Math.abs(Math.round(n)).toLocaleString('en-GB');
+const FX=1.16,FREE=23600,RESERVES={home:{name:'Future Home',value:4100},emergency:{name:'Emergency',value:8000}},START=FREE;
+const accounts={sabadell:{name:'Sabadell Personal',currency:'EUR',room:900,topup:'Trading 212 EUR Cash',topupAvailable:9000},t212eur:{name:'Trading 212 EUR Cash',currency:'EUR',room:9000,topup:null,topupAvailable:0},hsbc:{name:'HSBC Personal',currency:'GBP',room:300,topup:'Trading 212 GBP Cash',topupAvailable:1600},t212gbp:{name:'Trading 212 GBP Cash',currency:'GBP',room:1600,topup:null,topupAvailable:0}};
+const planned={tax:{name:'Annual tax payment',amount:4000,currency:'EUR',month:2,reserve:null,account:'sabadell'},insurance:{name:'Annual insurance',amount:900,currency:'EUR',month:3,reserve:null,account:'sabadell'}};
+const presets={
+purchase:{name:'New laptop',amount:1800,currency:'EUR',pattern:'once',month:0,account:'sabadell',treatment:'new',planned:'tax',reserve:'none'},
+recurring:{name:'New monthly commitment',amount:160,currency:'EUR',pattern:'monthly',month:1,account:'sabadell',treatment:'new',planned:'tax',reserve:'none'},
+planned:{name:'Annual tax payment',amount:4000,currency:'EUR',pattern:'once',month:2,account:'sabadell',treatment:'planned',planned:'tax',reserve:'none'},
+reserve:{name:'Home furniture',amount:1600,currency:'EUR',pattern:'once',month:3,account:'sabadell',treatment:'new',planned:'tax',reserve:'home'}
+};
+let selected='purchase',checked=null,mode='once';
+const getMonth=i=>MONTHS[i%12]+' '+(2026+Math.floor((i+9)/12));
+const toEUR=(amount,c)=>amount*(c==='GBP'?FX:1);
+function baseBurn(i){return [-3050,-5400,-6300,-5200,-5000][i]??-5200}
+function renderDateOptions(){
+ $('#payMonth').innerHTML=Array.from({length:18},(_,i)=>'<option value="'+i+'">'+getMonth(i)+'</option>').join('');
+}
+function accountsFor(currency){
+ const el=$('#paymentAccount'),existing=el.value,valid=Object.entries(accounts).filter(([key,a])=>a.currency===currency);
+ el.innerHTML=valid.map(([key,a])=>'<option value="'+key+'">'+a.name+'</option>').join('');
+ if(valid.some(([key])=>key===existing))el.value=existing;
+}
+function setPattern(value){
+ mode=value;$$('[data-pattern]').forEach(b=>b.classList.toggle('active',b.dataset.pattern===value));
+ const planned=$('#treatment');
+ if(value==='monthly'&&planned.value==='planned')planned.value='new';
+ planned.querySelector('option[value="planned"]').disabled=value==='monthly';
+ $('#dateLabel').textContent=value==='monthly'?'First payment month':'Expected payment month';
+ renderConditional();
+}
+function preset(id){
+ selected=id;checked=null;const p=presets[id];
+ $('#description').value=p.name;$('#amount').value=p.amount;$('#currency').value=p.currency;
+ accountsFor(p.currency);$('#paymentAccount').value=p.account;
+ $('#payMonth').value=p.month;$('#treatment').value=p.treatment;$('#plannedItem').value=p.planned;$('#reserve').value=p.reserve;
+ setPattern(p.pattern);renderInputNotes();$$('[data-example]').forEach(b=>b.classList.toggle('active',b.dataset.example===id));
+ $('#results').classList.add('hidden');$('#placeholder').classList.remove('hidden');
+}
+function renderConditional(){
+ const isPlanned=$('#treatment').value==='planned'&&mode==='once';
+ $('#plannedWrap').classList.toggle('hidden',!isPlanned);
+ if(isPlanned){
+   const item=planned[$('#plannedItem').value];
+   if(item){$('#reserve').value='none'}
+   $('#reserve').disabled=true;
+ }else $('#reserve').disabled=mode==='monthly';
+ if(mode==='monthly')$('#reserve').value='none';
+ renderInputNotes();
+}
+function renderInputNotes(){
+ const type=$('#treatment').value, currency=$('#currency').value;
+ let message='This is additional spending, not already in Expected Activity. It will be added only to this disposable calculation.';
+ if(type==='planned'&&mode==='once'){
+  const p=planned[$('#plannedItem').value];
+  message='The '+p.name.toLowerCase()+' is already included in the baseline ('+native(p.amount,p.currency)+' in '+getMonth(p.month)+'). This proposal replaces that occurrence for the calculation—never duplicates it.';
+ }else if(mode==='monthly')message='A recurring commitment affects every month from its start—not just the first month. It behaves like a small ongoing scenario change.';
+ if($('#reserve').value!=='none'&&type==='new')message+=' The named protected allocation is used for this one-off purpose; this is not a bank transfer.';
+ $('#inputNote').textContent=message;
+ $('#reserveHelp').textContent=mode==='monthly'?'Recurring obligations cannot silently consume a one-off protected reserve in this prototype. Use a planned funding rule in Reserves instead.':'A reserve is a virtual allocation, not a bank account. It does not guarantee the paying account holds enough money.';
+}
+function readInput(){
+ const amount=Number($('#amount').value), currency=$('#currency').value;
+ if(!Number.isFinite(amount)||amount<=0||amount>200000)return null;
+ return {name:$('#description').value.trim()||'Proposed expense',amount,currency,pattern:mode,month:Number($('#payMonth').value),account:$('#paymentAccount').value,treatment:$('#treatment').value,planned:$('#plannedItem').value,reserve:$('#reserve').value};
+}
+function shiftFor(x,i){
+ if(x.treatment==='planned'){
+  const p=planned[x.planned];
+  return (i===p.month?toEUR(p.amount,p.currency):0)-(i===x.month?toEUR(x.amount,x.currency):0);
+ }
+ if(x.pattern==='monthly')return i>=x.month?-toEUR(x.amount,x.currency):0;
+ return i===x.month?-toEUR(x.amount,x.currency):0;
+}
+function reserveConsumed(x){
+ if(x.treatment==='planned'||x.reserve==='none'||x.pattern!=='once')return 0;
+ return Math.min(toEUR(x.amount,x.currency),RESERVES[x.reserve]?.value||0);
+}
+function calculate(x){
+ let b=FREE,a=FREE,baseAt=null,altAt=null,remainingReserve=reserveConsumed(x),rows=[];
+ const reserved=remainingReserve;
+ for(let i=0;i<18;i++){
+  const old=b,newBefore=a,baseNet=baseBurn(i);
+  const paymentDelta=shiftFor(x,i);
+  const released=i===x.month?remainingReserve:0;
+  a+=baseNet+paymentDelta+released;
+  b+=baseNet;
+  if(baseAt===null&&b<=0)baseAt={index:i,part:old>0?old/(old-b):0};
+  if(altAt===null&&a<=0)altAt={index:i,part:newBefore>0?newBefore/(newBefore-a):0};
+  rows.push({i,base:b,alt:a,change:paymentDelta+released,baseNet});
+ }
+ const account=accounts[x.account];
+ const samePlannedCurrency=x.treatment==='planned'&&x.currency===planned[x.planned].currency;
+ const unchangedPlannedDate=x.treatment==='planned'&&x.month===planned[x.planned].month;
+ const netPay=x.treatment==='planned'&&samePlannedCurrency&&unchangedPlannedDate?Math.max(0,x.amount-planned[x.planned].amount):x.amount;
+ const transfer=Math.max(0,netPay-account.room);
+ const coverable=transfer<=account.topupAvailable&&(account.topup!==null||transfer===0);
+ const afterPurchase=Math.max(0,account.room-netPay);
+ const fundedRoom=account.room+Math.min(transfer,account.topupAvailable);
+ const fundableAtMonth=x.month<=2?coverable:null;
+ const isAlready=x.treatment==='planned'&&x.amount===planned[x.planned].amount&&x.currency===planned[x.planned].currency&&x.month===planned[x.planned].month;
+ const baseAtMonth=rows[x.month].base;
+ const resourcesMissing=x.treatment==='new'&&(x.month>0&&rows[Math.max(0,x.month-1)].base<=0);
+ return {x,rows,baseAt,altAt,reserved,account,transfer,coverable,afterPurchase,fundableAtMonth,isAlready,resourcesMissing,eligibleBalanceAfter:rows[x.month].alt,netPay};
+}
+function timeAt(t){return t===null?null:t.index+t.part}
+function monthAt(t){return t===null?'Not within 18m':'Around '+getMonth(t.index)}
+function roundRunway(t){return t===null?'18m+':timeAt(t).toFixed(1)+'m'}
+function figureDifference(r){
+ const current=timeAt(r.baseAt),after=timeAt(r.altAt);
+ if(current===null||after===null)return 'Not quantifiable within horizon';
+ const diff=after-current;
+ return (diff<0?'−':'+')+Math.abs(diff).toFixed(1)+' months';
+}
+function flags(r){
+ if(r.resourcesMissing)return {type:'warn',title:'Funding is unresolved before this payment',desc:'The current baseline reaches the protected-reserve boundary before this purchase month. A later expense cannot be treated as funded without another explicit source or transition.'};
+ if(r.isAlready)return {type:'neutral',title:'Already included in your plan',desc:'This matches an existing expected payment. The purchase does not create additional spending or shorten Runway; it simply fulfils the existing expectation if confirmed.'};
+ if(r.x.treatment==='planned')return {type:'neutral',title:'This updates an expected payment',desc:'The baseline expectation is replaced, not duplicated. Changes in amount or timing can change your cash path and account funding requirements.'};
+ if(r.reserved>0)return {type:'neutral',title:'Coverable by using a protected reserve',desc:'The protected allocation covers '+fmt(r.reserved)+' of this purchase. That cash would be spent for its purpose, reducing the named Reserve; only any uncovered portion draws on ordinary Runway cash.'};
+ if(r.altAt!==null&&r.altAt.index<=r.x.month)return {type:'warn',title:'This threatens protected-reserve runway',desc:'This expense would exhaust unallocated personal cash at or before the planned payment month. It requires different timing, resources or a conscious change to protection.'};
+ if(r.x.pattern==='monthly'&&r.altAt!==null&&r.baseAt!==null&&timeAt(r.altAt)<timeAt(r.baseAt))return {type:'neutral',title:'An ongoing commitment shortens Runway',desc:'This repeating expense brings the protected-reserve boundary closer. Its impact compounds monthly; account funding would also need an ongoing plan.'};
+ if(r.transfer>0&&!r.coverable&&r.x.month<=2)return {type:'warn',title:'The paying account has an unresolved shortfall',desc:'Cash available in the chosen operational account is below the estimated payment requirement, with no modelled viable top-up from its synthetic funding source.'};
+ if(r.transfer>0&&r.x.month<=2)return {type:'neutral',title:'Possible, with an account top-up',desc:'The overall cash may cover this expense, but the paying account is forecast to need replenishment. A plausible source exists in this synthetic example; this is not a transfer instruction.'};
+ return {type:'good',title:'Manageable within the modelled resources',desc:'This choice changes your financial position but does not immediately breach the protected reserve boundary. The trade-off is shown below rather than reduced to a yes/no verdict.'};
+}
+function outputLine(title,value,description){
+ return '<div class="item"><div><b>'+title+'</b><p>'+description+'</p></div><strong class="sensitive">'+value+'</strong></div>';
+}
+function drawChart(r){
+ const rows=r.rows.slice(0,8),w=600,x=i=>55+(i+1)*(530/8),maximum=25000,y=v=>169-138*Math.min(1,Math.max(0,v)/maximum);
+ function line(key){
+  let d='M55 '+y(FREE),prev=FREE,stop=false;
+  for(let i=0;i<8;i++){
+   if(stop)break;
+   const cur=rows[i][key],end=x(i),start=i===0?55:x(i-1);
+   if(cur>0)d+=' L'+end.toFixed(1)+' '+y(cur).toFixed(1);
+   else{let fraction=prev>0?prev/(prev-cur):0;fraction=Math.max(0,Math.min(1,fraction));d+=' L'+(start+(end-start)*fraction).toFixed(1)+' 169';stop=true}
+   prev=cur;
+  }
+  return d;
+ }
+ let svg='<line class="gridline" x1="55" y1="32" x2="585" y2="32"/><line class="gridline" x1="55" y1="100" x2="585" y2="100"/><line class="zeroline" x1="55" y1="169" x2="585" y2="169"/>';
+ svg+='<text x="7" y="35">€25k</text><text x="13" y="104">€12k</text><text x="24" y="172">€0</text>';
+ svg+='<path class="pathbase" d="'+line('base')+'"/><path class="pathnew" d="'+line('alt')+'"/>';
+ for(let i=0;i<8;i++)if(i%2===0||i===7)svg+='<text x="'+x(i)+'" y="195" text-anchor="middle">'+MONTHS[i%12]+'</text>';
+ $('#chartContent').innerHTML=svg;
+}
+function renderAnswer(r,shouldScroll=true){
+ const outcome=flags(r);
+ $('#resultHero').className='result-hero '+(outcome.type==='warn'?'warn':outcome.type==='neutral'?'neutral':'');
+ $('#resultKicker').textContent=outcome.type==='warn'?'● Funding / runway attention':outcome.type==='neutral'?'● Conditional consequence':'● Projected consequence';
+ $('#resultTitle').textContent=outcome.title;$('#resultText').textContent=outcome.desc;
+ $('#runwaySummary').textContent=roundRunway(r.baseAt)+' → '+roundRunway(r.altAt);
+ $('#runwayDetail').textContent=r.isAlready?'No incremental difference':figureDifference(r);
+ $('#reserveSummary').textContent=r.reserved>0?fmt(r.reserved):'€0';
+ $('#reserveDetail').textContent=r.reserved>0?RESERVES[r.x.reserve].name+' remaining '+fmt(RESERVES[r.x.reserve].value-r.reserved):'Protected allocations unchanged';
+ let type=r.x.treatment==='planned'?'Existing expected expense · replacement':r.x.pattern==='monthly'?'New recurring commitment':'Additional one-off';
+ const incremental=r.rows.reduce((n,row)=>n+row.change,0);
+ let affected=0;
+ if(r.x.treatment==='planned')affected=toEUR(r.x.amount,r.x.currency)-toEUR(planned[r.x.planned].amount,planned[r.x.planned].currency);
+ else affected=toEUR(r.x.amount,r.x.currency);
+ let funding='';
+ if(r.x.treatment==='planned')funding='This payment is already represented in the baseline. The account-level route remains inherited if unchanged; any revised amount, date or account needs a fresh funding check.';
+ else if(r.x.month>2)funding='Future account capacity must be recalculated at the actual payment date. Not verified by this near-term illustrative funding check.';
+ else if(r.netPay<=r.account.room)funding='Within the synthetic available room above the selected account’s operating buffer.';
+ else if(r.coverable)funding='Would require about '+native(r.transfer,r.x.currency)+' top-up via '+r.account.topup+' before paying, subject to the source remaining eligible.';
+ else funding='Unresolved '+native(r.transfer,r.x.currency)+' paying-account shortfall; the selected source has no confirmed fundable path in this demonstration.';
+ $('#impactList').innerHTML=
+  outputLine('Treatment',type,r.x.treatment==='planned'?'Replace linked expected payment, do not add a second copy.':'Temporary hypothetical, not yet represented in baseline.')+
+  outputLine('Payment timing',getMonth(r.x.month),r.x.pattern==='monthly'?'Monthly from this month onward':'Expected payment month (not the decision date)')+
+  outputLine('Change to forecast cashflows',signed(incremental),'EUR-equivalent aggregate cashflow difference over 18 months, including allocation use; not a bank balance.')+
+  outputLine('Account funding',r.account.name,funding)+
+  (r.reserved>0?outputLine('Protected allocation consumed',fmt(r.reserved),'No extra transfer is implied by using a virtual reserve. Future Home / Emergency allocation falls accordingly.'):'');
+ $('#chartNote').textContent='Illustrative first 8 months of unallocated EUR-equivalent cash. Each path stops at its protected-reserve boundary. Long-range cashflow is modelled monthly, not day by day.';
+ drawChart(r);
+ $('#placeholder').classList.add('hidden');$('#results').classList.remove('hidden');
+ if(shouldScroll&&window.innerWidth<800)setTimeout(()=>$('#results').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+function updateAfterEdit(){
+ if(!checked)return;
+ const x=readInput();if(x){checked=calculate(x);renderAnswer(checked,false)}else{checked=null;$('#results').classList.add('hidden');$('#placeholder').classList.remove('hidden')}
+}
+function check(){
+ if(document.body.classList.contains('mask')){toast('Reveal figures before evaluating a financial amount.');return}
+ const x=readInput();
+ if(!x){toast('Enter a positive amount up to 200,000.');return}
+ checked=calculate(x);renderAnswer(checked);
+}
+function clearCheck(){
+ checked=null;selected=null;$$('[data-example]').forEach(b=>b.classList.remove('active'));
+ $('#description').value='';$('#amount').value='';$('#currency').value='EUR';accountsFor('EUR');
+ $('#treatment').value='new';$('#reserve').value='none';$('#payMonth').value='0';setPattern('once');
+ $('#placeholder').classList.remove('hidden');$('#results').classList.add('hidden');
+ $('#formCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function detailSheet(title,body){$('#sheetTitle').textContent=title;$('#sheetBody').innerHTML=document.body.classList.contains('mask')?'<p>Reveal sensitive figures using the eye control before opening this detail.</p>':body;$('#sheetbg').classList.add('open')}
+function dismiss(){$('#sheetbg').classList.remove('open')}
+function toast(message){const t=$('#toast');t.textContent=message;t.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display='none',3600)}
+function explain(){
+ detailSheet('How the answer is determined','<p>Baseline → proposed change → recalculated expected cashflows → projected unallocated cash. The decision is not judged against an arbitrary category budget.</p><ul><li>Start with '+fmt(FREE)+' unallocated eligible personal cash and '+fmt(12100)+' protected allocations.</li><li>Include ordinary spending, recurring commitments, shared funding and known/seasonal expenses in the baseline.</li><li>New spending changes Expected Activity only in this disposable calculation.</li><li>Linked existing payments replace the original scheduled item. Funding from a Reserve consumes its protected allocation when spent.</li><li>Check account-specific operating buffers and any viable funding path separately from the aggregate Runway result.</li></ul><p>This is a synthetic monthly model. Real answers need provenance and the current live Expected Activity engine, not hard-coded demonstration assumptions.</p>');
+}
+function saveReview(){
+ if(!checked)return;
+ const x=checked.x,linked=x.treatment==='planned';
+ const expense=linked?planned[x.planned]:null;
+ detailSheet('Review for planned activity',
+ '<p>This would be a structured future-activity review, <b>not</b> a bank transaction or an automatic write. The actual v2 workflow would require a final confirmation and recompute eligibility/forecast server-side.</p>'+
+ '<div class="sheet-item"><span>What</span><b>'+escapeText(x.name)+'</b></div>'+
+ '<div class="sheet-item"><span>Amount</span><b>'+native(x.amount,x.currency)+(x.pattern==='monthly'?' / month':'')+'</b></div>'+
+ '<div class="sheet-item"><span>Effective month</span><b>'+getMonth(x.month)+'</b></div>'+
+ '<div class="sheet-item"><span>Effect on Expected Activity</span><b>'+(linked?'Amend linked '+escapeText(expense.name):x.pattern==='monthly'?'Add recurring stream':'Add dated one-off')+'</b></div>'+
+ '<div class="sheet-item"><span>Account</span><b>'+escapeText(checked.account.name)+'</b></div>'+
+ '<div class="sheet-item"><span>Reserve use</span><b>'+(checked.reserved?fmt(checked.reserved)+' from '+RESERVES[x.reserve].name:'None')+'</b></div>'+
+ '<p>Classification, Detail, child/purpose attribution and optional notes can be suggested at this stage. They are <b>not prerequisites</b> to asking the affordability question.</p><div class="info warn">This prototype has no Save/Apply action. Nothing changes in Squeebs, the baseline, your Reserves or any bank account.</div><button id="backToCheck" class="btn-primary">Back to decision</button>');
+ $('#backToCheck').onclick=dismiss;
+}
+const escapeText=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+renderDateOptions();preset('purchase');
+$$('[data-example]').forEach(b=>b.onclick=()=>preset(b.dataset.example));
+$$('[data-pattern]').forEach(b=>b.onclick=()=>{selected=null;setPattern(b.dataset.pattern);updateAfterEdit()});
+$('#clearExample').onclick=clearCheck;
+$('#checkImpact').onclick=check;
+$('#discard').onclick=clearCheck;
+$('#savePlan').onclick=saveReview;
+$('#whyAnswer').onclick=explain;
+$('#meaning').onclick=explain;
+$('#calculation').onclick=()=>{if(!checked)return;const r=checked,x=r.x;const first=r.rows.slice(0,6);
+ detailSheet('Calculation and evidence',
+ '<p>This synthetic check uses a consistent EUR-equivalent cash model and keeps the financial relationships explicit.</p>'+
+ '<div class="sheet-item"><span>Baseline runway</span><b>'+roundRunway(r.baseAt)+'</b></div>'+
+ '<div class="sheet-item"><span>With proposal</span><b>'+roundRunway(r.altAt)+'</b></div>'+
+ '<div class="sheet-item"><span>Allocation consumed</span><b>'+fmt(r.reserved)+'</b></div>'+
+ '<div class="sheet-item"><span>First affected month</span><b>'+getMonth(x.month)+'</b></div>'+
+ '<p>Expected Activity, bank-account funding, native currency, FX and protected reserves are separate inputs. Reserve consumption releases an equal virtual allocation as the linked intended payment leaves cash.</p>'+
+ '<p>The proposal '+(x.treatment==='planned'?'replaces a previously expected item of '+native(planned[x.planned].amount,planned[x.planned].currency)+' scheduled for '+getMonth(planned[x.planned].month):'is incremental to baseline activity')+'.</p>'+
+ '<p>Month-level sample: '+first.map(t=>getMonth(t.i)+' baseline '+fmt(t.base)+' / proposal '+fmt(t.alt)).join(' · ')+'</p><p>In the real product: answer → composition → assumption → methodology → source transaction/Expected Activity.</p>');
+};
+$('#timelineHelp').onclick=()=>detailSheet('Reading the Runway comparison','<p>Gray is the baseline path. Blue includes this hypothetical purchase or recurring commitment. Both start with unallocated personal cash after reserved allocations and use the same pre-existing expected activity.</p><p>When a path reaches zero it stops. A later month cannot be treated as funded simply because a projection formula continues.</p><p>A reserve-funded purchase can leave unallocated Runway unchanged while still using up a protected purpose allocation. Cash Forecast must separately assess how money reaches the paying account.</p>');
+function selectExpectedItem(){
+ const p=planned[$('#plannedItem').value];
+ if(p){
+   $('#description').value=p.name;$('#amount').value=p.amount;$('#currency').value=p.currency;
+   accountsFor(p.currency);$('#paymentAccount').value=p.account;$('#payMonth').value=p.month;
+ }
+ renderConditional();updateAfterEdit();
+}
+$('#treatment').onchange=()=>{if($('#treatment').value==='planned'&&mode==='once')selectExpectedItem();else{renderConditional();updateAfterEdit()}};
+$('#plannedItem').onchange=selectExpectedItem;
+$('#reserve').onchange=()=>{renderInputNotes();updateAfterEdit()};
+$('#currency').onchange=()=>{accountsFor($('#currency').value);renderInputNotes();updateAfterEdit()};
+['#description','#amount','#payMonth','#paymentAccount'].forEach(selector=>{const item=$(selector);item.addEventListener('input',updateAfterEdit);item.addEventListener('change',updateAfterEdit)});
+$('#privacy').onclick=()=>{const on=document.body.classList.toggle('mask');$('#privacy').setAttribute('aria-pressed',String(on));$('#privacy').setAttribute('aria-label',on?'Reveal sensitive figures':'Hide sensitive figures')};
+$('#fresh').onclick=()=>detailSheet('Data status','<p>Prototype only. The account balances, funding room, modelled obligations and reserves shown here are entirely synthetic.</p><p>No connected AI, real Squeebs API, user bank data or persistence is involved.</p>');
+$('#insights').onclick=()=>detailSheet('Insights','<p>The Insights prototype is a separate discovery surface. In v2, a relevant spending insight could open this check with appropriate context.</p>');
+$('#close').onclick=dismiss;
+$('#sheetbg').onclick=e=>{if(e.target===$('#sheetbg'))dismiss()};
+window.addEventListener('keydown',e=>{if(e.key==='Escape')dismiss()});
+</script><script src="foundation.js" defer></script>
+</body></html>
