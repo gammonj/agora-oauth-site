@@ -51,8 +51,10 @@
 
 <div class="quickbar"><button class="chip active" id="periodChip">This month</button><button class="chip" id="accountChip">All accounts</button><button class="chip" id="filtersChip">Filters</button><button class="chip clear" id="clearBtn">Clear all</button></div>
 
-<div class="summary-actions"><div class="summary-block"><div class="summary-label">Filtered net · 8 transactions</div><div class="summary-main"><strong>−€923.72</strong></div><div class="summary-sub">€962.46 out · €38.74 in</div></div><div class="toolbar"><button class="toolbtn" id="sortBtn"><span id="sortButtonLabel">Date ↓</span></button><button class="toolbtn" id="selectBtn">✓ <span>Select</span></button></div></div>
-<p class="context" id="context">Showing <b>October</b> · all accounts</p>
+<section class="v2-tx-summary" aria-label="Filtered transaction summary">
+  <div class="v2-tx-scope"><p class="context" id="context">Showing <b>October</b> · all accounts</p><span class="v2-result-count">8 transactions</span></div>
+  <div class="summary-actions"><div class="summary-block"><div class="summary-label">Filtered net</div><div class="summary-main"><strong>−€923.72</strong></div><div class="summary-sub">€962.46 out · €38.74 in</div></div><div class="toolbar"><button class="toolbtn" id="sortBtn"><span id="sortButtonLabel">Date ↓</span></button><button class="toolbtn" id="selectBtn">✓ <span>Select</span></button></div></div>
+</section>
 
 <div id="selectionRail" class="selection-rail">
   <div class="selection-copy"><strong id="selectedText">0 selected</strong><span>Only selected transactions will be changed.</span><div class="selection-mini"><button class="linkbtn" id="selectAllBtn">Select all 8</button><button class="linkbtn" id="clearSelectionBtn">Clear</button></div></div>
