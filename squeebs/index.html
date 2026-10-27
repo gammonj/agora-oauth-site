@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Information about Squeebs, a private, non-commercial, local-first personal-finance application.">
+  <title>Squeebs — Personal Finance</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f7f8; color: #24333d; }
+    main { max-width: 760px; margin: 0 auto; padding: 58px 24px 86px; }
+    h1 { font-size: clamp(2rem, 6vw, 3.3rem); letter-spacing: -.035em; line-height: 1.08; margin: 0 0 22px; }
+    h2 { font-size: 1.22rem; margin: 32px 0 10px; }
+    p, li { font-size: 1.04rem; line-height: 1.68; }
+    a { color: inherit; text-underline-offset: 3px; }
+    .muted { color: #667681; }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; margin: 30px 0; }
+    .card { border: 1px solid #dbe2e6; background: #fff; border-radius: 16px; padding: 18px 23px; margin-top: 26px; }
+    footer { margin-top: 50px; border-top: 1px solid #dbe2e6; padding-top: 16px; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #111b22; color: #e6ecf0; }
+      .muted { color: #a3b1ba; }
+      .card { background: #182630; border-color: #354651; }
+      footer { border-color: #354651; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="muted">Squeebs · private personal-finance application</p>
+    <h1>Squeebs</h1>
+    <p>Squeebs is a private, non-commercial personal-finance application used exclusively by its owner to organise financial transactions, track account balances, classify spending, and support personal cashflow planning and reporting.</p>
+    <div class="card">
+      <h2>Account information</h2>
+      <p>Squeebs can import statements supplied by its owner and may use authorised account-information services, including Enable Banking, to retrieve balances and transactions from bank accounts the owner has explicitly connected.</p>
+      <p>Bank authorisation takes place through the provider and the financial institution. Squeebs does not provide payment initiation or make transfers.</p>
+    </div>
+    <h2>Personal and local-first</h2>
+    <p>The application and its financial data are maintained in the owner's private, self-hosted environment. Squeebs is not offered as a public financial service, and this website is not connected to the owner's financial database.</p>
+    <nav aria-label="Policies">
+      <a href="privacy/">Privacy Notice</a>
+      <a href="terms/">Terms of Use</a>
+    </nav>
+    <footer><p class="muted">This public website contains information only. It does not provide access to financial accounts or the Squeebs application.</p></footer>
+  </main>
+</body>
+</html>
